@@ -12,6 +12,8 @@ group :doc do
 end
 
 gem 'unicorn', '4.6.3'
+gem 'exception_notification', '4.0.1'
+gem 'aws-ses', '0.5.0', :require => 'aws/ses'
 
 group :development, :test do
   gem 'rspec-rails', '2.14.0'
