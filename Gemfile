@@ -12,3 +12,9 @@ group :doc do
 end
 
 gem 'unicorn', '4.6.3'
+
+group :development, :test do
+  gem 'rspec-rails', '2.14.0'
+  gem 'database_cleaner', '1.2.0'
+  gem 'factory_girl_rails', '4.2.1'
+end
