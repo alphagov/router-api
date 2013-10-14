@@ -31,6 +31,8 @@ GEM
     bson_ext (1.9.2)
       bson (~> 1.9.2)
     builder (3.1.4)
+    ci_reporter (1.9.0)
+      builder (>= 2.1.2)
     database_cleaner (1.2.0)
     diff-lcs (1.2.4)
     erubis (2.7.0)
@@ -126,6 +128,7 @@ PLATFORMS
 
 DEPENDENCIES
   bson_ext (= 1.9.2)
+  ci_reporter (= 1.9.0)
   database_cleaner (= 1.2.0)
   factory_girl_rails (= 4.2.1)
   mongo_mapper (= 0.13.0.beta2)
