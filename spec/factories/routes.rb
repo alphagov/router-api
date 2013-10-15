@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :route do
-    sequence(:application_id) {|n| "backend-#{n}"}
+    sequence(:backend_id)     {|n| "backend-#{n}"}
     route_type                "prefix"
     sequence(:incoming_path)  {|n| "/path/#{n}"}
   end
