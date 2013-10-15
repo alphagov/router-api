@@ -6,14 +6,14 @@ describe Route do
       @route = FactoryGirl.build(:route)
     end
 
-    describe "on application_id" do
+    describe "on backend_id" do
       it "should be required" do
-        @route.application_id = ''
+        @route.backend_id = ''
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:application_id)
+        expect(@route).to have(1).error_on(:backend_id)
       end
 
-      it "should map to an existing application"
+      it "should map to an existing backend"
     end
 
     describe "on route_type" do
