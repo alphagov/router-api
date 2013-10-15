@@ -14,7 +14,6 @@ development:
 test:
   <<: *defaults
   database: router_api_test
-  w: 0
 
 # set these environment variables on your prod server
 production:
