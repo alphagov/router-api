@@ -166,8 +166,8 @@ smartanswers = [
   'vehicles-you-can-drive',
 ]
 smartanswers.each do |sa|
-  routes << [sa, "prefix", "smartanswers"]
-  routes << ["#{sa}.json", "exact", "smartanswers"]
+  routes << ["/#{sa}", "prefix", "smartanswers"]
+  routes << ["/#{sa}.json", "exact", "smartanswers"]
 end
 
 routes.each do |path, type, backend|
@@ -189,6 +189,8 @@ end
     route.destroy
   end
 end
+# Destroy any without a leading /
+Route.where(:incoming_path => /\A[^\/]/).destroy_all
 
 require 'router_reloader'
 RouterReloader.reload
