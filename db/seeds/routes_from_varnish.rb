@@ -42,11 +42,9 @@ end
 routes = [
   %w(/ prefix frontend),
 
-  %w(/autocomplete exact search),
-  %w(/preload-autocomplete exact search),
   %w(/sitemap.xml exact search),
   # TODO: Fix the sitemap routes.
-  #} else if (req.url ~ "^/autocomplete(\?.*)?$|^/preload-autocomplete(\?.*)?$|^/sitemap[^/]*.xml(\?.*)?$") {
+  #} else if (req.url ~ "^/sitemap[^/]*.xml(\?.*)?$") {
   %w(/sitemap prefix search),
 
   %w(/bank-holidays prefix calendars),
@@ -178,4 +176,16 @@ routes.each do |path, type, backend|
   route = Route.find_or_initialize_by_incoming_path_and_route_type(path, type)
   route.backend_id = backend
   route.save!
+end
+
+# Remove some previously seeded routes.
+# This can be removed once it's run on prod.
+[
+  %w(/autocomplete exact),
+  %w(/preload-autocomplete exact),
+].each do |path, type|
+  if route = Route.find_by_incoming_path_and_route_type(path, type)
+    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
+    route.destroy
+  end
 end
