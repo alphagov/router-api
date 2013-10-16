@@ -189,3 +189,6 @@ end
     route.destroy
   end
 end
+
+require 'router_reloader'
+RouterReloader.reload
