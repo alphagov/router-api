@@ -2,11 +2,11 @@ require 'net/http'
 
 class RouterReloader
   def self.reload
-    new(router_urls).reload
+    new(router_reload_urls).reload
   end
 
-  def self.router_urls
-    @router_urls ||= YAML.load_file(Rails.root.join("config", "router_urls.yml"))
+  def self.router_reload_urls
+    @router_reload_urls ||= YAML.load_file(Rails.root.join("config", "router_reload_urls.yml"))
   end
 
   def initialize(urls)

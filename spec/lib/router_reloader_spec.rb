@@ -5,7 +5,7 @@ describe RouterReloader do
 
   describe "triggering a reload of routes" do
     before :each do
-      RouterReloader.stub(:router_urls).and_return(["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"])
+      RouterReloader.stub(:router_reload_urls).and_return(["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"])
     end
 
     it "should POST to the reload endpoint on all the configured routers" do
