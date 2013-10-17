@@ -204,5 +204,7 @@ end
   end
 end
 
-require 'router_reloader'
-RouterReloader.reload
+unless ENV['SKIP_RELOAD_ROUTES_FROM_SEEDS']
+  require 'router_reloader'
+  RouterReloader.reload
+end
