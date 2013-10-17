@@ -6,16 +6,6 @@ describe Route do
       @route = FactoryGirl.build(:route)
     end
 
-    describe "on backend_id" do
-      it "should be required" do
-        @route.backend_id = ''
-        expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:backend_id)
-      end
-
-      it "should map to an existing backend"
-    end
-
     describe "on route_type" do
       it "should be required" do
         @route.route_type = ''
@@ -76,5 +66,39 @@ describe Route do
       end
     end
 
+    describe "on handler" do
+      it "should be required" do
+        @route.handler = ""
+        expect(@route).not_to be_valid
+        expect(@route).to have(1).error_on(:handler)
+      end
+
+      it "should only allow specific values" do
+        %w(backend).each do |type|
+          @route.handler = type
+          expect(@route).to be_valid
+        end
+
+        @route.handler = "fooey"
+        expect(@route).not_to be_valid
+        expect(@route).to have(1).error_on(:handler)
+      end
+    end
+
+    context "with handler set to 'backend'" do
+      before :each do
+        @route.handler = "backend"
+      end
+
+      describe "on backend_id" do
+        it "should be required" do
+          @route.backend_id = ''
+          expect(@route).not_to be_valid
+          expect(@route).to have(1).error_on(:backend_id)
+        end
+
+        it "should map to an existing backend"
+      end
+    end
   end
 end
