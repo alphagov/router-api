@@ -178,19 +178,5 @@ routes.each do |path, type, backend|
   route.save!
 end
 
-# Remove some previously seeded routes.
-# This can be removed once it's run on prod.
-[
-  %w(/autocomplete exact),
-  %w(/preload-autocomplete exact),
-].each do |path, type|
-  if route = Route.find_by_incoming_path_and_route_type(path, type)
-    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
-    route.destroy
-  end
-end
-# Destroy any without a leading /
-Route.where(:incoming_path => /\A[^\/]/).destroy_all
-
 require 'router_reloader'
 RouterReloader.reload
