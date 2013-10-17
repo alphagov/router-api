@@ -84,8 +84,22 @@ routes = [
 
   %w(/feedback prefix feedback),
 
-  # TODO: replace foo with real values
-  %w(/performance/foo/api prefix publicapi),
+  %w(/performance/deposit-foreign-marriage/api prefix publicapi),
+  %w(/performance/vehicle-licensing/api prefix publicapi),
+  %w(/performance/government/api prefix publicapi),
+  %w(/performance/hmrc_preview/api prefix publicapi),
+  %w(/performance/licence_finder/api prefix publicapi),
+  %w(/performance/licensing/api prefix publicapi),
+  %w(/performance/lasting-power-of-attorney/api prefix publicapi),
+  %w(/performance/pay-foreign-marriage-certificates/api prefix publicapi),
+  %w(/performance/pay-legalisation-drop-off/api prefix publicapi),
+  %w(/performance/pay-legalisation-post/api prefix publicapi),
+  %w(/performance/pay-register-birth-abroad/api prefix publicapi),
+  %w(/performance/pay-register-death-abroad/api prefix publicapi),
+  %w(/performance/sorn/api prefix publicapi),
+  %w(/performance/tax-disc/api prefix publicapi),
+  %w(/performance/test/api prefix publicapi),
+
   %w(/performance exact datainsight-frontend),
   %w(/performance/dashboard prefix datainsight-frontend),
   %w(/performance/transactions-explorer prefix transactions-explorer),
@@ -177,6 +191,17 @@ routes.each do |path, type, backend|
   route.handler = "backend"
   route.backend_id = backend
   route.save!
+end
+
+# Remove some previously seeded routes.
+# This can be removed once it's run on prod.
+[
+  %w(/performance/foo/api prefix),
+].each do |path, type|
+  if route = Route.find_by_incoming_path_and_route_type(path, type)
+    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
+    route.destroy
+  end
 end
 
 require 'router_reloader'
