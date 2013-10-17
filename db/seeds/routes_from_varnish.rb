@@ -174,6 +174,7 @@ routes.each do |path, type, backend|
   puts "Route #{path} (#{type}) => #{backend}"
   abort "Invalid backend #{backend}" unless Backend.find_by_backend_id(backend)
   route = Route.find_or_initialize_by_incoming_path_and_route_type(path, type)
+  route.handler = "backend"
   route.backend_id = backend
   route.save!
 end
