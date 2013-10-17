@@ -8,4 +8,8 @@ class Backend
 
   validates :backend_id, :presence => true, :uniqueness => true, :format => {:with => /\A[a-z0-9-]*\z/}
   validates :backend_url, :presence => true
+
+  def as_json
+    super().reject {|k,v| k == "id"}
+  end
 end

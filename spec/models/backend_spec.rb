@@ -45,4 +45,9 @@ describe Backend do
       it "should look like a URL"
     end
   end
+
+  it "should not include the mongo id in its json representation" do
+    be = FactoryGirl.build(:backend)
+    expect(be.as_json).not_to have_key("id")
+  end
 end
