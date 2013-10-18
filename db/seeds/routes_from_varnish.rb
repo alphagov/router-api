@@ -83,6 +83,9 @@ routes = [
   %w(/api prefix publicapi),
 
   %w(/feedback prefix feedback),
+  %w(/feedback.json exact feedback),
+  %w(/contact prefix feedback),
+  %w(/contact.json exact feedback),
 
   %w(/performance/deposit-foreign-marriage/api prefix publicapi),
   %w(/performance/vehicle-licensing/api prefix publicapi),
