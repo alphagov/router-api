@@ -45,4 +45,53 @@ describe Backend do
       it "should look like a URL"
     end
   end
+
+  describe "as_json" do
+    before :each do
+      @backend = FactoryGirl.build(:backend)
+    end
+
+    it "should not include the mongo id in its json representation" do
+      expect(@backend.as_json).not_to have_key("id")
+    end
+
+    it "should include details of errors if any" do
+      @backend.backend_id = ""
+      @backend.valid?
+      json_hash = @backend.as_json
+      expect(json_hash).to have_key("errors")
+      expect(json_hash["errors"]).to eq({
+        :backend_id => ["can't be blank"],
+      })
+    end
+
+    it "should not include the errors key when there are none" do
+      expect(@backend.as_json).not_to have_key("errors")
+    end
+  end
+
+  describe "destroying" do
+    before :each do
+      @backend = FactoryGirl.create(:backend)
+    end
+
+    it "should not allow destroy when it has associated routes" do
+      FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
+
+      expect(@backend.destroy).to be_false
+
+      backend = Backend.find_by_backend_id(@backend.backend_id)
+      expect(backend).to be
+    end
+
+    it "should allow destroy otherwise" do
+      backend2 = FactoryGirl.create(:backend)
+      FactoryGirl.create(:backend_route, :backend_id => backend2.backend_id)
+
+      expect(@backend.destroy).to be_true
+
+      backend = Backend.find_by_backend_id(@backend.backend_id)
+      expect(backend).not_to be
+    end
+  end
 end

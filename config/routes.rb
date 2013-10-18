@@ -1,4 +1,6 @@
 RouterApi::Application.routes.draw do
 
-  get "/healthcheck" => proc { [200, {}, ["OK"]] }
+  resources :backends, :only => [:show, :update, :destroy], :format => false
+
+  get "/healthcheck" => proc { [200, {}, ["OK"]] }, :format => false
 end
