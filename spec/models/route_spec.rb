@@ -97,7 +97,16 @@ describe Route do
           expect(@route).to have(1).error_on(:backend_id)
         end
 
-        it "should map to an existing backend"
+        it "should map to an existing backend" do
+          backend = FactoryGirl.create(:backend, :backend_id => "foo")
+
+          @route.backend_id = "foo"
+          expect(@route).to be_valid
+
+          @route.backend_id = "bar"
+          expect(@route).not_to be_valid
+          expect(@route).to have(1).error_on(:backend_id)
+        end
       end
     end
   end
