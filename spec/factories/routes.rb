@@ -6,5 +6,8 @@ FactoryGirl.define do
     sequence(:incoming_path)  {|n| "/path/#{n}"}
     handler                   "backend"
     sequence(:backend_id)     {|n| "backend-#{n}"}
+
+    factory :backend_route do
+    end
   end
 end

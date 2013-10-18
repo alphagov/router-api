@@ -90,4 +90,32 @@ describe "managing backends" do
       expect(backend.backend_url).to eq("http://something.example.com/")
     end
   end
+
+  describe "deleting a backend" do
+    it "should delete the backend" do
+      FactoryGirl.create(:backend, :backend_id => "foo")
+
+      delete "/backends/foo"
+
+      expect(response.code.to_i).to eq(200)
+      backend = Backend.find_by_backend_id("foo")
+      expect(backend).not_to be
+    end
+
+    it "should not allow deletion of a backend with associated routes" do
+      FactoryGirl.create(:backend, :backend_id => "foo")
+      FactoryGirl.create(:backend_route, :backend_id => "foo")
+
+      delete "/backends/foo"
+
+      expect(response.code.to_i).to eq(422)
+      backend = Backend.find_by_backend_id("foo")
+      expect(backend).to be
+    end
+
+    it "should 404 for a non-existent route" do
+      delete "/backends/non-existent"
+      expect(response.code.to_i).to eq(404)
+    end
+  end
 end

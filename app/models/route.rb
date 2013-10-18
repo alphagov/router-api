@@ -12,4 +12,6 @@ class Route
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
   validates :handler, :inclusion => {:in => %w(backend)}
   validates :backend_id, :presence => true
+
+  scope :backend, where(:handler => "backend")
 end

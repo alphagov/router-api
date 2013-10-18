@@ -50,4 +50,29 @@ describe Backend do
     be = FactoryGirl.build(:backend)
     expect(be.as_json).not_to have_key("id")
   end
+
+  describe "destroying" do
+    before :each do
+      @backend = FactoryGirl.create(:backend)
+    end
+
+    it "should not allow destroy when it has associated routes" do
+      FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
+
+      expect(@backend.destroy).to be_false
+
+      backend = Backend.find_by_backend_id(@backend.backend_id)
+      expect(backend).to be
+    end
+
+    it "should allow destroy otherwise" do
+      backend2 = FactoryGirl.create(:backend)
+      FactoryGirl.create(:backend_route, :backend_id => backend2.backend_id)
+
+      expect(@backend.destroy).to be_true
+
+      backend = Backend.find_by_backend_id(@backend.backend_id)
+      expect(backend).not_to be
+    end
+  end
 end

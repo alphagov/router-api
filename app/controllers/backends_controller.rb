@@ -18,6 +18,15 @@ class BackendsController < ApplicationController
     end
   end
 
+  def destroy
+    @backend = Backend.find_by_backend_id!(params[:id])
+    if @backend.destroy
+      render :nothing => true
+    else
+      render :nothing => true, :status => 422
+    end
+  end
+
   private
 
   def validate_slug
