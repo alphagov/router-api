@@ -90,6 +90,7 @@ routes = [
   %w(/performance/hmrc_preview/api prefix publicapi),
   %w(/performance/licence_finder/api prefix publicapi),
   %w(/performance/licensing/api prefix publicapi),
+  %w(/performance/land-registry/api prefix publicapi),
   %w(/performance/lasting-power-of-attorney/api prefix publicapi),
   %w(/performance/pay-foreign-marriage-certificates/api prefix publicapi),
   %w(/performance/pay-legalisation-drop-off/api prefix publicapi),
