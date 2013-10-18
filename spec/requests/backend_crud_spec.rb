@@ -92,23 +92,37 @@ describe "managing backends" do
   end
 
   describe "deleting a backend" do
-    it "should delete the backend" do
-      FactoryGirl.create(:backend, :backend_id => "foo")
+    before :each do
+      @backend = FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://foo.example.com/")
+    end
 
+    it "should delete the backend" do
       delete "/backends/foo"
 
       expect(response.code.to_i).to eq(200)
+      expect(JSON.parse(response.body)).to eq({
+        "backend_id" => "foo",
+        "backend_url" => "http://foo.example.com/",
+      })
+
       backend = Backend.find_by_backend_id("foo")
       expect(backend).not_to be
     end
 
     it "should not allow deletion of a backend with associated routes" do
-      FactoryGirl.create(:backend, :backend_id => "foo")
-      FactoryGirl.create(:backend_route, :backend_id => "foo")
+      FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
 
       delete "/backends/foo"
 
       expect(response.code.to_i).to eq(422)
+      expect(JSON.parse(response.body)).to eq({
+        "backend_id" => "foo",
+        "backend_url" => "http://foo.example.com/",
+        "errors" => {
+          "base" => ["Backend has routes - can't delete"],
+        },
+      })
+
       backend = Backend.find_by_backend_id("foo")
       expect(backend).to be
     end

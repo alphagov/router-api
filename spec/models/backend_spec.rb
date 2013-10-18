@@ -46,9 +46,28 @@ describe Backend do
     end
   end
 
-  it "should not include the mongo id in its json representation" do
-    be = FactoryGirl.build(:backend)
-    expect(be.as_json).not_to have_key("id")
+  describe "as_json" do
+    before :each do
+      @backend = FactoryGirl.build(:backend)
+    end
+
+    it "should not include the mongo id in its json representation" do
+      expect(@backend.as_json).not_to have_key("id")
+    end
+
+    it "should include details of errors if any" do
+      @backend.backend_id = ""
+      @backend.valid?
+      json_hash = @backend.as_json
+      expect(json_hash).to have_key("errors")
+      expect(json_hash["errors"]).to eq({
+        :backend_id => ["can't be blank"],
+      })
+    end
+
+    it "should not include the errors key when there are none" do
+      expect(@backend.as_json).not_to have_key("errors")
+    end
   end
 
   describe "destroying" do

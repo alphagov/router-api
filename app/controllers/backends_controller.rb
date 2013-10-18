@@ -13,17 +13,16 @@ class BackendsController < ApplicationController
     if @backend.update_attributes(params[:backend])
       render :json => @backend.as_json, :status => status_code
     else
-      response_data = @backend.as_json.merge(:errors => @backend.errors.as_json)
-      render :json => response_data, :status => 422
+      render :json => @backend.as_json, :status => 422
     end
   end
 
   def destroy
     @backend = Backend.find_by_backend_id!(params[:id])
     if @backend.destroy
-      render :nothing => true
+      render :json => @backend.as_json
     else
-      render :nothing => true, :status => 422
+      render :json => @backend.as_json, :status => 422
     end
   end
 
