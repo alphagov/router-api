@@ -60,6 +60,10 @@ describe Backend do
           "mailto:me@example.com",
           "www.example.org/foo",
           "/relative/url",
+          "http://",
+          "http:foo",
+          "http://foo.example.com/?bar=baz",
+          "http://foo.example.com/#bar",
         ].each do |url|
           @backend.backend_url = url
           expect(@backend).not_to be_valid

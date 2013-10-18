@@ -7,7 +7,8 @@ class Backend
   ensure_index :backend_id, :unique => true
 
   validates :backend_id, :presence => true, :uniqueness => true, :format => {:with => /\A[a-z0-9-]*\z/}
-  validates :backend_url, :presence => true, :format => {:with => URI.regexp("http"), :allow_blank => true}
+  validates :backend_url, :presence => true
+  validate :validate_backend_url
 
   before_destroy :ensure_no_linked_routes
 
@@ -19,6 +20,22 @@ class Backend
   end
 
   private
+
+  def validate_backend_url
+    return if backend_url.blank?
+    errors[:backend_url] << "is not a valid HTTP URL" unless valid_backend_url?
+  end
+
+  def valid_backend_url?
+    uri = URI.parse(self.backend_url)
+    uri.scheme == "http" &&
+      uri.host.present? &&
+      uri.path.present? &&
+      uri.query.blank? &&
+      uri.fragment.blank?
+  rescue URI::InvalidURIError
+    false
+  end
 
   def ensure_no_linked_routes
     if Route.backend.find_all_by_backend_id(self.backend_id).any?
