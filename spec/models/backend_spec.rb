@@ -42,7 +42,30 @@ describe Backend do
         expect(@backend).to have(1).error_on(:backend_url)
       end
 
-      it "should look like a URL"
+      it "should accept an HTTP URL" do
+        @backend.backend_url = "http://foo.example.com/"
+        expect(@backend).to be_valid
+      end
+
+      it "should not accept an HTTPS URL" do
+        @backend.backend_url = "https://foo.example.com/"
+        expect(@backend).not_to be_valid
+        expect(@backend).to have(1).error_on(:backend_url)
+      end
+
+      it "should reject invalid URLs" do
+        [
+          "I'm not an URL",
+          "ftp://example.org/foo/bar",
+          "mailto:me@example.com",
+          "www.example.org/foo",
+          "/relative/url",
+        ].each do |url|
+          @backend.backend_url = url
+          expect(@backend).not_to be_valid
+          expect(@backend).to have(1).error_on(:backend_url)
+        end
+      end
     end
   end
 

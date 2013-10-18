@@ -7,7 +7,7 @@ class Backend
   ensure_index :backend_id, :unique => true
 
   validates :backend_id, :presence => true, :uniqueness => true, :format => {:with => /\A[a-z0-9-]*\z/}
-  validates :backend_url, :presence => true
+  validates :backend_url, :presence => true, :format => {:with => URI.regexp("http"), :allow_blank => true}
 
   before_destroy :ensure_no_linked_routes
 
