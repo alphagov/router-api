@@ -8,7 +8,7 @@ class Route
 
   ensure_index [[:incoming_path, 1], [:route_type, 1]], :unique => true
 
-  validates :incoming_path, :presence => true, :uniqueness => {:scope => :route_type}
+  validates :incoming_path, :uniqueness => {:scope => :route_type}
   validate :validate_incoming_path
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
   validates :handler, :inclusion => {:in => %w(backend)}
@@ -26,8 +26,9 @@ class Route
   private
 
   def validate_incoming_path
-    return if self.incoming_path.blank? # handled by presence validation
-    errors[:incoming_path] << "is not a valid absolute URL path" unless valid_incoming_path?
+    unless valid_incoming_path?
+      errors[:incoming_path] << "is not a valid absolute URL path"
+    end
   end
 
   def valid_incoming_path?
