@@ -134,4 +134,28 @@ describe Route do
       end
     end
   end
+
+  describe "as_json" do
+    before :each do
+      @route = FactoryGirl.build(:route)
+    end
+
+    it "should not include the mongo id in its json representation" do
+      expect(@route.as_json).not_to have_key("id")
+    end
+
+    it "should include details of errors if any" do
+      @route.handler = ""
+      @route.valid?
+      json_hash = @route.as_json
+      expect(json_hash).to have_key("errors")
+      expect(json_hash["errors"]).to eq({
+        :handler => ["is not included in the list"],
+      })
+    end
+
+    it "should not include the errors key when there are none" do
+      expect(@route.as_json).not_to have_key("errors")
+    end
+  end
 end

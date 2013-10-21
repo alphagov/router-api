@@ -1,6 +1,12 @@
 RouterApi::Application.routes.draw do
 
-  resources :backends, :only => [:show, :update, :destroy], :format => false
+  with_options :format => false do |r|
+    r.resources :backends, :only => [:show, :update, :destroy]
 
-  get "/healthcheck" => proc { [200, {}, ["OK"]] }, :format => false
+    r.get "/routes" => "routes#show"
+    r.put "/routes" => "routes#update"
+    r.delete "/routes" => "routes#destroy"
+
+    r.get "/healthcheck" => proc { [200, {}, ["OK"]] }
+  end
 end
