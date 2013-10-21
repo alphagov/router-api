@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "managing routes", :pending => true do
+describe "managing routes" do
 
   describe "fetching details of a route" do
     before :each do
@@ -51,7 +51,7 @@ describe "managing routes", :pending => true do
     end
 
     it "should return an error if given invalid data" do
-      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend"}
+      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", :backend_id => ""}
 
       expect(response.code.to_i).to eq(400)
       expect(JSON.parse(response.body)).to eq({
@@ -93,7 +93,7 @@ describe "managing routes", :pending => true do
     end
 
     it "should return an error if given invalid data" do
-      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend"}
+      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", "backend_id" => ""}
 
       expect(response.code.to_i).to eq(400)
       expect(JSON.parse(response.body)).to eq({

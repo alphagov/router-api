@@ -23,6 +23,13 @@ class Route
     self.handler == "backend"
   end
 
+  def as_json(options = nil)
+    super.tap do |h|
+      h.delete("id")
+      h["errors"] = self.errors.as_json if self.errors.any?
+    end
+  end
+
   private
 
   def validate_incoming_path
