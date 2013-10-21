@@ -11,7 +11,7 @@ class Backend
 
   before_destroy :ensure_no_linked_routes
 
-  def as_json
+  def as_json(options = nil)
     super.tap do |h|
       h.delete("id")
       h["errors"] = self.errors.as_json if self.errors.any?

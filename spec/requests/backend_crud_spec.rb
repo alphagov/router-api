@@ -39,7 +39,7 @@ describe "managing backends" do
     it "should return an error if given invalid data" do
       put_json "/backends/foo", :backend => {:backend_url => ""}
 
-      expect(response.code.to_i).to eq(422)
+      expect(response.code.to_i).to eq(400)
       expect(JSON.parse(response.body)).to eq({
         "backend_id" => "foo",
         "backend_url" => "",
@@ -77,7 +77,7 @@ describe "managing backends" do
       backend = FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://something.example.com/")
       put_json "/backends/foo", :backend => {:backend_url => ""}
 
-      expect(response.code.to_i).to eq(422)
+      expect(response.code.to_i).to eq(400)
       expect(JSON.parse(response.body)).to eq({
         "backend_id" => "foo",
         "backend_url" => "",
@@ -114,7 +114,7 @@ describe "managing backends" do
 
       delete "/backends/foo"
 
-      expect(response.code.to_i).to eq(422)
+      expect(response.code.to_i).to eq(400)
       expect(JSON.parse(response.body)).to eq({
         "backend_id" => "foo",
         "backend_url" => "http://foo.example.com/",
@@ -127,7 +127,7 @@ describe "managing backends" do
       expect(backend).to be
     end
 
-    it "should 404 for a non-existent route" do
+    it "should 404 for a non-existent backend" do
       delete "/backends/non-existent"
       expect(response.code.to_i).to eq(404)
     end
