@@ -36,7 +36,7 @@ On error a 400 status code will be returned, and the JSON response will include 
 ``` sh
 curl http://router-api.example.com/routes -v -X DELETE \
     -H 'Content-type: application/json' \
-    -d '{"route": {"incoming_path": "/foo", "route_type": "exact"}}`
+    -d '{"route": {"incoming_path": "/foo", "route_type": "exact"}}'
 ```
 
 This will delete the corresponding route.  If no route matches the JSON request, a 400 status codce will be returned.
