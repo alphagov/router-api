@@ -44,7 +44,7 @@ describe "managing backends" do
         "backend_id" => "foo",
         "backend_url" => "",
         "errors" => {
-          "backend_url" => ["can't be blank"],
+          "backend_url" => ["is not a valid HTTP URL"],
         }
       })
 
@@ -82,7 +82,7 @@ describe "managing backends" do
         "backend_id" => "foo",
         "backend_url" => "",
         "errors" => {
-          "backend_url" => ["can't be blank"],
+          "backend_url" => ["is not a valid HTTP URL"],
         }
       })
 
