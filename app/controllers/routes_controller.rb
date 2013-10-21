@@ -1,4 +1,5 @@
 class RoutesController < ApplicationController
+  before_filter :ensure_route_keys, :only => [:update, :destroy]
 
   def show
     @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
@@ -23,7 +24,15 @@ class RoutesController < ApplicationController
       @route.destroy
       render :json => @route
     else
-      render :text => "TODO: Error message", :status => 400
+      render :json => {"error" => "Route not found"}, :status => 400
+    end
+  end
+
+  private
+
+  def ensure_route_keys
+    unless params[:route].respond_to?(:has_key?) and params[:route].has_key?(:incoming_path) and params[:route].has_key?(:route_type)
+      render :json => {"error" => "Required route keys (incoming_path and route_type) missing"}, :status => 400
     end
   end
 end

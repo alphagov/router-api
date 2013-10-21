@@ -110,6 +110,14 @@ describe "managing routes" do
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
     end
+
+    it "should not blow up if not given the necessary route lookup keys" do
+      put_json "/routes", {}
+      expect(response.code.to_i).to eq(400)
+
+      put "/routes"
+      expect(response.code.to_i).to eq(400)
+    end
   end
 
   describe "deleting a route" do
@@ -138,6 +146,14 @@ describe "managing routes" do
       expect(response.code.to_i).to eq(400)
 
       delete_json "/routes", :route => {:incoming_path => "/foo", :route_type => "exact"}
+      expect(response.code.to_i).to eq(400)
+    end
+
+    it "should not blow up if not given the necessary route lookup keys" do
+      delete_json "/routes", {}
+      expect(response.code.to_i).to eq(400)
+
+      delete "/routes"
       expect(response.code.to_i).to eq(400)
     end
   end
