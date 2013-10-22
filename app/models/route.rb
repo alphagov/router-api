@@ -41,7 +41,7 @@ class Route
   def valid_incoming_path?
     return false unless self.incoming_path.starts_with?("/")
     uri = URI.parse(self.incoming_path)
-    uri.path == self.incoming_path
+    uri.path == self.incoming_path && self.incoming_path !~ %r{//} && self.incoming_path !~ %r{./\z}
   rescue URI::InvalidURIError
     false
   end
