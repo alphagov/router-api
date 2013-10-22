@@ -197,16 +197,5 @@ routes.each do |path, type, backend|
   route.save!
 end
 
-# Remove some previously seeded routes.
-# This can be removed once it's run on prod.
-[
-  %w(/performance/foo/api prefix),
-].each do |path, type|
-  if route = Route.find_by_incoming_path_and_route_type(path, type)
-    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
-    route.destroy
-  end
-end
-
 require 'router_reloader'
 RouterReloader.reload
