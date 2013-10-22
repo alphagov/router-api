@@ -1,5 +1,5 @@
 class RoutesController < ApplicationController
-  before_filter :ensure_route_keys, :only => [:update, :destroy]
+  before_filter :ensure_route_keys, :only => [:update]
   after_filter :reload_routes_if_needed, :only => [:update, :destroy]
 
   def show
@@ -20,15 +20,10 @@ class RoutesController < ApplicationController
   end
 
   def destroy
-    route_details = params[:route]
-    @route = Route.find_by_incoming_path_and_route_type(route_details[:incoming_path], route_details[:route_type])
-    if @route
-      @route.destroy
-      @routes_need_reloading = true
-      render :json => @route
-    else
-      render :json => {"error" => "Route not found"}, :status => 400
-    end
+    @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
+    @route.destroy
+    @routes_need_reloading = true
+    render :json => @route
   end
 
   private
