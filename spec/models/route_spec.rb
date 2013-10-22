@@ -57,6 +57,20 @@ describe Route do
           expect(@route).to have(1).error_on(:incoming_path)
         end
       end
+
+      it "should reject url paths with consecutive slashes or trailing slashes" do
+        [
+          "/foo//bar",
+          "/foo/bar///",
+          "//bar/baz",
+          "//",
+          "/foo/bar/",
+        ].each do |path|
+          @route.incoming_path = path
+          expect(@route).not_to be_valid
+          expect(@route).to have(1).error_on(:incoming_path)
+        end
+      end
     end
 
     describe "path uniqueness constraints" do
