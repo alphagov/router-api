@@ -1,7 +1,7 @@
 class BackendsController < ApplicationController
 
   before_filter :validate_slug
-  after_filter :reload_routes_if_needed, :only => [:update, :destroy]
+  after_filter :reload_routes_if_needed, :only => [:update]
 
   def show
     @backend = Backend.find_by_backend_id!(params[:id])
@@ -22,7 +22,6 @@ class BackendsController < ApplicationController
   def destroy
     @backend = Backend.find_by_backend_id!(params[:id])
     if @backend.destroy
-      @routes_need_reloading = true
       render :json => @backend
     else
       render :json => @backend, :status => 400

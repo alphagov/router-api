@@ -126,7 +126,8 @@ describe "managing backends" do
       backend = Backend.find_by_backend_id("foo")
       expect(backend).not_to be
 
-      expect(router_reload_http_stub).to have_been_requested
+      # No point reloading for a deleted backend as it can't have had any routes
+      expect(router_reload_http_stub).not_to have_been_requested
     end
 
     it "should not allow deletion of a backend with associated routes" do
