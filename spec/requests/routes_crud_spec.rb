@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe "managing routes" do
+  before :each do
+    setup_router_reload_http_stub
+  end
 
   describe "fetching details of a route" do
     before :each do
@@ -27,6 +30,10 @@ describe "managing routes" do
       get "/routes", :incoming_path => "/foo", :route_type => "exact"
       expect(response.code.to_i).to eq(404)
     end
+
+    after :each do
+      expect(router_reload_http_stub).not_to have_been_requested
+    end
   end
 
   describe "creating a route" do
@@ -48,6 +55,8 @@ describe "managing routes" do
       route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
+
+      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return an error if given invalid data" do
@@ -66,6 +75,8 @@ describe "managing routes" do
 
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).not_to be
+
+      expect(router_reload_http_stub).not_to have_been_requested
     end
   end
 
@@ -90,6 +101,8 @@ describe "managing routes" do
       route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("another-backend")
+
+      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return an error if given invalid data" do
@@ -109,6 +122,8 @@ describe "managing routes" do
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
+
+      expect(router_reload_http_stub).not_to have_been_requested
     end
 
     it "should not blow up if not given the necessary route lookup keys" do
@@ -117,6 +132,8 @@ describe "managing routes" do
 
       put "/routes"
       expect(response.code.to_i).to eq(400)
+
+      expect(router_reload_http_stub).not_to have_been_requested
     end
   end
 
@@ -139,6 +156,8 @@ describe "managing routes" do
 
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
       expect(route).not_to be
+
+      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return 400 for non-existent routes" do
@@ -147,6 +166,8 @@ describe "managing routes" do
 
       delete_json "/routes", :route => {:incoming_path => "/foo", :route_type => "exact"}
       expect(response.code.to_i).to eq(400)
+
+      expect(router_reload_http_stub).not_to have_been_requested
     end
 
     it "should not blow up if not given the necessary route lookup keys" do
@@ -155,6 +176,8 @@ describe "managing routes" do
 
       delete "/routes"
       expect(response.code.to_i).to eq(400)
+
+      expect(router_reload_http_stub).not_to have_been_requested
     end
   end
 end
