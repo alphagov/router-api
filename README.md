@@ -22,7 +22,7 @@ This will return the corresponding route in JSON format.
 The following will create/update a route entry:
 
 ``` sh
-curl http://router-api.example.com/routes -v -X PUT \
+curl http://router-api.example.com/routes -X PUT \
     -H 'Content-type: application/json' \
     -d '{"route": {"incoming_path": "/foo", "route_type": "exact", "handler": "backend", "backend_id": "foo"}}'
 ```
@@ -34,9 +34,7 @@ On error a 400 status code will be returned, and the JSON response will include 
 ##### Deleting a route:
 
 ``` sh
-curl http://router-api.example.com/routes -v -X DELETE \
-    -H 'Content-type: application/json' \
-    -d '{"route": {"incoming_path": "/foo", "route_type": "exact"}}'
+curl http://router-api.example.com/routes?incoming_path=/foo&route_type=exact -X DELETE
 ```
 
 This will delete the corresponding route.  If no route matches the JSON request, a 400 status codce will be returned.
@@ -56,7 +54,7 @@ Will return the backend details in JSON format.
 ##### Creating/updating a backend:
 
 ``` sh
-curl http://router-api.example.com/backends/foo -v -X PUT \
+curl http://router-api.example.com/backends/foo -X PUT \
     -H 'Content-type: application/json' \
     -d '{"backend": {"backend_url": "http://foo.example.com/"}}'
 ```
@@ -68,7 +66,7 @@ On validation error a 400 status code will be returned, and the resulting JSON d
 ##### Deleting a backend:
 
 ``` sh
-curl http://router-api.example.com/backends/foo -v -X DELETE
+curl http://router-api.example.com/backends/foo -X DELETE
 ```
 
 This will delete the backend with id 'foo'.  This will only be allowed if the backend has no associated routes.  A 400 status code will be returned if this is the case.

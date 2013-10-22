@@ -144,7 +144,7 @@ describe "managing routes" do
     end
 
     it "should delete the route" do
-      delete_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "exact"}
+      delete "/routes", :incoming_path => "/foo/bar", :route_type => "exact"
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -160,22 +160,12 @@ describe "managing routes" do
       expect(router_reload_http_stub).to have_been_requested
     end
 
-    it "should return 400 for non-existent routes" do
-      delete_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix"}
-      expect(response.code.to_i).to eq(400)
+    it "should return 404 for non-existent routes" do
+      delete "/routes", :incoming_path => "/foo/bar", :route_type => "prefix"
+      expect(response.code.to_i).to eq(404)
 
-      delete_json "/routes", :route => {:incoming_path => "/foo", :route_type => "exact"}
-      expect(response.code.to_i).to eq(400)
-
-      expect(router_reload_http_stub).not_to have_been_requested
-    end
-
-    it "should not blow up if not given the necessary route lookup keys" do
-      delete_json "/routes", {}
-      expect(response.code.to_i).to eq(400)
-
-      delete "/routes"
-      expect(response.code.to_i).to eq(400)
+      delete "/routes", :incoming_path => "/foo", :route_type => "exact"
+      expect(response.code.to_i).to eq(404)
 
       expect(router_reload_http_stub).not_to have_been_requested
     end
