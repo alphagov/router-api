@@ -43,16 +43,14 @@ routes = [
   %w(/ prefix frontend),
 
   %w(/sitemap.xml exact search),
-  # TODO: Fix the sitemap routes.
-  #} else if (req.url ~ "^/sitemap[^/]*.xml(\?.*)?$") {
-  %w(/sitemap prefix search),
+  %w(/sitemaps prefix search),
 
   %w(/bank-holidays prefix calendars),
-  %w(/bank-holidays.json prefix calendars),
+  %w(/bank-holidays.json exact calendars),
   %w(/gwyliau-banc prefix calendars),
-  %w(/gwyliau-banc.json prefix calendars),
+  %w(/gwyliau-banc.json exact calendars),
   %w(/when-do-the-clocks-change prefix calendars),
-  %w(/when-do-the-clocks-change.json prefix calendars),
+  %w(/when-do-the-clocks-change.json exact calendars),
 
   %w(/child-benefit-tax-calculator prefix calculators),
 
@@ -195,6 +193,20 @@ routes.each do |path, type, backend|
   route.handler = "backend"
   route.backend_id = backend
   route.save!
+end
+
+# Remove some previously seeded routes.
+# This can be removed once it's run on prod.
+[
+  %w(/sitemap prefix),
+  %w(/bank-holidays.json prefix),
+  %w(/gwyliau-banc.json prefix),
+  %w(/when-do-the-clocks-change.json prefix),
+].each do |path, type|
+  if route = Route.find_by_incoming_path_and_route_type(path, type)
+    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
+    route.destroy
+  end
 end
 
 require 'router_reloader'
