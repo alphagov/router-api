@@ -5,22 +5,34 @@ class Route
   key :route_type, String
   key :handler, String
   key :backend_id, String
+  key :redirect_to, String
+  key :redirect_type, String
 
   ensure_index [[:incoming_path, 1], [:route_type, 1]], :unique => true
 
   validates :incoming_path, :uniqueness => {:scope => :route_type}
   validate :validate_incoming_path
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
-  validates :handler, :inclusion => {:in => %w(backend)}
+  validates :handler, :inclusion => {:in => %w(backend redirect)}
   with_options :if => :backend? do |be|
     be.validates :backend_id, :presence => true
     be.validate :validate_backend_id
+  end
+
+  with_options :if => :redirect? do |be|
+    be.validates :redirect_to, :presence => true
+    be.validate :validate_redirect_to
+    be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
   end
 
   scope :backend, where(:handler => "backend")
 
   def backend?
     self.handler == "backend"
+  end
+
+  def redirect?
+    self.handler == "redirect"
   end
 
   def as_json(options = nil)
@@ -38,10 +50,25 @@ class Route
     end
   end
 
+  def validate_redirect_to
+    return unless self.redirect_to.present? # This is to short circuit nil values
+    unless valid_redirect_to?
+      errors[:redirect_to] << "is not a valid absolute URL path"
+    end
+  end
+
   def valid_incoming_path?
     return false unless self.incoming_path.starts_with?("/")
     uri = URI.parse(self.incoming_path)
     uri.path == self.incoming_path && self.incoming_path !~ %r{//} && self.incoming_path !~ %r{./\z}
+  rescue URI::InvalidURIError
+    false
+  end
+
+  def valid_redirect_to?
+    return false unless self.redirect_to.starts_with?("/")
+    uri = URI.parse(self.redirect_to)
+    uri.path == self.redirect_to && self.redirect_to !~ %r{//} && self.redirect_to !~ %r{./\z}
   rescue URI::InvalidURIError
     false
   end

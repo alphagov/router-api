@@ -9,5 +9,11 @@ FactoryGirl.define do
 
     factory :backend_route do
     end
+
+    factory :redirect_route do
+      handler "redirect"
+      redirect_to "/bar"
+      redirect_type "permanent"
+    end
   end
 end
