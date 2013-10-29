@@ -116,9 +116,6 @@ describe Route do
           @route.handler = type
           @route.valid?
           expect(@route).to have(0).errors_on(:handler)
-          @route.handler = 'fooey'
-          @route.valid?
-          expect(@route).to have(1).error_on(:handler)
         end
 
         @route.handler = "fooey"
