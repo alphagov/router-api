@@ -112,9 +112,10 @@ describe Route do
       end
 
       it "should only allow specific values" do
-        %w(backend).each do |type|
+        %w(backend redirect).each do |type|
           @route.handler = type
-          expect(@route).to be_valid
+          @route.valid?
+          expect(@route).to have(0).errors_on(:handler)
         end
 
         @route.handler = "fooey"
@@ -144,6 +145,25 @@ describe Route do
           @route.backend_id = "bar"
           expect(@route).not_to be_valid
           expect(@route).to have(1).error_on(:backend_id)
+        end
+      end
+    end
+    context "with handler set to 'redirect'" do
+      before :each do
+        @route = FactoryGirl.build(:redirect_route)
+      end
+
+      describe "on redirect_to" do
+        it "should be required" do
+          @route.redirect_to = ""
+          expect(@route).not_to be_valid
+          expect(@route).to have(1).error_on(:redirect_to)
+        end
+
+        it "should be a valid URL" do
+          @route.redirect_to = "\jkhsdfgjkhdjskfgh//fdf#th"
+          expect(@route).not_to be_valid
+          expect(@route).to have(1).error_on(:redirect_to)
         end
       end
     end
