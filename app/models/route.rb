@@ -45,30 +45,22 @@ class Route
   private
 
   def validate_incoming_path
-    unless valid_incoming_path?
+    unless valid_local_path?(self.incoming_path)
       errors[:incoming_path] << "is not a valid absolute URL path"
     end
   end
 
   def validate_redirect_to
     return unless self.redirect_to.present? # This is to short circuit nil values
-    unless valid_redirect_to?
+    unless valid_local_path?(self.redirect_to)
       errors[:redirect_to] << "is not a valid absolute URL path"
     end
   end
 
-  def valid_incoming_path?
-    return false unless self.incoming_path.starts_with?("/")
-    uri = URI.parse(self.incoming_path)
-    uri.path == self.incoming_path && self.incoming_path !~ %r{//} && self.incoming_path !~ %r{./\z}
-  rescue URI::InvalidURIError
-    false
-  end
-
-  def valid_redirect_to?
-    return false unless self.redirect_to.starts_with?("/")
-    uri = URI.parse(self.redirect_to)
-    uri.path == self.redirect_to && self.redirect_to !~ %r{//} && self.redirect_to !~ %r{./\z}
+  def valid_local_path?(path)
+    return false unless path.starts_with?("/")
+    uri = URI.parse(path)
+    uri.path == path && path !~ %r{//} && path !~ %r{./\z}
   rescue URI::InvalidURIError
     false
   end
