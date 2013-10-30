@@ -112,7 +112,7 @@ describe Route do
       end
 
       it "should only allow specific values" do
-        %w(backend redirect).each do |type|
+        %w(backend redirect gone).each do |type|
           @route.handler = type
           @route.valid?
           expect(@route).to have(0).errors_on(:handler)
@@ -148,6 +148,7 @@ describe Route do
         end
       end
     end
+
     context "with handler set to 'redirect'" do
       before :each do
         @route = FactoryGirl.build(:redirect_route)

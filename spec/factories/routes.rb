@@ -4,10 +4,11 @@ FactoryGirl.define do
   factory :route do
     route_type                "prefix"
     sequence(:incoming_path)  {|n| "/path/#{n}"}
-    handler                   "backend"
-    backend_id                { (Backend.first || create(:backend)).backend_id }
+    handler                   "gone"
 
     factory :backend_route do
+      handler       "backend"
+      backend_id    { (Backend.first || create(:backend)).backend_id }
     end
 
     factory :redirect_route do
