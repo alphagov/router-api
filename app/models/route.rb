@@ -10,10 +10,12 @@ class Route
 
   ensure_index [[:incoming_path, 1], [:route_type, 1]], :unique => true
 
+  HANDLERS = %w(backend redirect gone)
+
   validates :incoming_path, :uniqueness => {:scope => :route_type}
   validate :validate_incoming_path
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
-  validates :handler, :inclusion => {:in => %w(backend redirect gone)}
+  validates :handler, :inclusion => {:in => HANDLERS}
   with_options :if => :backend? do |be|
     be.validates :backend_id, :presence => true
     be.validate :validate_backend_id
@@ -25,14 +27,12 @@ class Route
     be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
   end
 
-  scope :backend, where(:handler => "backend")
+  HANDLERS.each do |handler|
+    scope handler, where(:handler => handler)
 
-  def backend?
-    self.handler == "backend"
-  end
-
-  def redirect?
-    self.handler == "redirect"
+    define_method "#{handler}?" do
+      self.handler == handler
+    end
   end
 
   def as_json(options = nil)
