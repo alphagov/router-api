@@ -61,7 +61,7 @@ class Route
       return true if Route.excluding(self).prefix.where(:incoming_path => "/#{segments.join('/')}").any?
       segments.pop
     end
-    Route.prefix.where(:incoming_path => "/").any?
+    Route.excluding(self).prefix.where(:incoming_path => "/").any?
   end
 
   private

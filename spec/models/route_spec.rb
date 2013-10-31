@@ -229,6 +229,11 @@ describe Route do
       FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "exact")
       expect(@route.has_parent_prefix_routes?).to be_false
     end
+
+    it "should be false for a prefix route at /" do
+      @route.update_attributes(:incoming_path => "/", :route_type => "prefix")
+      expect(@route.has_parent_prefix_routes?).to be_false
+    end
   end
 
   describe "soft_delete" do
