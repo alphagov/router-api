@@ -27,6 +27,9 @@ class Route
     be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
   end
 
+  scope :excluding, lambda {|route| where(:id => {:$ne => route.id}) }
+  scope :prefix, where(:route_type => "prefix")
+
   HANDLERS.each do |handler|
     scope handler, where(:handler => handler)
 
@@ -40,6 +43,23 @@ class Route
       h.delete("id")
       h["errors"] = self.errors.as_json if self.errors.any?
     end
+  end
+
+  def soft_delete
+    if self.has_parent_prefix_routes?
+      destroy
+    else
+      update_attributes(:handler => "gone", :backend_id => nil)
+    end
+  end
+
+  def has_parent_prefix_routes?
+    segments = self.incoming_path.split('/').reject(&:blank?)
+    while segments.any? do
+      return true if Route.excluding(self).prefix.where(:incoming_path => "/#{segments.join('/')}").any?
+      segments.pop
+    end
+    Route.prefix.where(:incoming_path => "/").any?
   end
 
   private

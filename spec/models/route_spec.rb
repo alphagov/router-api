@@ -193,4 +193,64 @@ describe Route do
       expect(@route.as_json).not_to have_key("errors")
     end
   end
+
+  describe "has_parent_prefix_routes?" do
+    before :each do
+      @route = FactoryGirl.create(:route, :incoming_path => "/foo/bar")
+    end
+
+    it "should be false with no parents" do
+      expect(@route.has_parent_prefix_routes?).to be_false
+    end
+
+    it "should be true with a parent prefix route" do
+      FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "prefix")
+      expect(@route.has_parent_prefix_routes?).to be_true
+    end
+
+    it "should be false with a parent exact route" do
+      FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "exact")
+      expect(@route.has_parent_prefix_routes?).to be_false
+    end
+
+    it "should be true with a prefix route at /" do
+      FactoryGirl.create(:route, :incoming_path => "/", :route_type => "prefix")
+      expect(@route.has_parent_prefix_routes?).to be_true
+    end
+
+    it "should be true for an exact route with a prefix route at the same path" do
+      @route.update_attributes!(:route_type => "exact")
+      FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "prefix")
+      expect(@route.has_parent_prefix_routes?).to be_true
+    end
+
+    it "should be false for a prefix route with an exact route at the same path" do
+      @route.update_attributes!(:route_type => "prefix")
+      FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "exact")
+      expect(@route.has_parent_prefix_routes?).to be_false
+    end
+  end
+
+  describe "soft_delete" do
+    before :each do
+      @route = FactoryGirl.create(:backend_route)
+    end
+
+    it "should destroy the route if it has a parent prefix route" do
+      @route.stub(:has_parent_prefix_routes?).and_return(true)
+      @route.soft_delete
+
+      r = Route.find_by_incoming_path_and_route_type(@route.incoming_path, @route.route_type)
+      expect(r).not_to be
+    end
+
+    it "should convert the route to a gone route otherwise" do
+      @route.stub(:has_parent_prefix_routes?).and_return(false)
+      @route.soft_delete
+
+      r = Route.find_by_incoming_path_and_route_type(@route.incoming_path, @route.route_type)
+      expect(r).to be
+      expect(r.handler).to eq("gone")
+    end
+  end
 end

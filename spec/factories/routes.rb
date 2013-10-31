@@ -16,5 +16,8 @@ FactoryGirl.define do
       redirect_to "/bar"
       redirect_type "permanent"
     end
+
+    factory :gone_route do
+    end
   end
 end
