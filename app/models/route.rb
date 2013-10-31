@@ -27,6 +27,8 @@ class Route
     be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
   end
 
+  after_create :cleanup_child_gone_routes
+
   scope :excluding, lambda {|route| where(:id => {:$ne => route.id}) }
   scope :prefix, where(:route_type => "prefix")
 
@@ -49,7 +51,7 @@ class Route
     if self.has_parent_prefix_routes?
       destroy
     else
-      update_attributes(:handler => "gone", :backend_id => nil)
+      update_attributes(:handler => "gone", :backend_id => nil, :redirect_to => nil, :redirect_type => nil)
     end
   end
 
@@ -90,5 +92,10 @@ class Route
     unless Backend.find_by_backend_id(self.backend_id)
       errors[:backend_id] << "does not exist"
     end
+  end
+
+  def cleanup_child_gone_routes
+    return unless self.route_type == "prefix"
+    Route.excluding(self).gone.where(:incoming_path => {:$regex => %r{\A#{Regexp.escape(self.incoming_path)}(/|\z)} }).destroy_all
   end
 end

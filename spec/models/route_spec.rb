@@ -253,4 +253,72 @@ describe Route do
       expect(r.handler).to eq("gone")
     end
   end
+
+  describe "cleaning child gone routes after create" do
+
+    it "should delete a child gone route after creating a route" do
+      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      expect(r).not_to be
+    end
+
+    it "should not delete anything if the creation fails" do
+      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix", :redirect_to => "not a url"))
+      expect(new_route.save).to be_false
+
+      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      expect(r).to be
+    end
+
+    it "should not delete anything if the created route is an exact route" do
+      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "exact"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      expect(r).to be
+    end
+
+    it "should not delete a child route that's not a gone route" do
+      child = FactoryGirl.create(:redirect_route, :incoming_path => "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      expect(r).to be
+    end
+
+    it "should not delete a route that's not a child" do
+      child1 = FactoryGirl.create(:redirect_route, :incoming_path => "/bar/baz")
+      child2 = FactoryGirl.create(:redirect_route, :incoming_path => "/foo/barbaz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(child1.incoming_path, child1.route_type)
+      expect(r).to be
+      r = Route.find_by_incoming_path_and_route_type(child2.incoming_path, child2.route_type)
+      expect(r).to be
+    end
+
+    it "should not delete itself when deleting routes" do
+      new_route = Route.new(FactoryGirl.attributes_for(:gone_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(new_route.incoming_path, new_route.route_type)
+      expect(r).to be
+    end
+
+    it "should delete an exact gone route with the same path as the created prefix route" do
+      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar", :route_type => "exact")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
+      new_route.save!
+
+      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      expect(r).not_to be
+    end
+  end
 end

@@ -49,9 +49,27 @@ describe "auto creation and deletion of gone routes" do
   end
 
   describe "cleaning up gone routes on prefix route creation" do
-    it "should delete a gone route when a parent prefix route is created"
+    before :each do
+      FactoryGirl.create(:backend, :backend_id => "a-backend")
+      FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar", :route_type => "exact")
+    end
 
-    it "should delete an exact gone route when a prefix route is created with the same path"
+    it "should delete a gone route when a parent prefix route is created" do
+      put_json "/routes", :route => {:incoming_path => "/foo", :route_type => "prefix", :handler => "backend", :backend_id => "a-backend"}
 
+      expect(response.code.to_i).to eq(201)
+
+      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      expect(route).not_to be
+    end
+
+    it "should delete an exact gone route when a prefix route is created with the same path" do
+      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", :backend_id => "a-backend"}
+
+      expect(response.code.to_i).to eq(201)
+
+      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      expect(route).not_to be
+    end
   end
 end
