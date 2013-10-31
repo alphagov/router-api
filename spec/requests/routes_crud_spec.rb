@@ -144,7 +144,7 @@ describe "managing routes" do
     end
 
     it "should delete the route" do
-      delete "/routes", :incoming_path => "/foo/bar", :route_type => "exact"
+      delete "/routes", :incoming_path => "/foo/bar", :route_type => "exact", :hard_delete => "true"
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({

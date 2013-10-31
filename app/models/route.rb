@@ -10,10 +10,12 @@ class Route
 
   ensure_index [[:incoming_path, 1], [:route_type, 1]], :unique => true
 
+  HANDLERS = %w(backend redirect gone)
+
   validates :incoming_path, :uniqueness => {:scope => :route_type}
   validate :validate_incoming_path
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
-  validates :handler, :inclusion => {:in => %w(backend redirect gone)}
+  validates :handler, :inclusion => {:in => HANDLERS}
   with_options :if => :backend? do |be|
     be.validates :backend_id, :presence => true
     be.validate :validate_backend_id
@@ -25,14 +27,17 @@ class Route
     be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
   end
 
-  scope :backend, where(:handler => "backend")
+  after_create :cleanup_child_gone_routes
 
-  def backend?
-    self.handler == "backend"
-  end
+  scope :excluding, lambda {|route| where(:id => {:$ne => route.id}) }
+  scope :prefix, where(:route_type => "prefix")
 
-  def redirect?
-    self.handler == "redirect"
+  HANDLERS.each do |handler|
+    scope handler, where(:handler => handler)
+
+    define_method "#{handler}?" do
+      self.handler == handler
+    end
   end
 
   def as_json(options = nil)
@@ -40,6 +45,23 @@ class Route
       h.delete("id")
       h["errors"] = self.errors.as_json if self.errors.any?
     end
+  end
+
+  def soft_delete
+    if self.has_parent_prefix_routes?
+      destroy
+    else
+      update_attributes(:handler => "gone", :backend_id => nil, :redirect_to => nil, :redirect_type => nil)
+    end
+  end
+
+  def has_parent_prefix_routes?
+    segments = self.incoming_path.split('/').reject(&:blank?)
+    while segments.any? do
+      return true if Route.excluding(self).prefix.where(:incoming_path => "/#{segments.join('/')}").any?
+      segments.pop
+    end
+    Route.excluding(self).prefix.where(:incoming_path => "/").any?
   end
 
   private
@@ -70,5 +92,10 @@ class Route
     unless Backend.find_by_backend_id(self.backend_id)
       errors[:backend_id] << "does not exist"
     end
+  end
+
+  def cleanup_child_gone_routes
+    return unless self.route_type == "prefix"
+    Route.excluding(self).gone.where(:incoming_path => {:$regex => %r{\A#{Regexp.escape(self.incoming_path)}(/|\z)} }).destroy_all
   end
 end

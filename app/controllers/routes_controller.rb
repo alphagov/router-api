@@ -21,7 +21,11 @@ class RoutesController < ApplicationController
 
   def destroy
     @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
-    @route.destroy
+    if params[:hard_delete] == "true"
+      @route.destroy
+    else
+      @route.soft_delete
+    end
     @routes_need_reloading = true
     render :json => @route
   end
