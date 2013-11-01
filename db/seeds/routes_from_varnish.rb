@@ -102,7 +102,6 @@ routes = [
   %w(/performance/tax-disc/api prefix publicapi),
   %w(/performance/test/api prefix publicapi),
 
-  %w(/performance exact datainsight-frontend),
   %w(/performance/dashboard prefix datainsight-frontend),
   %w(/performance/transactions-explorer prefix transactions-explorer),
   %w(/performance prefix limelight),

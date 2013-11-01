@@ -37,7 +37,7 @@ On error a 400 status code will be returned, and the JSON response will include 
 curl http://router-api.example.com/routes?incoming_path=/foo&route_type=exact -X DELETE
 ```
 
-This will delete the corresponding route.  If no route matches the JSON request, a 400 status codce will be returned.
+This will delete the corresponding route.  If no route matches the JSON request, a 400 status code will be returned.
 
 ### Backends
 
