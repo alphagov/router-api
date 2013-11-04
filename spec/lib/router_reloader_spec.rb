@@ -59,11 +59,11 @@ describe RouterReloader do
         ENV['ENABLE_ROUTER_RELOADING'] = @old_env
       end
 
-      it "should not attempt to trigger a reload" do
+      it "should not attempt to trigger a reload, and return true" do
         r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(:status => 200)
         r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(:status => 200)
 
-        RouterReloader.reload
+        expect(RouterReloader.reload).to be_true
 
         expect(r1).not_to have_been_requested
         expect(r2).not_to have_been_requested
