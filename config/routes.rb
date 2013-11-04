@@ -6,6 +6,7 @@ RouterApi::Application.routes.draw do
     r.get "/routes" => "routes#show"
     r.put "/routes" => "routes#update"
     r.delete "/routes" => "routes#destroy"
+    r.post "/routes/commit" => "routes#commit"
 
     r.get "/healthcheck" => proc { [200, {}, ["OK"]] }
   end

@@ -16,18 +16,18 @@ describe RouterReloader do
         ENV['ENABLE_ROUTER_RELOADING'] = @old_env
       end
 
-      it "should POST to the reload endpoint on all the configured routers" do
+      it "should POST to the reload endpoint on all the configured routers, and return true" do
         r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(:status => 200)
         r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(:status => 200)
 
-        RouterReloader.reload
+        expect(RouterReloader.reload).to be_true
 
         expect(r1).to have_been_requested.once
         expect(r2).to have_been_requested.once
       end
 
       context "error handling" do
-        it "should send an exception notification on HTTP errors" do
+        it "should send an exception notification, and return false on HTTP errors" do
           r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(:status => 401, :body => "Authorisation required")
           r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(:status => 404, :body => "Not found")
 
@@ -37,7 +37,7 @@ describe RouterReloader do
             expect(errors[0]).to eq({:url => "http://foo.example.com:1234/reload", :status => "401", :body => "Authorisation required"})
             expect(errors[1]).to eq({:url => "http://bar.example.com:4321/reload", :status => "404", :body => "Not found"})
           }
-          RouterReloader.reload
+          expect(RouterReloader.reload).to be_false
         end
 
         it "should still reload subsequent hosts on error" do

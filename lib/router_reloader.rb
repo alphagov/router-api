@@ -25,7 +25,9 @@ class RouterReloader
         RuntimeError.new("Failed to trigger reload on some routers"),
         :data => { :errors => @errors.map {|url, resp| {:url => url, :status => resp.code, :body => resp.body} } }
       )
+      return false
     end
+    true
   end
 
   def should_reload?

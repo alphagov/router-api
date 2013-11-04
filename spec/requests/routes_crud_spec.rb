@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe "managing routes" do
-  before :each do
-    setup_router_reload_http_stub
-  end
-
   describe "fetching details of a route" do
     before :each do
       FactoryGirl.create(:backend, :backend_id => "a-backend")
@@ -30,10 +26,6 @@ describe "managing routes" do
       get "/routes", :incoming_path => "/foo", :route_type => "exact"
       expect(response.code.to_i).to eq(404)
     end
-
-    after :each do
-      expect(router_reload_http_stub).not_to have_been_requested
-    end
   end
 
   describe "creating a route" do
@@ -55,8 +47,6 @@ describe "managing routes" do
       route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
-
-      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return an error if given invalid data" do
@@ -75,8 +65,6 @@ describe "managing routes" do
 
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).not_to be
-
-      expect(router_reload_http_stub).not_to have_been_requested
     end
   end
 
@@ -101,8 +89,6 @@ describe "managing routes" do
       route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("another-backend")
-
-      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return an error if given invalid data" do
@@ -122,8 +108,6 @@ describe "managing routes" do
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
-
-      expect(router_reload_http_stub).not_to have_been_requested
     end
 
     it "should not blow up if not given the necessary route lookup keys" do
@@ -132,8 +116,6 @@ describe "managing routes" do
 
       put "/routes"
       expect(response.code.to_i).to eq(400)
-
-      expect(router_reload_http_stub).not_to have_been_requested
     end
   end
 
@@ -156,8 +138,6 @@ describe "managing routes" do
 
       route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
       expect(route).not_to be
-
-      expect(router_reload_http_stub).to have_been_requested
     end
 
     it "should return 404 for non-existent routes" do
@@ -166,8 +146,27 @@ describe "managing routes" do
 
       delete "/routes", :incoming_path => "/foo", :route_type => "exact"
       expect(response.code.to_i).to eq(404)
+    end
+  end
 
-      expect(router_reload_http_stub).not_to have_been_requested
+  describe "committing the routes" do
+    before :each do
+      setup_router_reload_http_stub
+    end
+
+    it "should trigger a reload on the router, and return success" do
+      post "/routes/commit"
+      expect(response.code.to_i).to eq(200)
+
+      expect(router_reload_http_stub).to have_been_requested
+    end
+
+    it "should return an error if reloading fails" do
+      stub_router_reload_error
+
+      post "/routes/commit"
+      expect(response.code.to_i).to eq(500)
+      expect(response.body).to eq("Failed to reload all routers")
     end
   end
 end

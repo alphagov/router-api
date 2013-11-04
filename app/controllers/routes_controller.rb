@@ -1,6 +1,7 @@
+require 'router_reloader'
+
 class RoutesController < ApplicationController
   before_filter :ensure_route_keys, :only => [:update]
-  after_filter :reload_routes_if_needed, :only => [:update, :destroy]
 
   def show
     @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
@@ -12,7 +13,6 @@ class RoutesController < ApplicationController
     @route = Route.find_or_initialize_by_incoming_path_and_route_type(route_details.delete(:incoming_path), route_details.delete(:route_type))
     status_code = @route.new_record? ? 201 : 200
     if @route.update_attributes(route_details)
-      @routes_need_reloading = true
       render :json => @route, :status => status_code
     else
       render :json => @route, :status => 400
@@ -26,8 +26,15 @@ class RoutesController < ApplicationController
     else
       @route.soft_delete
     end
-    @routes_need_reloading = true
     render :json => @route
+  end
+
+  def commit
+    if RouterReloader.reload
+      render :text => "Router reloaded"
+    else
+      render :text => "Failed to reload all routers", :status => 500
+    end
   end
 
   private

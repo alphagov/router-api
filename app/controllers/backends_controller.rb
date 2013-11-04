@@ -1,7 +1,6 @@
 class BackendsController < ApplicationController
 
   before_filter :validate_slug
-  after_filter :reload_routes_if_needed, :only => [:update]
 
   def show
     @backend = Backend.find_by_backend_id!(params[:id])
@@ -12,7 +11,6 @@ class BackendsController < ApplicationController
     @backend = Backend.find_or_initialize_by_backend_id(params[:id])
     status_code = @backend.new_record? ? 201 : 200
     if @backend.update_attributes(params[:backend])
-      @routes_need_reloading = status_code == 200
       render :json => @backend, :status => status_code
     else
       render :json => @backend, :status => 400
