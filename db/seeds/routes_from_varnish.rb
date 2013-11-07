@@ -72,7 +72,7 @@ routes = [
 
   %w(/licence-finder prefix licencefinder),
 
-  %w(/business-finder-support-finder prefix businesssupportfinder),
+  %w(/business-finance-support-finder prefix businesssupportfinder),
 
   %w(/apply-for-a-licence prefix licensify),
 
@@ -201,6 +201,7 @@ end
   %w(/bank-holidays.json prefix),
   %w(/gwyliau-banc.json prefix),
   %w(/when-do-the-clocks-change.json prefix),
+  %w(/business-finder-support-finder prefix),
 ].each do |path, type|
   if route = Route.find_by_incoming_path_and_route_type(path, type)
     puts "Removing route #{path} (#{type}) => #{route.backend_id}"
