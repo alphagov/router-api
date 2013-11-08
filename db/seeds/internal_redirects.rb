@@ -17,6 +17,3 @@ internal_redirects.each do |from, to|
   route.redirect_type = 'permanent'
   route.save!
 end
-
-require 'router_reloader'
-RouterReloader.reload
