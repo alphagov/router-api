@@ -17,6 +17,3 @@ external_redirects.each do |from, to|
   route.redirect_type = 'temporary'
   route.save :validate => false
 end
-
-require 'router_reloader'
-RouterReloader.reload
