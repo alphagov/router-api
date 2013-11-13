@@ -40,8 +40,6 @@ backends.each do |backend|
 end
 
 routes = [
-  %w(/ prefix frontend),
-
   %w(/sitemap.xml exact search),
   %w(/sitemaps prefix search),
 
@@ -197,11 +195,7 @@ end
 # Remove some previously seeded routes.
 # This can be removed once it's run on prod.
 [
-  %w(/sitemap prefix),
-  %w(/bank-holidays.json prefix),
-  %w(/gwyliau-banc.json prefix),
-  %w(/when-do-the-clocks-change.json prefix),
-  %w(/business-finder-support-finder prefix),
+  %w(/ prefix),
 ].each do |path, type|
   if route = Route.find_by_incoming_path_and_route_type(path, type)
     puts "Removing route #{path} (#{type}) => #{route.backend_id}"
