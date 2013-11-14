@@ -13,7 +13,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(200)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).to be
       expect(route.handler).to eq("gone")
     end
@@ -23,7 +23,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(200)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).not_to be
     end
 
@@ -33,7 +33,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(200)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).not_to be
     end
 
@@ -43,7 +43,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(200)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).not_to be
     end
   end
@@ -59,7 +59,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(201)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).not_to be
     end
 
@@ -68,7 +68,7 @@ describe "auto creation and deletion of gone routes" do
 
       expect(response.code.to_i).to eq(201)
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "exact").first
       expect(route).not_to be
     end
   end

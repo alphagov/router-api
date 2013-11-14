@@ -31,7 +31,7 @@ describe Backend do
         @backend.backend_id = 'a-backend'
         expect {
           @backend.save :validate => false
-        }.to raise_error(Mongo::OperationFailure)
+        }.to raise_error(Moped::Errors::OperationFailure)
       end
     end
 
@@ -79,7 +79,7 @@ describe Backend do
     end
 
     it "should not include the mongo id in its json representation" do
-      expect(@backend.as_json).not_to have_key("id")
+      expect(@backend.as_json).not_to have_key("_id")
     end
 
     it "should include details of errors if any" do
@@ -107,7 +107,7 @@ describe Backend do
 
       expect(@backend.destroy).to be_false
 
-      backend = Backend.find_by_backend_id(@backend.backend_id)
+      backend = Backend.where(:backend_id => @backend.backend_id).first
       expect(backend).to be
     end
 
@@ -117,7 +117,7 @@ describe Backend do
 
       expect(@backend.destroy).to be_true
 
-      backend = Backend.find_by_backend_id(@backend.backend_id)
+      backend = Backend.where(:backend_id =>@backend.backend_id).first
       expect(backend).not_to be
     end
   end

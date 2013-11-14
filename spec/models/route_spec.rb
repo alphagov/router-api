@@ -100,7 +100,7 @@ describe Route do
         @route.incoming_path = "/foo"
         expect {
           @route.save :validate => false
-        }.to raise_error(Mongo::OperationFailure)
+        }.to raise_error(Moped::Errors::OperationFailure)
       end
     end
 
@@ -172,11 +172,15 @@ describe Route do
 
   describe "as_json" do
     before :each do
-      @route = FactoryGirl.build(:route)
+      @route = FactoryGirl.build(:redirect_route)
     end
 
     it "should not include the mongo id in its json representation" do
-      expect(@route.as_json).not_to have_key("id")
+      expect(@route.as_json).not_to have_key("_id")
+    end
+
+    it "should not include fields with nil values" do
+      expect(@route.as_json).not_to have_key("backend_id")
     end
 
     it "should include details of errors if any" do
@@ -245,7 +249,7 @@ describe Route do
       @route.stub(:has_parent_prefix_routes?).and_return(true)
       @route.soft_delete
 
-      r = Route.find_by_incoming_path_and_route_type(@route.incoming_path, @route.route_type)
+      r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
       expect(r).not_to be
     end
 
@@ -253,7 +257,7 @@ describe Route do
       @route.stub(:has_parent_prefix_routes?).and_return(false)
       @route.soft_delete
 
-      r = Route.find_by_incoming_path_and_route_type(@route.incoming_path, @route.route_type)
+      r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
       expect(r).to be
       expect(r.handler).to eq("gone")
     end
@@ -266,7 +270,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).not_to be
     end
 
@@ -275,7 +279,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix", :redirect_to => "not a url"))
       expect(new_route.save).to be_false
 
-      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).to be
     end
 
@@ -284,7 +288,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "exact"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).to be
     end
 
@@ -293,7 +297,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).to be
     end
 
@@ -303,9 +307,9 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(child1.incoming_path, child1.route_type)
+      r = Route.where(:incoming_path => child1.incoming_path, :route_type => child1.route_type).first
       expect(r).to be
-      r = Route.find_by_incoming_path_and_route_type(child2.incoming_path, child2.route_type)
+      r = Route.where(:incoming_path => child2.incoming_path, :route_type => child2.route_type).first
       expect(r).to be
     end
 
@@ -313,7 +317,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:gone_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(new_route.incoming_path, new_route.route_type)
+      r = Route.where(:incoming_path => new_route.incoming_path, :route_type => new_route.route_type).first
       expect(r).to be
     end
 
@@ -322,7 +326,7 @@ describe Route do
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
       new_route.save!
 
-      r = Route.find_by_incoming_path_and_route_type(child.incoming_path, child.route_type)
+      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).not_to be
     end
   end

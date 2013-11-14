@@ -44,7 +44,7 @@ describe "managing routes" do
         "backend_id" => "a-backend",
       })
 
-      route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
+      route = Route.backend.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
     end
@@ -63,7 +63,7 @@ describe "managing routes" do
         },
       })
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
       expect(route).not_to be
     end
   end
@@ -86,7 +86,7 @@ describe "managing routes" do
         "backend_id" => "another-backend",
       })
 
-      route = Route.backend.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
+      route = Route.backend.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
       expect(route).to be
       expect(route.backend_id).to eq("another-backend")
     end
@@ -105,7 +105,7 @@ describe "managing routes" do
         },
       })
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "prefix")
+      route = Route.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
     end
@@ -136,7 +136,7 @@ describe "managing routes" do
         "backend_id" => "a-backend",
       })
 
-      route = Route.find_by_incoming_path_and_route_type("/foo/bar", "exact")
+      route = Route.where(:incoming_path => "/foo/bar", :routes => "exact").first
       expect(route).not_to be
     end
 

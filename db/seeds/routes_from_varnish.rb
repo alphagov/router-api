@@ -34,7 +34,7 @@ backends = [
 backends.each do |backend|
   url = "http://#{backend}.#{ENV['GOVUK_APP_DOMAIN']}/"
   puts "Backend #{backend} => #{url}"
-  be = Backend.find_or_initialize_by_backend_id(backend)
+  be = Backend.find_or_initialize_by(:backend_id => backend)
   be.backend_url = url
   be.save!
 end
@@ -185,8 +185,8 @@ end
 
 routes.each do |path, type, backend|
   puts "Route #{path} (#{type}) => #{backend}"
-  abort "Invalid backend #{backend}" unless Backend.find_by_backend_id(backend)
-  route = Route.find_or_initialize_by_incoming_path_and_route_type(path, type)
+  abort "Invalid backend #{backend}" unless Backend.where(:backend_id => backend).any?
+  route = Route.find_or_initialize_by(:incoming_path => path, :route_type => type)
   route.handler = "backend"
   route.backend_id = backend
   route.save!
@@ -197,7 +197,7 @@ end
 [
   %w(/ prefix),
 ].each do |path, type|
-  if route = Route.find_by_incoming_path_and_route_type(path, type)
+  if route = Route.where(:incoming_path => path, :route_type => type).first
     puts "Removing route #{path} (#{type}) => #{route.backend_id}"
     route.destroy
   end

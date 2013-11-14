@@ -11,7 +11,7 @@ internal_redirects = [
 ]
 internal_redirects.each do |from, to|
   puts "Adding redirect from #{from} (exact) -> #{to}"
-  route = Route.find_or_initialize_by_incoming_path_and_route_type(from, 'exact')
+  route = Route.find_or_initialize_by(:incoming_path => from, :route_type => 'exact')
   route.handler = 'redirect'
   route.redirect_to = to
   route.redirect_type = 'permanent'
