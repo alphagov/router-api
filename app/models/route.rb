@@ -1,14 +1,14 @@
 class Route
-  include MongoMapper::Document
+  include Mongoid::Document
 
-  key :incoming_path, String
-  key :route_type, String
-  key :handler, String
-  key :backend_id, String
-  key :redirect_to, String
-  key :redirect_type, String
+  field :incoming_path, :type => String
+  field :route_type, :type => String
+  field :handler, :type => String
+  field :backend_id, :type => String
+  field :redirect_to, :type => String
+  field :redirect_type, :type => String
 
-  ensure_index [[:incoming_path, 1], [:route_type, 1]], :unique => true
+  index({:incoming_path => 1, :route_type => 1}, :unique => true)
 
   HANDLERS = %w(backend redirect gone)
 
@@ -42,7 +42,8 @@ class Route
 
   def as_json(options = nil)
     super.tap do |h|
-      h.delete("id")
+      h.delete("_id")
+      h.delete_if {|k,v| v.nil? }
       h["errors"] = self.errors.as_json if self.errors.any?
     end
   end
@@ -89,7 +90,7 @@ class Route
 
   def validate_backend_id
     return if self.backend_id.blank? # handled by presence validation
-    unless Backend.find_by_backend_id(self.backend_id)
+    unless Backend.where(:backend_id => self.backend_id).first
       errors[:backend_id] << "does not exist"
     end
   end

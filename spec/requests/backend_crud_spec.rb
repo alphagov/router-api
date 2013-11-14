@@ -31,7 +31,7 @@ describe "managing backends" do
         "backend_url" => "http://foo.example.com/",
       })
 
-      backend = Backend.find_by_backend_id("foo")
+      backend = Backend.where(:backend_id => "foo").first
       expect(backend).to be
       expect(backend.backend_url).to eq("http://foo.example.com/")
     end
@@ -48,7 +48,7 @@ describe "managing backends" do
         }
       })
 
-      backend = Backend.find_by_backend_id("foo")
+      backend = Backend.where(:backend_id => "foo").first
       expect(backend).to be_nil
     end
 
@@ -105,7 +105,7 @@ describe "managing backends" do
         "backend_url" => "http://foo.example.com/",
       })
 
-      backend = Backend.find_by_backend_id("foo")
+      backend = Backend.where(:backend_id => "foo").first
       expect(backend).not_to be
     end
 
@@ -123,7 +123,7 @@ describe "managing backends" do
         },
       })
 
-      backend = Backend.find_by_backend_id("foo")
+      backend = Backend.where(:backend_id => "foo").first
       expect(backend).to be
     end
 

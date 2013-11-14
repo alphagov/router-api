@@ -2,10 +2,9 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.15'
 
-gem 'mongo_mapper', '0.13.0.beta2'
-gem 'bson_ext', '1.9.2'
-gem 'logstasher', '0.3.0'
+gem 'mongoid', '3.1.5'
 
+gem 'logstasher', '0.3.0'
 gem 'unicorn', '4.6.3'
 gem 'exception_notification', '4.0.1'
 gem 'aws-ses', '0.5.0', :require => 'aws/ses'

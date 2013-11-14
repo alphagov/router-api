@@ -4,13 +4,13 @@ class RoutesController < ApplicationController
   before_filter :ensure_route_keys, :only => [:update]
 
   def show
-    @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
+    @route = Route.find_by(:incoming_path => params[:incoming_path], :route_type => params[:route_type])
     render :json => @route
   end
 
   def update
     route_details = params[:route]
-    @route = Route.find_or_initialize_by_incoming_path_and_route_type(route_details.delete(:incoming_path), route_details.delete(:route_type))
+    @route = Route.find_or_initialize_by(:incoming_path => route_details.delete(:incoming_path), :route_type => route_details.delete(:route_type))
     status_code = @route.new_record? ? 201 : 200
     if @route.update_attributes(route_details)
       render :json => @route, :status => status_code
@@ -20,7 +20,7 @@ class RoutesController < ApplicationController
   end
 
   def destroy
-    @route = Route.find_by_incoming_path_and_route_type!(params[:incoming_path], params[:route_type])
+    @route = Route.find_by(:incoming_path => params[:incoming_path], :route_type => params[:route_type])
     if params[:hard_delete] == "true"
       @route.destroy
     else
