@@ -33,6 +33,13 @@ routes = [
 
   %w(/trade-tariff prefix tariff),
 
+  %w(/performance/deposit-foreign-marriage prefix spotlight),
+  %w(/performance/pay-legalisation-post prefix spotlight),
+  %w(/performance/pay-legalisation-drop-off prefix spotlight),
+  %w(/performance/pay-foreign-marriage-certificates prefix spotlight),
+  %w(/performance/pay-register-birth-abroad prefix spotlight),
+  %w(/performance/pay-register-death-abroad prefix spotlight),
+
   %w(/performance/deposit-foreign-marriage/api prefix publicapi),
   %w(/performance/vehicle-licensing/api prefix publicapi),
   %w(/performance/government/api prefix publicapi),
