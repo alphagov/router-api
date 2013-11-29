@@ -16,6 +16,7 @@ backends = [
   'licensify',
   'limelight',
   'publicapi',
+  'spotlight',
   'tariff',
   'transactions-explorer',
 ]
