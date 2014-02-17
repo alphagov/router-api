@@ -4,7 +4,7 @@ gem 'rails', '3.2.16'
 
 gem 'mongoid', '3.1.5'
 
-gem 'logstasher', '0.4.1'
+gem 'logstasher', '0.4.8'
 gem 'unicorn', '4.6.3'
 gem 'exception_notification', '4.0.1'
 gem 'aws-ses', '0.5.0', :require => 'aws/ses'
