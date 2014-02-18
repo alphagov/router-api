@@ -33,11 +33,6 @@ GEM
       builder
       multi_json
     arel (3.0.3)
-    aws-ses (0.5.0)
-      builder
-      mail (> 2.2.5)
-      mime-types
-      xml-simple
     builder (3.0.4)
     ci_reporter (1.9.0)
       builder (>= 2.1.2)
@@ -46,9 +41,6 @@ GEM
     database_cleaner (1.2.0)
     diff-lcs (1.2.4)
     erubis (2.7.0)
-    exception_notification (4.0.1)
-      actionmailer (>= 3.0.4)
-      activesupport (>= 3.0.4)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
@@ -137,17 +129,14 @@ GEM
     webmock (1.15.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
-    xml-simple (1.1.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   airbrake (= 3.1.15)
-  aws-ses (= 0.5.0)
   ci_reporter (= 1.9.0)
   database_cleaner (= 1.2.0)
-  exception_notification (= 4.0.1)
   factory_girl_rails (= 4.2.1)
   logstasher (= 0.4.8)
   mongoid (= 3.1.5)
