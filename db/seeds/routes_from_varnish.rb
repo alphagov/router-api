@@ -11,7 +11,6 @@ end
 
 backends = [
   'canary-frontend',
-  'datainsight-frontend',
   'frontend',
   'licensify',
   'limelight',
@@ -58,7 +57,6 @@ routes = [
   %w(/performance/tax-disc/api prefix publicapi),
   %w(/performance/test/api prefix publicapi),
 
-  %w(/performance/dashboard prefix datainsight-frontend),
   %w(/performance/transactions-explorer prefix transactions-explorer),
   %w(/performance prefix limelight),
 
