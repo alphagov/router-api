@@ -9,6 +9,8 @@ API endpoints
 
 ### Routes
 
+Information about the route data structure can be found in the [router repository](https://github.com/alphagov/router#routes).
+
 ##### Getting details of a route:
 
 ``` sh
@@ -49,7 +51,7 @@ This will trigger a router reload and cause any changes to the route to take eff
 
 ### Backends
 
-Backends represent an application that the router can route requests to.  They are referenced by entries in the routes collection.
+Backends represent an application that the router can route requests to.  They are referenced by entries in the routes collection. Information about the backend data structure can be found in the [router repository](https://github.com/alphagov/router#backends).
 
 ##### Getting details for a backend:
 
