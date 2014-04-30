@@ -33,32 +33,14 @@ routes = [
 
   %w(/trade-tariff prefix tariff),
 
-  %w(/performance/deposit-foreign-marriage prefix spotlight),
-  %w(/performance/pay-legalisation-post prefix spotlight),
-  %w(/performance/pay-legalisation-drop-off prefix spotlight),
-  %w(/performance/pay-foreign-marriage-certificates prefix spotlight),
-  %w(/performance/pay-register-birth-abroad prefix spotlight),
-  %w(/performance/pay-register-death-abroad prefix spotlight),
+  %w(/performance/services exact limelight),
 
-  %w(/performance/deposit-foreign-marriage/api prefix publicapi),
-  %w(/performance/vehicle-licensing/api prefix publicapi),
-  %w(/performance/government/api prefix publicapi),
-  %w(/performance/hmrc_preview/api prefix publicapi),
-  %w(/performance/licence_finder/api prefix publicapi),
+  %w(/performance/licensing prefix limelight),
   %w(/performance/licensing/api prefix publicapi),
-  %w(/performance/land-registry/api prefix publicapi),
-  %w(/performance/lasting-power-of-attorney/api prefix publicapi),
-  %w(/performance/pay-foreign-marriage-certificates/api prefix publicapi),
-  %w(/performance/pay-legalisation-drop-off/api prefix publicapi),
-  %w(/performance/pay-legalisation-post/api prefix publicapi),
-  %w(/performance/pay-register-birth-abroad/api prefix publicapi),
-  %w(/performance/pay-register-death-abroad/api prefix publicapi),
-  %w(/performance/sorn/api prefix publicapi),
-  %w(/performance/tax-disc/api prefix publicapi),
-  %w(/performance/test/api prefix publicapi),
 
   %w(/performance/transactions-explorer prefix transactions-explorer),
-  %w(/performance prefix limelight),
+
+  %w(/performance prefix spotlight),
 
   %w(/__canary__ exact canary-frontend),
 ]
