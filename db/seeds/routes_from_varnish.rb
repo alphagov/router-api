@@ -33,8 +33,6 @@ routes = [
 
   %w(/trade-tariff prefix tariff),
 
-  %w(/performance/services exact limelight),
-
   %w(/performance/licensing prefix limelight),
   %w(/performance/licensing/api prefix publicapi),
 
