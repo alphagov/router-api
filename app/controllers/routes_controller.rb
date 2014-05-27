@@ -15,7 +15,7 @@ class RoutesController < ApplicationController
     if @route.update_attributes(route_details)
       render :json => @route, :status => status_code
     else
-      render :json => @route, :status => 400
+      render :json => @route, :status => 422
     end
   end
 
@@ -41,7 +41,7 @@ class RoutesController < ApplicationController
 
   def ensure_route_keys
     unless params[:route].respond_to?(:has_key?) and params[:route].has_key?(:incoming_path) and params[:route].has_key?(:route_type)
-      render :json => {"error" => "Required route keys (incoming_path and route_type) missing"}, :status => 400
+      render :json => {"error" => "Required route keys (incoming_path and route_type) missing"}, :status => 422
     end
   end
 end

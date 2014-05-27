@@ -52,7 +52,7 @@ describe "managing routes" do
     it "should return an error if given invalid data" do
       put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", :backend_id => ""}
 
-      expect(response.code.to_i).to eq(400)
+      expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq({
         "incoming_path" => "/foo/bar",
         "route_type" => "prefix",
@@ -94,7 +94,7 @@ describe "managing routes" do
     it "should return an error if given invalid data" do
       put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", "backend_id" => ""}
 
-      expect(response.code.to_i).to eq(400)
+      expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq({
         "incoming_path" => "/foo/bar",
         "route_type" => "prefix",
@@ -112,10 +112,10 @@ describe "managing routes" do
 
     it "should not blow up if not given the necessary route lookup keys" do
       put_json "/routes", {}
-      expect(response.code.to_i).to eq(400)
+      expect(response.code.to_i).to eq(422)
 
       put "/routes"
-      expect(response.code.to_i).to eq(400)
+      expect(response.code.to_i).to eq(422)
     end
   end
 

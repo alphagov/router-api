@@ -13,7 +13,7 @@ class BackendsController < ApplicationController
     if @backend.update_attributes(params[:backend])
       render :json => @backend, :status => status_code
     else
-      render :json => @backend, :status => 400
+      render :json => @backend, :status => 422
     end
   end
 
@@ -22,7 +22,7 @@ class BackendsController < ApplicationController
     if @backend.destroy
       render :json => @backend
     else
-      render :json => @backend, :status => 400
+      render :json => @backend, :status => 422
     end
   end
 
