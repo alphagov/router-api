@@ -12,11 +12,8 @@ class RoutesController < ApplicationController
     route_details = params[:route]
     @route = Route.find_or_initialize_by(:incoming_path => route_details.delete(:incoming_path), :route_type => route_details.delete(:route_type))
     status_code = @route.new_record? ? 201 : 200
-    if @route.update_attributes(route_details)
-      render :json => @route, :status => status_code
-    else
-      render :json => @route, :status => 422
-    end
+    @route.update_attributes(route_details) or status_code = 422
+    render :json => @route, :status => status_code
   end
 
   def destroy
