@@ -14,7 +14,6 @@ class RouterReloader
   end
 
   def reload
-    return true unless should_reload?
     @errors = []
     @urls.each do |url|
       response = Net::HTTP.post_form(URI.parse(url), {})
@@ -28,9 +27,5 @@ class RouterReloader
       return false
     end
     true
-  end
-
-  def should_reload?
-    ENV['ENABLE_ROUTER_RELOADING'].present?
   end
 end
