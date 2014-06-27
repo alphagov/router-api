@@ -40,6 +40,21 @@ describe RouterReloader do
 
         expect(r2).to have_been_requested.once
       end
+
+      it "should pass through any exceptions raised" do
+        stub_request(:post, "http://foo.example.com:1234/reload").to_raise(Errno::ECONNREFUSED)
+
+        expect {
+          RouterReloader.reload
+        }.to raise_error(Errno::ECONNREFUSED)
+      end
+
+      it "should swallow connection refused errors when configured to" do
+        RouterReloader.stub(:swallow_connection_errors).and_return(true)
+        stub_request(:post, "http://foo.example.com:1234/reload").to_raise(Errno::ECONNREFUSED)
+
+        expect(RouterReloader.reload).to eq(true)
+      end
     end
   end
 end

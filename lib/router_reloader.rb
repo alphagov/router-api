@@ -9,6 +9,9 @@ class RouterReloader
     @router_reload_urls ||= YAML.load_file(Rails.root.join("config", "router_reload_urls.yml"))
   end
 
+  # To be set in dev mode so that this can run when the router isn't running.
+  cattr_accessor :swallow_connection_errors
+
   def initialize(urls)
     @urls = urls
   end
@@ -26,6 +29,9 @@ class RouterReloader
       )
       return false
     end
+    true
+  rescue Errno::ECONNREFUSED
+    raise unless self.class.swallow_connection_errors
     true
   end
 end
