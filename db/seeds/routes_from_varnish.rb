@@ -13,6 +13,7 @@ backends = [
   'canary-frontend',
   'frontend',
   'licensify',
+  'publicapi',
   'spotlight',
   'tariff',
   'transactions-explorer',
