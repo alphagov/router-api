@@ -13,8 +13,6 @@ backends = [
   'canary-frontend',
   'frontend',
   'licensify',
-  'limelight',
-  'publicapi',
   'spotlight',
   'tariff',
   'transactions-explorer',
@@ -32,9 +30,6 @@ routes = [
   %w(/apply-for-a-licence prefix licensify),
 
   %w(/trade-tariff prefix tariff),
-
-  %w(/performance/licensing prefix limelight),
-  %w(/performance/licensing/api prefix publicapi),
 
   %w(/performance/transactions-explorer prefix transactions-explorer),
 
