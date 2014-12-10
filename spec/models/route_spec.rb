@@ -51,6 +51,7 @@ describe Route do
           "http://foo.example.com/bar",
           "bar/baz",
           "/foo/bar?baz=qux",
+          "/foo/bar#baz",
         ].each do |path|
           @route.incoming_path = path
           expect(@route).not_to be_valid
@@ -177,6 +178,11 @@ describe Route do
       describe "redirect_to field" do
         it "should allow query strings" do
           @route.redirect_to = "/foo/bar?thing"
+          expect(@route).to be_valid
+        end
+
+        it "should allow URL fragments" do
+          @route.redirect_to = "/foo/bar#section"
           expect(@route).to be_valid
         end
 
