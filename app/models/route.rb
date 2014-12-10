@@ -75,8 +75,14 @@ class Route
 
   def validate_redirect_to
     return unless self.redirect_to.present? # This is to short circuit nil values
-    unless valid_local_path?(self.redirect_to)
-      errors[:redirect_to] << "is not a valid absolute URL path"
+    if self.route_type == 'exact'
+      unless valid_exact_redirect_target?(self.redirect_to)
+        errors[:redirect_to] << "is not a valid redirect target"
+      end
+    else
+      unless valid_local_path?(self.redirect_to)
+        errors[:redirect_to] << "is not a valid redirect target"
+      end
     end
   end
 
@@ -84,6 +90,18 @@ class Route
     return false unless path.starts_with?("/")
     uri = URI.parse(path)
     uri.path == path && path !~ %r{//} && path !~ %r{./\z}
+  rescue URI::InvalidURIError
+    false
+  end
+
+  def valid_exact_redirect_target?(target)
+    # Valid 'exact' redirect targets differ from standard targets in that we
+    # allow:
+    # 1. External URLs, or
+    # 2. Query strings
+    uri = URI.parse(target)
+    return false unless (uri.absolute? || uri.path.starts_with?("/"))
+    (uri.absolute? || uri.path !~ %r{//}) && target !~ %r{./\z}
   rescue URI::InvalidURIError
     false
   end
