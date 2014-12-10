@@ -154,7 +154,7 @@ describe Route do
         @route = FactoryGirl.build(:redirect_route)
       end
 
-      describe "on redirect_to" do
+      describe "redirect_to field" do
         it "should be required" do
           @route.redirect_to = ""
           expect(@route).not_to be_valid
@@ -166,7 +166,15 @@ describe Route do
           expect(@route).not_to be_valid
           expect(@route).to have(1).error_on(:redirect_to)
         end
+      end
+    end
 
+    context "with handler set to 'redirect' and route_type set to 'exact'" do
+      before :each do
+        @route = FactoryGirl.build(:redirect_route, :route_type => 'exact')
+      end
+
+      describe "redirect_to field" do
         it "should allow query strings" do
           @route.redirect_to = "/foo/bar?thing"
           expect(@route).to be_valid
