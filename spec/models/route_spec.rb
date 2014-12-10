@@ -166,6 +166,28 @@ describe Route do
           expect(@route).not_to be_valid
           expect(@route).to have(1).error_on(:redirect_to)
         end
+
+        it "should allow query strings" do
+          @route.redirect_to = "/foo/bar?thing"
+          expect(@route).to be_valid
+        end
+
+        it "should allow external URLs" do
+          @route.redirect_to = "http://example.com/thing"
+          expect(@route).to be_valid
+        end
+
+        it "should reject invalid URL paths" do
+          [
+            "not a URL path",
+            "bar/baz",
+            "/foo//bar",
+          ].each do |path|
+            @route.redirect_to = path
+            expect(@route).not_to be_valid
+            expect(@route).to have(1).error_on(:redirect_to)
+          end
+        end
       end
     end
   end
