@@ -101,7 +101,7 @@ class Route
     # 2. Query strings
     uri = URI.parse(target)
     return false unless (uri.absolute? || uri.path.starts_with?("/"))
-    (uri.absolute? || uri.path !~ %r{//}) && target !~ %r{./\z}
+    uri.absolute? || (uri.path !~ %r{//} && target !~ %r{./\z})
   rescue URI::InvalidURIError
     false
   end
