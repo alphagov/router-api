@@ -15,5 +15,5 @@ external_redirects.each do |from, to|
   route.handler = 'redirect'
   route.redirect_to = to
   route.redirect_type = 'temporary'
-  route.save :validate => false
+  route.save!
 end
