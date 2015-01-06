@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "managing backends" do
+describe "managing backends", :type => :request do
 
   describe "getting details of a backend" do
     it "should return the backend details as JSON" do
