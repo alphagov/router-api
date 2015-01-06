@@ -14,7 +14,7 @@ Information about the route data structure can be found in the [router repositor
 ##### Getting details of a route:
 
 ``` sh
-curl "http://router-api.example.com/routes?incoming_path=/foo&route_type=exact"
+curl "http://router-api.example.com/routes?incoming_path=/foo"
 ```
 
 This will return the corresponding route in JSON format.
@@ -36,7 +36,7 @@ On error a 400 status code will be returned, and the JSON response will include 
 ##### Deleting a route:
 
 ``` sh
-curl "http://router-api.example.com/routes?incoming_path=/foo&route_type=exact" -X DELETE
+curl "http://router-api.example.com/routes?incoming_path=/foo" -X DELETE
 ```
 
 This will delete the corresponding route.  If no route matches the JSON request, a 404 status code will be returned.

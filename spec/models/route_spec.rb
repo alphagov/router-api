@@ -72,36 +72,25 @@ RSpec.describe Route, :type => :model do
           expect(@route.errors[:incoming_path].size).to eq(1)
         end
       end
-    end
 
-    describe "path uniqueness constraints" do
-      it "should allow duplicate paths with different route_types" do
-        FactoryGirl.create(:route, :route_type => "prefix", :incoming_path => "/foo")
-        @route.route_type = "exact"
-        @route.incoming_path = "/foo"
-        expect(@route).to be_valid
+      describe "uniqueness" do
+        it "should be unique" do
+          FactoryGirl.create(:route, :incoming_path => '/foo')
+          @route.incoming_path = '/foo'
+          expect(@route).not_to be_valid
+          expect(@route.errors[:incoming_path].size).to eq(1)
+        end
 
-        # Ensure db constraint allows this combination
-        expect {
-          @route.save!
-        }.not_to raise_error
-      end
+        it "should have a db level uniqueness constraint" do
+          skip("unique index wil be updated once data is cleaned up")
 
-      it "should require a unique path per route_type" do
-        FactoryGirl.create(:route, :route_type => "prefix", :incoming_path => "/foo")
-        @route.route_type = "prefix"
-        @route.incoming_path = "/foo"
-        expect(@route).not_to be_valid
-        expect(@route.errors[:incoming_path].size).to eq(1)
-      end
+          FactoryGirl.create(:route, :incoming_path => '/foo')
+          @route.incoming_path = '/foo'
 
-      it "should have a db level uniqueness constraint" do
-        FactoryGirl.create(:route, :route_type => "prefix", :incoming_path => "/foo")
-        @route.route_type = "prefix"
-        @route.incoming_path = "/foo"
-        expect {
-          @route.save :validate => false
-        }.to raise_error(Moped::Errors::OperationFailure)
+          expect {
+            @route.save :validate => false
+          }.to raise_error(Moped::Errors::OperationFailure)
+        end
       end
     end
 
@@ -258,18 +247,6 @@ RSpec.describe Route, :type => :model do
       expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
-    it "should be true for an exact route with a prefix route at the same path" do
-      @route.update_attributes!(:route_type => "exact")
-      FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "prefix")
-      expect(@route.has_parent_prefix_routes?).to be_truthy
-    end
-
-    it "should be false for a prefix route with an exact route at the same path" do
-      @route.update_attributes!(:route_type => "prefix")
-      FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "exact")
-      expect(@route.has_parent_prefix_routes?).to be_falsey
-    end
-
     it "should be false for a prefix route at /" do
       @route.update_attributes(:incoming_path => "/", :route_type => "prefix")
       expect(@route.has_parent_prefix_routes?).to be_falsey
@@ -355,15 +332,6 @@ RSpec.describe Route, :type => :model do
 
       r = Route.where(:incoming_path => new_route.incoming_path, :route_type => new_route.route_type).first
       expect(r).to be
-    end
-
-    it "should delete an exact gone route with the same path as the created prefix route" do
-      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar", :route_type => "exact")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
-      new_route.save!
-
-      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
-      expect(r).not_to be
     end
   end
 end
