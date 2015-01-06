@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "managing routes" do
   describe "fetching details of a route" do

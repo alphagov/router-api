@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'router_reloader'
 
 describe RouterReloader do
