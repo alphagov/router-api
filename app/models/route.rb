@@ -30,10 +30,10 @@ class Route
   after_create :cleanup_child_gone_routes
 
   scope :excluding, lambda {|route| where(:id => {:$ne => route.id}) }
-  scope :prefix, where(:route_type => "prefix")
+  scope :prefix, lambda { where(:route_type => "prefix") }
 
   HANDLERS.each do |handler|
-    scope handler, where(:handler => handler)
+    scope handler, lambda { where(:handler => handler) }
 
     define_method "#{handler}?" do
       self.handler == handler
