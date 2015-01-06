@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "auto creation and deletion of gone routes", :type => :request do
+RSpec.describe "auto creation and deletion of gone routes", :type => :request do
 
   describe "soft-deleting a route" do
     before :each do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Backend, :type => :model do
+RSpec.describe Backend, :type => :model do
   describe "validations" do
     before :each do
       @backend = FactoryGirl.build(:backend)

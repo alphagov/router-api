@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'router_reloader'
 
-describe RouterReloader do
+RSpec.describe RouterReloader do
 
   describe "triggering a reload of routes" do
     before :each do

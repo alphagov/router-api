@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Route, :type => :model do
+RSpec.describe Route, :type => :model do
   describe "validations" do
     before :each do
       @route = FactoryGirl.build(:route)

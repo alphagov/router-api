@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "managing routes", :type => :request do
+RSpec.describe "managing routes", :type => :request do
   describe "fetching details of a route" do
     before :each do
       FactoryGirl.create(:backend, :backend_id => "a-backend")
