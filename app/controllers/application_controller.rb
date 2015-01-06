@@ -10,4 +10,10 @@ class ApplicationController < ActionController::Base
   def error_404
     render :status => 404, :text => "Not found"
   end
+
+  def parse_json_request
+    @request_data = JSON.parse(request.body.read).with_indifferent_access
+  rescue JSON::ParserError
+    head :bad_request
+  end
 end

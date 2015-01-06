@@ -113,9 +113,14 @@ RSpec.describe "managing routes", :type => :request do
     it "should not blow up if not given the necessary route lookup keys" do
       put_json "/routes", {}
       expect(response.code.to_i).to eq(422)
+    end
 
-      put "/routes"
-      expect(response.code.to_i).to eq(422)
+    it "should return a 400 when given bad JSON" do
+      put "/routes", "i'm not json", "CONTENT_TYPE" => "application/json"
+      expect(response.status).to eq(400)
+
+      put "/routes", "", "CONTENT_TYPE" => "application/json"
+      expect(response.code.to_i).to eq(400)
     end
   end
 

@@ -5,9 +5,15 @@ development:
       hosts:
         - localhost:27017
       options:
-        safe:
+        write:
           w: 1
-        consistency: :strong
+        read: primary
+
+        # Change the default consistency model to primary, secondary.
+        # 'secondary' will send reads to secondaries, 'primary' sends everything
+        # to master. (default: primary)
+        # read: secondary_preferred
+
 test:
   sessions:
     default:
@@ -15,9 +21,9 @@ test:
       hosts:
         - localhost:27017
       options:
-        safe:
+        write:
           w: 1
-        consistency: :strong
+        read: primary
         # In the test environment we lower the retries and retry interval to
         # low amounts for fast failures.
         max_retries: 1
