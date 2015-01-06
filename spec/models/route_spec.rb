@@ -10,7 +10,7 @@ describe Route do
       it "should be required" do
         @route.route_type = ''
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:route_type)
+        expect(@route.errors[:route_type].size).to eq(1)
       end
 
       it "should only allow specific values" do
@@ -21,7 +21,7 @@ describe Route do
 
         @route.route_type = 'foo'
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:route_type)
+        expect(@route.errors[:route_type].size).to eq(1)
       end
     end
 
@@ -29,7 +29,7 @@ describe Route do
       it "should be required" do
         @route.incoming_path = ""
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:incoming_path)
+        expect(@route.errors[:incoming_path].size).to eq(1)
       end
 
       it "should allow an absolute URL path" do
@@ -55,7 +55,7 @@ describe Route do
         ].each do |path|
           @route.incoming_path = path
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:incoming_path)
+          expect(@route.errors[:incoming_path].size).to eq(1)
         end
       end
 
@@ -69,7 +69,7 @@ describe Route do
         ].each do |path|
           @route.incoming_path = path
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:incoming_path)
+          expect(@route.errors[:incoming_path].size).to eq(1)
         end
       end
     end
@@ -92,7 +92,7 @@ describe Route do
         @route.route_type = "prefix"
         @route.incoming_path = "/foo"
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:incoming_path)
+        expect(@route.errors[:incoming_path].size).to eq(1)
       end
 
       it "should have a db level uniqueness constraint" do
@@ -109,19 +109,19 @@ describe Route do
       it "should be required" do
         @route.handler = ""
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:handler)
+        expect(@route.errors[:handler].size).to eq(1)
       end
 
       it "should only allow specific values" do
         %w(backend redirect gone).each do |type|
           @route.handler = type
           @route.valid?
-          expect(@route).to have(0).errors_on(:handler)
+          expect(@route.errors[:handler]).to be_empty
         end
 
         @route.handler = "fooey"
         expect(@route).not_to be_valid
-        expect(@route).to have(1).error_on(:handler)
+        expect(@route.errors[:handler].size).to eq(1)
       end
     end
 
@@ -134,7 +134,7 @@ describe Route do
         it "should be required" do
           @route.backend_id = ''
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:backend_id)
+          expect(@route.errors[:backend_id].size).to eq(1)
         end
 
         it "should map to an existing backend" do
@@ -145,7 +145,7 @@ describe Route do
 
           @route.backend_id = "bar"
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:backend_id)
+          expect(@route.errors[:backend_id].size).to eq(1)
         end
       end
     end
@@ -159,13 +159,13 @@ describe Route do
         it "should be required" do
           @route.redirect_to = ""
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:redirect_to)
+          expect(@route.errors[:redirect_to].size).to eq(1)
         end
 
         it "should be a valid URL" do
           @route.redirect_to = "\jkhsdfgjkhdjskfgh//fdf#th"
           expect(@route).not_to be_valid
-          expect(@route).to have(1).error_on(:redirect_to)
+          expect(@route.errors[:redirect_to].size).to eq(1)
         end
       end
     end
@@ -199,7 +199,7 @@ describe Route do
           ].each do |path|
             @route.redirect_to = path
             expect(@route).not_to be_valid
-            expect(@route).to have(1).error_on(:redirect_to)
+            expect(@route.errors[:redirect_to].size).to eq(1)
           end
         end
       end
@@ -240,39 +240,39 @@ describe Route do
     end
 
     it "should be false with no parents" do
-      expect(@route.has_parent_prefix_routes?).to be_false
+      expect(@route.has_parent_prefix_routes?).to be_falsey
     end
 
     it "should be true with a parent prefix route" do
       FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "prefix")
-      expect(@route.has_parent_prefix_routes?).to be_true
+      expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
     it "should be false with a parent exact route" do
       FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "exact")
-      expect(@route.has_parent_prefix_routes?).to be_false
+      expect(@route.has_parent_prefix_routes?).to be_falsey
     end
 
     it "should be true with a prefix route at /" do
       FactoryGirl.create(:route, :incoming_path => "/", :route_type => "prefix")
-      expect(@route.has_parent_prefix_routes?).to be_true
+      expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
     it "should be true for an exact route with a prefix route at the same path" do
       @route.update_attributes!(:route_type => "exact")
       FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "prefix")
-      expect(@route.has_parent_prefix_routes?).to be_true
+      expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
     it "should be false for a prefix route with an exact route at the same path" do
       @route.update_attributes!(:route_type => "prefix")
       FactoryGirl.create(:route, :incoming_path => "/foo/bar", :route_type => "exact")
-      expect(@route.has_parent_prefix_routes?).to be_false
+      expect(@route.has_parent_prefix_routes?).to be_falsey
     end
 
     it "should be false for a prefix route at /" do
       @route.update_attributes(:incoming_path => "/", :route_type => "prefix")
-      expect(@route.has_parent_prefix_routes?).to be_false
+      expect(@route.has_parent_prefix_routes?).to be_falsey
     end
   end
 
@@ -282,7 +282,7 @@ describe Route do
     end
 
     it "should destroy the route if it has a parent prefix route" do
-      @route.stub(:has_parent_prefix_routes?).and_return(true)
+      allow(@route).to receive(:has_parent_prefix_routes?).and_return(true)
       @route.soft_delete
 
       r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
@@ -290,7 +290,7 @@ describe Route do
     end
 
     it "should convert the route to a gone route otherwise" do
-      @route.stub(:has_parent_prefix_routes?).and_return(false)
+      allow(@route).to receive(:has_parent_prefix_routes?).and_return(false)
       @route.soft_delete
 
       r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
@@ -313,7 +313,7 @@ describe Route do
     it "should not delete anything if the creation fails" do
       child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
       new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix", :redirect_to => "not a url"))
-      expect(new_route.save).to be_false
+      expect(new_route.save).to be_falsey
 
       r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
       expect(r).to be

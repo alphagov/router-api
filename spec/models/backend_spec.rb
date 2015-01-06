@@ -10,20 +10,20 @@ describe Backend do
       it "should be required" do
         @backend.backend_id = ''
         expect(@backend).not_to be_valid
-        expect(@backend).to have(1).error_on(:backend_id)
+        expect(@backend.errors[:backend_id].size).to eq(1)
       end
 
       it "should be a slug format" do
         @backend.backend_id = 'not a slug'
         expect(@backend).not_to be_valid
-        expect(@backend).to have(1).error_on(:backend_id)
+        expect(@backend.errors[:backend_id].size).to eq(1)
       end
 
       it "should be unique" do
         FactoryGirl.create(:backend, :backend_id => 'a-backend')
         @backend.backend_id = 'a-backend'
         expect(@backend).not_to be_valid
-        expect(@backend).to have(1).error_on(:backend_id)
+        expect(@backend.errors[:backend_id].size).to eq(1)
       end
 
       it "should have a db level uniqueness constraint" do
@@ -39,7 +39,7 @@ describe Backend do
       it "should be required" do
         @backend.backend_url = ''
         expect(@backend).not_to be_valid
-        expect(@backend).to have(1).error_on(:backend_url)
+        expect(@backend.errors[:backend_url].size).to eq(1)
       end
 
       it "should accept an HTTP URL" do
@@ -50,7 +50,7 @@ describe Backend do
       it "should not accept an HTTPS URL" do
         @backend.backend_url = "https://foo.example.com/"
         expect(@backend).not_to be_valid
-        expect(@backend).to have(1).error_on(:backend_url)
+        expect(@backend.errors[:backend_url].size).to eq(1)
       end
 
       it "should reject invalid URLs" do
@@ -67,7 +67,7 @@ describe Backend do
         ].each do |url|
           @backend.backend_url = url
           expect(@backend).not_to be_valid
-          expect(@backend).to have(1).error_on(:backend_url)
+          expect(@backend.errors[:backend_url].size).to eq(1)
         end
       end
     end
@@ -105,7 +105,7 @@ describe Backend do
     it "should not allow destroy when it has associated routes" do
       FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
 
-      expect(@backend.destroy).to be_false
+      expect(@backend.destroy).to be_falsey
 
       backend = Backend.where(:backend_id => @backend.backend_id).first
       expect(backend).to be
@@ -115,7 +115,7 @@ describe Backend do
       backend2 = FactoryGirl.create(:backend)
       FactoryGirl.create(:backend_route, :backend_id => backend2.backend_id)
 
-      expect(@backend.destroy).to be_true
+      expect(@backend.destroy).to be_truthy
 
       backend = Backend.where(:backend_id =>@backend.backend_id).first
       expect(backend).not_to be
