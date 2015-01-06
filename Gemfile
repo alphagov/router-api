@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.8'
 
 gem 'mongoid', '4.0.0'
+gem 'mongoid_rails_migrations', '~> 1.0.1'
 
 gem 'logstasher', '0.4.8'
 gem 'unicorn', '4.6.3'
