@@ -56,6 +56,11 @@ RSpec.describe "managing backends", :type => :request do
       put_json "/backends/foo+bar", :backend => {:backend_url => "http://foo.example.com/"}
       expect(response.code.to_i).to eq(404)
     end
+
+    it "should return a 400 when given bad JSON" do
+      put "/backends/foo", "i'm not json", "CONTENT_TYPE" => "application/json"
+      expect(response.status).to eq(400)
+    end
   end
 
   describe "updating a backend" do
