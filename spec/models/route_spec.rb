@@ -82,8 +82,6 @@ RSpec.describe Route, :type => :model do
         end
 
         it "should have a db level uniqueness constraint" do
-          skip("unique index wil be updated once data is cleaned up")
-
           FactoryGirl.create(:route, :incoming_path => '/foo')
           @route.incoming_path = '/foo'
 

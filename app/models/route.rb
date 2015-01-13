@@ -8,9 +8,7 @@ class Route
   field :redirect_to, :type => String
   field :redirect_type, :type => String
 
-  # FIXME: update this index to only cover incoming_path once data has been
-  # cleaned up
-  index({:incoming_path => 1, :route_type => 1}, :unique => true)
+  index({:incoming_path => 1}, :unique => true)
 
   HANDLERS = %w(backend redirect gone)
 
