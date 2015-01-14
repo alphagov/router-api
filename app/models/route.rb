@@ -8,11 +8,11 @@ class Route
   field :redirect_to, :type => String
   field :redirect_type, :type => String
 
-  index({:incoming_path => 1, :route_type => 1}, :unique => true)
+  index({:incoming_path => 1}, :unique => true)
 
   HANDLERS = %w(backend redirect gone)
 
-  validates :incoming_path, :uniqueness => {:scope => :route_type}
+  validates :incoming_path, :uniqueness => true
   validate :validate_incoming_path
   validates :route_type, :inclusion => {:in => %w(prefix exact)}
   validates :handler, :inclusion => {:in => HANDLERS}
@@ -57,7 +57,7 @@ class Route
   end
 
   def has_parent_prefix_routes?
-    segments = self.incoming_path.split('/').reject(&:blank?)
+    segments = self.incoming_path.split('/').reject(&:blank?).tap(&:pop)
     while segments.any? do
       return true if Route.excluding(self).prefix.where(:incoming_path => "/#{segments.join('/')}").any?
       segments.pop
@@ -115,6 +115,6 @@ class Route
 
   def cleanup_child_gone_routes
     return unless self.route_type == "prefix"
-    Route.excluding(self).gone.where(:incoming_path => {:$regex => %r{\A#{Regexp.escape(self.incoming_path)}(/|\z)} }).destroy_all
+    Route.excluding(self).gone.where(:incoming_path => %r{\A#{Regexp.escape(self.incoming_path)}/}).destroy_all
   end
 end

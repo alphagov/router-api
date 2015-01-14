@@ -8,7 +8,7 @@ RSpec.describe "managing routes", :type => :request do
     end
 
     it "should return details of the route in JSON format" do
-      get "/routes", :incoming_path => "/foo/bar", :route_type => "exact"
+      get "/routes", :incoming_path => "/foo/bar"
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -20,10 +20,7 @@ RSpec.describe "managing routes", :type => :request do
     end
 
     it "should 404 for non-existent routes" do
-      get "/routes", :incoming_path => "/foo/bar", :route_type => "prefix"
-      expect(response.code.to_i).to eq(404)
-
-      get "/routes", :incoming_path => "/foo", :route_type => "exact"
+      get "/routes", :incoming_path => "/foo"
       expect(response.code.to_i).to eq(404)
     end
   end
@@ -44,8 +41,9 @@ RSpec.describe "managing routes", :type => :request do
         "backend_id" => "a-backend",
       })
 
-      route = Route.backend.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
+      route = Route.backend.where(:incoming_path => "/foo/bar").first
       expect(route).to be
+      expect(route.route_type).to eq("prefix")
       expect(route.backend_id).to eq("a-backend")
     end
 
@@ -63,7 +61,7 @@ RSpec.describe "managing routes", :type => :request do
         },
       })
 
-      route = Route.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
+      route = Route.where(:incoming_path => "/foo/bar").first
       expect(route).not_to be
     end
   end
@@ -76,18 +74,19 @@ RSpec.describe "managing routes", :type => :request do
     end
 
     it "should update the route" do
-      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", :backend_id => "another-backend"}
+      put_json "/routes", :route => {:incoming_path => "/foo/bar", :route_type => "exact", :handler => "backend", :backend_id => "another-backend"}
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
         "incoming_path" => "/foo/bar",
-        "route_type" => "prefix",
+        "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "another-backend",
       })
 
-      route = Route.backend.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
+      route = Route.backend.where(:incoming_path => "/foo/bar").first
       expect(route).to be
+      expect(route.route_type).to eq("exact")
       expect(route.backend_id).to eq("another-backend")
     end
 
@@ -105,7 +104,7 @@ RSpec.describe "managing routes", :type => :request do
         },
       })
 
-      route = Route.where(:incoming_path => "/foo/bar", :route_type => "prefix").first
+      route = Route.where(:incoming_path => "/foo/bar").first
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
     end
@@ -131,7 +130,7 @@ RSpec.describe "managing routes", :type => :request do
     end
 
     it "should delete the route" do
-      delete "/routes", :incoming_path => "/foo/bar", :route_type => "exact", :hard_delete => "true"
+      delete "/routes", :incoming_path => "/foo/bar", :hard_delete => "true"
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -141,15 +140,12 @@ RSpec.describe "managing routes", :type => :request do
         "backend_id" => "a-backend",
       })
 
-      route = Route.where(:incoming_path => "/foo/bar", :routes => "exact").first
+      route = Route.where(:incoming_path => "/foo/bar").first
       expect(route).not_to be
     end
 
     it "should return 404 for non-existent routes" do
-      delete "/routes", :incoming_path => "/foo/bar", :route_type => "prefix"
-      expect(response.code.to_i).to eq(404)
-
-      delete "/routes", :incoming_path => "/foo", :route_type => "exact"
+      delete "/routes", :incoming_path => "/foo"
       expect(response.code.to_i).to eq(404)
     end
   end
