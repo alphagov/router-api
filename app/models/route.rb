@@ -10,6 +10,10 @@ class Route
 
   index({:incoming_path => 1}, :unique => true)
 
+  # The router loads the routes in order, and therefore needs this index.
+  # This is to enable it to generate a consistent checksum of the routes.
+  index({:incoming_path => 1, :route_type => 1})
+
   HANDLERS = %w(backend redirect gone)
 
   validates :incoming_path, :uniqueness => true
