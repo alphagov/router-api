@@ -1,11 +1,33 @@
-Router API
-==========
+# Router API
 
 This provides an API for updating the routes used by the [router](https://github.com/alphagov/router/).
 
+## Technical documentation
 
-API endpoints
--------------
+A Ruby on Rails application that manages the router database.  Routes are
+stored in a mongo database using [Mongoid](http://mongoid.org/) as an ORM.
+
+### Dependencies
+
+- [mongoDB](http://www.mongodb.org/)
+- [alphagov/router](https://github.com/alphagov/router/) - to reload routes
+  (optional in dev mode)
+
+When running in development mode, this will ignore connection errors when
+triggering a reload of the router
+
+### Running the application
+
+`bundle exec rails s`
+
+The app will then be available at http://localhost:3000/ (the port can be
+changed by passing a `-p` option to the command)
+
+### Running the test suite
+
+`bundle exec rake`
+
+## API endpoints
 
 ### Routes
 
@@ -80,3 +102,7 @@ curl http://router-api.example.com/backends/foo -X DELETE
 ```
 
 This will delete the backend with id 'foo'.  This will only be allowed if the backend has no associated routes.  A 400 status code will be returned if this is the case.
+
+## Licence
+
+[MIT License](LICENSE)
