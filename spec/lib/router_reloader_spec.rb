@@ -3,6 +3,32 @@ require 'router_reloader'
 
 RSpec.describe RouterReloader do
 
+  describe "parsing router reload urls from env var string" do
+    around :each do |example|
+      original_urls = RouterReloader.router_reload_urls
+      example.run
+      RouterReloader.router_reload_urls = original_urls
+    end
+
+    it "should generate urls from list of host:port pairs" do
+      RouterReloader.set_router_reload_urls_from_string("foo.bar:1234,bar.baz:2345")
+
+      expect(RouterReloader.router_reload_urls).to eq([
+        "http://foo.bar:1234/reload",
+        "http://bar.baz:2345/reload",
+      ])
+    end
+
+    it "should cope with extra whitespace in the string" do
+      RouterReloader.set_router_reload_urls_from_string(" foo.bar:1234, bar.baz:2345 \n")
+
+      expect(RouterReloader.router_reload_urls).to eq([
+        "http://foo.bar:1234/reload",
+        "http://bar.baz:2345/reload",
+      ])
+    end
+  end
+
   describe "triggering a reload of routes" do
     before :each do
       allow(RouterReloader).to receive(:router_reload_urls).and_return(["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"])
