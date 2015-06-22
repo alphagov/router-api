@@ -5,8 +5,11 @@ class RouterReloader
     new(router_reload_urls).reload
   end
 
-  def self.router_reload_urls
-    @router_reload_urls ||= YAML.load_file(Rails.root.join("config", "router_reload_urls.yml"))
+  # set from an initializer
+  cattr_accessor :router_reload_urls
+  def self.set_router_reload_urls_from_string(router_nodes_str)
+    nodes = router_nodes_str.split(',').map(&:strip)
+    self.router_reload_urls = nodes.map {|node| "http://#{node}/reload" }
   end
 
   # To be set in dev mode so that this can run when the router isn't running.

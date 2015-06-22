@@ -1,9 +1,7 @@
 development:
   sessions:
     default:
-      database: router
-      hosts:
-        - localhost:27017
+      uri: mongodb://localhost/router
       options:
         write:
           w: 1
@@ -17,9 +15,7 @@ development:
 test:
   sessions:
     default:
-      database: router_api_test
-      hosts:
-        - localhost:27017
+      uri: mongodb://localhost/router_api_test
       options:
         write:
           w: 1
@@ -28,3 +24,12 @@ test:
         # low amounts for fast failures.
         max_retries: 1
         retry_interval: 0
+
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGODB_URI'] %>
+      options:
+        write:
+          w: 1
+        read: primary
