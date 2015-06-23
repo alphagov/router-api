@@ -3,11 +3,6 @@ require 'router_reloader'
 if ENV['ROUTER_NODES'].present?
   RouterReloader.set_router_reload_urls_from_string(ENV['ROUTER_NODES'])
 
-elsif File.exist?(Rails.root.join("config", "router_reload_urls.yml"))
-  # FIXME: Remove this clause once deploy scripts are updated. to no longer
-  # create this file
-  RouterReloader.router_reload_urls = YAML.load_file(Rails.root.join("config", "router_reload_urls.yml"))
-
 elsif ! Rails.env.production?
   RouterReloader.router_reload_urls = ["http://localhost:3055/reload"]
 
