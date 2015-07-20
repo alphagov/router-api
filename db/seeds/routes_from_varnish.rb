@@ -11,7 +11,6 @@ end
 
 backends = [
   'canary-frontend',
-  'frontend',
   'licensify',
   'spotlight',
   'tariff',
@@ -45,15 +44,4 @@ routes.each do |path, type, backend|
   route.handler = "backend"
   route.backend_id = backend
   route.save!
-end
-
-# Remove some previously seeded routes.
-# This can be removed once it's run on prod.
-[
-  %w(/ prefix),
-].each do |path, type|
-  if route = Route.where(:incoming_path => path, :route_type => type).first
-    puts "Removing route #{path} (#{type}) => #{route.backend_id}"
-    route.destroy
-  end
 end
