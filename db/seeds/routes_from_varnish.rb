@@ -12,7 +12,6 @@ end
 backends = [
   'canary-frontend',
   'licensify',
-  'spotlight',
   'tariff',
   'transactions-explorer',
 ]
@@ -31,8 +30,6 @@ routes = [
   %w(/trade-tariff prefix tariff),
 
   %w(/performance/transactions-explorer prefix transactions-explorer),
-
-  %w(/performance prefix spotlight),
 
   %w(/__canary__ exact canary-frontend),
 ]
