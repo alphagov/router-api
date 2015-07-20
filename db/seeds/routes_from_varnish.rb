@@ -13,7 +13,6 @@ backends = [
   'canary-frontend',
   'licensify',
   'tariff',
-  'transactions-explorer',
 ]
 
 backends.each do |backend|
@@ -28,8 +27,6 @@ routes = [
   %w(/apply-for-a-licence prefix licensify),
 
   %w(/trade-tariff prefix tariff),
-
-  %w(/performance/transactions-explorer prefix transactions-explorer),
 
   %w(/__canary__ exact canary-frontend),
 ]
