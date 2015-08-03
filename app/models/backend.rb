@@ -28,7 +28,7 @@ class Backend
 
   def valid_backend_url?
     uri = URI.parse(self.backend_url)
-    uri.scheme == "http" &&
+    uri.scheme =~ /^https?$/ &&
       uri.host.present? &&
       uri.path.present? &&
       uri.query.blank? &&

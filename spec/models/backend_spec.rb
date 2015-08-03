@@ -47,10 +47,9 @@ RSpec.describe Backend, :type => :model do
         expect(@backend).to be_valid
       end
 
-      it "should not accept an HTTPS URL" do
+      it "should accept an HTTPS URL" do
         @backend.backend_url = "https://foo.example.com/"
-        expect(@backend).not_to be_valid
-        expect(@backend.errors[:backend_url].size).to eq(1)
+        expect(@backend).to be_valid
       end
 
       it "should reject invalid URLs" do
