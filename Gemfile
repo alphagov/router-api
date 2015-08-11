@@ -10,6 +10,8 @@ gem 'unicorn', '4.6.3'
 
 gem 'airbrake', '3.1.15'
 
+gem "gds-api-adapters", "23.2.0"
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.1.0'
   gem 'database_cleaner', '1.2.0'
