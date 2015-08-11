@@ -5,42 +5,42 @@
 #
 ######################################
 
-unless ENV['GOVUK_APP_DOMAIN'].present?
-  abort "GOVUK_APP_DOMAIN is not set.  Maybe you need to run under govuk_setenv..."
-end
-
-backends = {
-  'canary-frontend' => {'tls' => false},
-  'licensify' => {'tls' => true},
-  'tariff' => {'tls' => false},
-}
-
-backends.each do |name, properties|
-  if properties['tls'] == true
-    protocol = 'https'
-  else
-    protocol = 'http'
-  end
-  url = "#{protocol}://#{name}.#{ENV['GOVUK_APP_DOMAIN']}/"
-  puts "Backend #{name} => #{url}"
-  be = Backend.find_or_initialize_by(:backend_id => name)
-  be.backend_url = url
-  be.save!
-end
+require "gds_api/publishing_api/special_route_publisher"
+require "securerandom"
 
 routes = [
-  %w(/apply-for-a-licence prefix licensify),
-
-  %w(/trade-tariff prefix tariff),
-
-  %w(/__canary__ exact canary-frontend),
+  {
+    content_id: "a652fcab-7aa6-42e5-9d72-c82d7e3c5377",
+    base_path: "/apply-for-a-licence",
+    type: "prefix",
+    rendering_app: "licensify",
+    title: "Apply for a licence",
+    description: "Redirects to the licence finder."
+  },
+  {
+    content_id: "81e8949b-a3fa-4712-97ff-decdd80024c8",
+    base_path: "/trade-tariff",
+    type: "prefix",
+    rendering_app: "tariff",
+    publishing_app: "tariff",
+    title: "Trade tariff finder",
+    description: "Landing page for the trade tariff finder."
+  },
+  {
+    content_id: "e055ca55-d6d7-4815-977d-2a022b93090f",
+    base_path: "/__canary__",
+    type: "exact",
+    rendering_app: "canary-frontend",
+    title: "Canary endpoint",
+    description: "Provides an endpoint to check against when testing our routing from start to finish."
+  },
 ]
 
-routes.each do |path, type, backend|
-  puts "Route #{path} (#{type}) => #{backend}"
-  abort "Invalid backend #{backend}" unless Backend.where(:backend_id => backend).any?
-  route = Route.find_or_initialize_by(:incoming_path => path, :route_type => type)
-  route.handler = "backend"
-  route.backend_id = backend
-  route.save!
+publisher = GdsApi::PublishingApi::SpecialRoutePublisher.new
+routes.each do |route|
+  route = {
+    publishing_app: "router-api"
+  }.merge(route)
+
+  publisher.publish(route)
 end
