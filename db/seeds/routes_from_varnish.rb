@@ -12,7 +12,6 @@ end
 backends = {
   'canary-frontend' => {'tls' => false},
   'licensify' => {'tls' => true},
-  'tariff' => {'tls' => false},
 }
 
 backends.each do |name, properties|
@@ -30,9 +29,6 @@ end
 
 routes = [
   %w(/apply-for-a-licence prefix licensify),
-
-  %w(/trade-tariff prefix tariff),
-
   %w(/__canary__ exact canary-frontend),
 ]
 
