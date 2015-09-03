@@ -11,10 +11,7 @@ end
 
 backends = {
   'canary-frontend' => {'tls' => false},
-# FIXME: Disabled to prevent router-api deployments from re-registering the
-# Licensify route in Carrenza Production.  To be removed once Licensify no
-# longer performs destructive actions when handling GET requests.
-#  'licensify' => {'tls' => true},
+  'licensify' => {'tls' => true},
 }
 
 backends.each do |name, properties|
@@ -31,10 +28,7 @@ backends.each do |name, properties|
 end
 
 routes = [
-# FIXME: Disabled to prevent router-api deployments from re-registering the
-# Licensify route in Carrenza Production.  To be removed once Licensify no
-# longer performs destructive actions when handling GET requests.
-#  %w(/apply-for-a-licence prefix licensify),
+  %w(/apply-for-a-licence prefix licensify),
   %w(/__canary__ exact canary-frontend),
 ]
 
