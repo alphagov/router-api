@@ -6,7 +6,7 @@ gem 'mongoid', '4.0.0'
 gem 'mongoid_rails_migrations', '~> 1.0.1'
 
 gem 'logstasher', '0.4.8'
-gem 'unicorn', '4.6.3'
+gem 'unicorn', '~> 4.9.0'
 
 gem 'airbrake', '3.1.15'
 
