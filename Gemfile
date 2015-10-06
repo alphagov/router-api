@@ -5,10 +5,10 @@ gem 'rails', '4.1.11'
 gem 'mongoid', '4.0.2'
 gem 'mongoid_rails_migrations', '~> 1.0.1'
 
-gem 'logstasher', '0.4.8'
+gem 'logstasher', '0.6.2'
 gem 'unicorn', '~> 4.9.0'
 
-gem 'airbrake', '3.1.15'
+gem 'airbrake', '4.3.1'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.1.0'

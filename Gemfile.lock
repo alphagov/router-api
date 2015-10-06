@@ -28,7 +28,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
-    airbrake (3.1.15)
+    airbrake (4.3.1)
       builder
       multi_json
     arel (5.0.1.20140414130214)
@@ -54,8 +54,9 @@ GEM
     json (1.8.3)
     kgio (2.10.0)
     logstash-event (1.1.5)
-    logstasher (0.4.8)
+    logstasher (0.6.2)
       logstash-event (~> 1.1.0)
+      request_store
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.6.1)
@@ -97,6 +98,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     raindrops (0.15.0)
     rake (10.4.2)
+    request_store (1.2.0)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -146,11 +148,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  airbrake (= 3.1.15)
+  airbrake (= 4.3.1)
   ci_reporter_rspec (= 1.0.0)
   database_cleaner (= 1.2.0)
   factory_girl_rails (= 4.2.1)
-  logstasher (= 0.4.8)
+  logstasher (= 0.6.2)
   mongoid (= 4.0.2)
   mongoid_rails_migrations (~> 1.0.1)
   rails (= 4.1.11)
