@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.11'
+gem 'rails', '4.2.4'
 
 gem 'mongoid', '4.0.2'
 gem 'mongoid_rails_migrations', '~> 1.0.1'
