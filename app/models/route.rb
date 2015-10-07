@@ -4,6 +4,7 @@ class Route
   field :incoming_path, :type => String
   field :route_type, :type => String
   field :handler, :type => String
+  field :disabled, :type => Boolean, :default => false
   field :backend_id, :type => String
   field :redirect_to, :type => String
   field :redirect_type, :type => String
