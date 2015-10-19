@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Backend, :type => :model do
+RSpec.describe Backend, type: :model do
   describe "validations" do
     before :each do
       @backend = FactoryGirl.build(:backend)
@@ -20,17 +20,17 @@ RSpec.describe Backend, :type => :model do
       end
 
       it "should be unique" do
-        FactoryGirl.create(:backend, :backend_id => 'a-backend')
+        FactoryGirl.create(:backend, backend_id: 'a-backend')
         @backend.backend_id = 'a-backend'
         expect(@backend).not_to be_valid
         expect(@backend.errors[:backend_id].size).to eq(1)
       end
 
       it "should have a db level uniqueness constraint" do
-        FactoryGirl.create(:backend, :backend_id => 'a-backend')
+        FactoryGirl.create(:backend, backend_id: 'a-backend')
         @backend.backend_id = 'a-backend'
         expect {
-          @backend.save :validate => false
+          @backend.save validate: false
         }.to raise_error(Moped::Errors::OperationFailure)
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe Backend, :type => :model do
       json_hash = @backend.as_json
       expect(json_hash).to have_key("errors")
       expect(json_hash["errors"]).to eq({
-        :backend_id => ["can't be blank"],
+        backend_id: ["can't be blank"],
       })
     end
 
@@ -102,21 +102,21 @@ RSpec.describe Backend, :type => :model do
     end
 
     it "should not allow destroy when it has associated routes" do
-      FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
+      FactoryGirl.create(:backend_route, backend_id: @backend.backend_id)
 
       expect(@backend.destroy).to be_falsey
 
-      backend = Backend.where(:backend_id => @backend.backend_id).first
+      backend = Backend.where(backend_id: @backend.backend_id).first
       expect(backend).to be
     end
 
     it "should allow destroy otherwise" do
       backend2 = FactoryGirl.create(:backend)
-      FactoryGirl.create(:backend_route, :backend_id => backend2.backend_id)
+      FactoryGirl.create(:backend_route, backend_id: backend2.backend_id)
 
       expect(@backend.destroy).to be_truthy
 
-      backend = Backend.where(:backend_id =>@backend.backend_id).first
+      backend = Backend.where(backend_id: @backend.backend_id).first
       expect(backend).not_to be
     end
   end

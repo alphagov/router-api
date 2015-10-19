@@ -36,7 +36,7 @@ class CleanupDuplicateRoutes < Mongoid::Migration
   def self.duplicate_routes
     duplicates = []
     Route.prefix.asc(:incoming_path).each do |prefix|
-      exact = Route.where(:incoming_path => prefix.incoming_path, :route_type => 'exact').first
+      exact = Route.where(incoming_path: prefix.incoming_path, route_type: 'exact').first
       next unless exact
       duplicates << [prefix, exact]
     end

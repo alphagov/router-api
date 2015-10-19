@@ -22,7 +22,7 @@ backends.each do |name, properties|
   end
   url = "#{protocol}://#{name}.#{ENV['GOVUK_APP_DOMAIN']}/"
   puts "Backend #{name} => #{url}"
-  be = Backend.find_or_initialize_by(:backend_id => name)
+  be = Backend.find_or_initialize_by(backend_id: name)
   be.backend_url = url
   be.save!
 end
@@ -34,8 +34,8 @@ routes = [
 
 routes.each do |path, type, backend|
   puts "Route #{path} (#{type}) => #{backend}"
-  abort "Invalid backend #{backend}" unless Backend.where(:backend_id => backend).any?
-  route = Route.find_or_initialize_by(:incoming_path => path, :route_type => type)
+  abort "Invalid backend #{backend}" unless Backend.where(backend_id: backend).any?
+  route = Route.find_or_initialize_by(incoming_path: path, route_type: type)
   route.handler = "backend"
   route.backend_id = backend
   route.save!

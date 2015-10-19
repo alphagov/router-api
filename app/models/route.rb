@@ -1,44 +1,44 @@
 class Route
   include Mongoid::Document
 
-  field :incoming_path, :type => String
-  field :route_type, :type => String
-  field :handler, :type => String
-  field :disabled, :type => Boolean, :default => false
-  field :backend_id, :type => String
-  field :redirect_to, :type => String
-  field :redirect_type, :type => String
+  field :incoming_path, type: String
+  field :route_type, type: String
+  field :handler, type: String
+  field :disabled, type: Boolean, default: false
+  field :backend_id, type: String
+  field :redirect_to, type: String
+  field :redirect_type, type: String
 
-  index({:incoming_path => 1}, :unique => true)
+  index({incoming_path: 1}, unique: true)
 
   # The router loads the routes in order, and therefore needs this index.
   # This is to enable it to generate a consistent checksum of the routes.
-  index({:incoming_path => 1, :route_type => 1})
+  index({incoming_path: 1, route_type: 1})
 
   HANDLERS = %w(backend redirect gone)
 
-  validates :incoming_path, :uniqueness => true
+  validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
-  validates :route_type, :inclusion => {:in => %w(prefix exact)}
-  validates :handler, :inclusion => {:in => HANDLERS}
-  with_options :if => :backend? do |be|
-    be.validates :backend_id, :presence => true
+  validates :route_type, inclusion: {in: %w(prefix exact)}
+  validates :handler, inclusion: {in: HANDLERS}
+  with_options if: :backend? do |be|
+    be.validates :backend_id, presence: true
     be.validate :validate_backend_id
   end
 
-  with_options :if => :redirect? do |be|
-    be.validates :redirect_to, :presence => true
+  with_options if: :redirect? do |be|
+    be.validates :redirect_to, presence: true
     be.validate :validate_redirect_to
-    be.validates :redirect_type, :inclusion => {:in => %w(permanent temporary)}
+    be.validates :redirect_type, inclusion: {in: %w(permanent temporary)}
   end
 
   after_create :cleanup_child_gone_routes
 
-  scope :excluding, lambda {|route| where(:id => {:$ne => route.id}) }
-  scope :prefix, lambda { where(:route_type => "prefix") }
+  scope :excluding, lambda {|route| where(id: {:$ne => route.id}) }
+  scope :prefix, lambda { where(route_type: "prefix") }
 
   HANDLERS.each do |handler|
-    scope handler, lambda { where(:handler => handler) }
+    scope handler, lambda { where(handler: handler) }
 
     define_method "#{handler}?" do
       self.handler == handler
@@ -48,7 +48,7 @@ class Route
   def as_json(options = nil)
     super.tap do |h|
       h.delete("_id")
-      h.delete_if {|k,v| v.nil? }
+      h.delete_if {|_k, v| v.nil? }
       h["errors"] = self.errors.as_json if self.errors.any?
     end
   end
@@ -57,17 +57,17 @@ class Route
     if self.has_parent_prefix_routes?
       destroy
     else
-      update_attributes(:handler => "gone", :backend_id => nil, :redirect_to => nil, :redirect_type => nil)
+      update_attributes(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
     end
   end
 
   def has_parent_prefix_routes?
     segments = self.incoming_path.split('/').reject(&:blank?).tap(&:pop)
     while segments.any? do
-      return true if Route.excluding(self).prefix.where(:incoming_path => "/#{segments.join('/')}").any?
+      return true if Route.excluding(self).prefix.where(incoming_path: "/#{segments.join('/')}").any?
       segments.pop
     end
-    Route.excluding(self).prefix.where(:incoming_path => "/").any?
+    Route.excluding(self).prefix.where(incoming_path: "/").any?
   end
 
   private
@@ -105,7 +105,7 @@ class Route
     # 1. External URLs, or
     # 2. Query strings
     uri = URI.parse(target)
-    return false unless (uri.absolute? || uri.path.starts_with?("/"))
+    return false unless uri.absolute? || uri.path.starts_with?("/")
     uri.absolute? || (uri.path !~ %r{//} && target !~ %r{./\z})
   rescue URI::InvalidURIError
     false
@@ -113,13 +113,13 @@ class Route
 
   def validate_backend_id
     return if self.backend_id.blank? # handled by presence validation
-    unless Backend.where(:backend_id => self.backend_id).first
+    unless Backend.where(backend_id: self.backend_id).exists?
       errors[:backend_id] << "does not exist"
     end
   end
 
   def cleanup_child_gone_routes
     return unless self.route_type == "prefix"
-    Route.excluding(self).gone.where(:incoming_path => %r{\A#{Regexp.escape(self.incoming_path)}/}).destroy_all
+    Route.excluding(self).gone.where(incoming_path: %r{\A#{Regexp.escape(self.incoming_path)}/}).destroy_all
   end
 end

@@ -1,10 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "managing backends", :type => :request do
-
+RSpec.describe "managing backends", type: :request do
   describe "getting details of a backend" do
     it "should return the backend details as JSON" do
-      FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://foo.example.com/")
+      FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
 
       get "/backends/foo"
 
@@ -23,7 +22,7 @@ RSpec.describe "managing backends", :type => :request do
 
   describe "creating a backend" do
     it "should create a new backend" do
-      put_json "/backends/foo", :backend => {:backend_url => "http://foo.example.com/"}
+      put_json "/backends/foo", backend: {backend_url: "http://foo.example.com/"}
 
       expect(response.code.to_i).to eq(201)
       expect(JSON.parse(response.body)).to eq({
@@ -31,13 +30,13 @@ RSpec.describe "managing backends", :type => :request do
         "backend_url" => "http://foo.example.com/",
       })
 
-      backend = Backend.where(:backend_id => "foo").first
+      backend = Backend.where(backend_id: "foo").first
       expect(backend).to be
       expect(backend.backend_url).to eq("http://foo.example.com/")
     end
 
     it "should return an error if given invalid data" do
-      put_json "/backends/foo", :backend => {:backend_url => ""}
+      put_json "/backends/foo", backend: {backend_url: ""}
 
       expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq({
@@ -48,12 +47,12 @@ RSpec.describe "managing backends", :type => :request do
         }
       })
 
-      backend = Backend.where(:backend_id => "foo").first
+      backend = Backend.where(backend_id: "foo").first
       expect(backend).to be_nil
     end
 
     it "should 404 for a backend_id that doesn't look like a slug" do
-      put_json "/backends/foo+bar", :backend => {:backend_url => "http://foo.example.com/"}
+      put_json "/backends/foo+bar", backend: {backend_url: "http://foo.example.com/"}
       expect(response.code.to_i).to eq(404)
     end
 
@@ -65,8 +64,8 @@ RSpec.describe "managing backends", :type => :request do
 
   describe "updating a backend" do
     it "should update the backend" do
-      backend = FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://something.example.com/")
-      put_json "/backends/foo", :backend => {:backend_url => "http://something-else.example.com/"}
+      backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
+      put_json "/backends/foo", backend: {backend_url: "http://something-else.example.com/"}
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -79,8 +78,8 @@ RSpec.describe "managing backends", :type => :request do
     end
 
     it "should return an error if given invalid data" do
-      backend = FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://something.example.com/")
-      put_json "/backends/foo", :backend => {:backend_url => ""}
+      backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
+      put_json "/backends/foo", backend: {backend_url: ""}
 
       expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq({
@@ -98,7 +97,7 @@ RSpec.describe "managing backends", :type => :request do
 
   describe "deleting a backend" do
     before :each do
-      @backend = FactoryGirl.create(:backend, :backend_id => "foo", :backend_url => "http://foo.example.com/")
+      @backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
     end
 
     it "should delete the backend" do
@@ -110,12 +109,12 @@ RSpec.describe "managing backends", :type => :request do
         "backend_url" => "http://foo.example.com/",
       })
 
-      backend = Backend.where(:backend_id => "foo").first
+      backend = Backend.where(backend_id: "foo").first
       expect(backend).not_to be
     end
 
     it "should not allow deletion of a backend with associated routes" do
-      FactoryGirl.create(:backend_route, :backend_id => @backend.backend_id)
+      FactoryGirl.create(:backend_route, backend_id: @backend.backend_id)
 
       delete "/backends/foo"
 
@@ -128,7 +127,7 @@ RSpec.describe "managing backends", :type => :request do
         },
       })
 
-      backend = Backend.where(:backend_id => "foo").first
+      backend = Backend.where(backend_id: "foo").first
       expect(backend).to be
     end
 

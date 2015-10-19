@@ -28,7 +28,7 @@ class RouterReloader
     if @errors.any?
       Airbrake.notify_or_ignore(
         RuntimeError.new("Failed to trigger reload on some routers"),
-        :parameters => { :errors => @errors.map {|url, resp| {:url => url, :status => resp.code, :body => resp.body} } }
+        parameters: { errors: @errors.map {|url, resp| {url: url, status: resp.code, body: resp.body} } }
       )
       return false
     end
