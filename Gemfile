@@ -16,4 +16,5 @@ group :development, :test do
   gem 'factory_girl_rails', '4.2.1'
   gem 'ci_reporter_rspec', '1.0.0'
   gem 'webmock', '~> 1.20.4', :require => false
+  gem 'govuk-lint'
 end
