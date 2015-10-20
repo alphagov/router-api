@@ -136,49 +136,124 @@ RSpec.describe Route, type: :model do
     context "with handler set to 'redirect'" do
       subject(:route) { FactoryGirl.build(:redirect_route) }
 
+      describe "segments_mode field" do
+        it "is required" do
+          route.segments_mode = ""
+          expect(route).not_to be_valid
+          expect(route.errors[:segments_mode].size).to eq(1)
+        end
+
+        it "must be either 'ignore' or 'preserve'" do
+          route.segments_mode = "foobar"
+          expect(route).not_to be_valid
+          expect(route.errors[:segments_mode].size).to eq(1)
+
+          route.segments_mode = "ignore"
+          expect(route).to be_valid
+
+          route.segments_mode = "preserve"
+          expect(route).to be_valid
+        end
+
+        context "with an exact route" do
+          subject(:route) { FactoryGirl.create(:redirect_route, route_type: "exact") }
+
+          it "defaults to ignore" do
+            expect(route.segments_mode).to eq "ignore"
+          end
+
+          it "is not overriden" do
+            route = FactoryGirl.create(:redirect_route, route_type: "exact", segments_mode: "preserve")
+            expect(route.segments_mode).to eq "preserve"
+          end
+        end
+
+        context "with an prefix route" do
+          subject(:route) { FactoryGirl.create(:redirect_route, route_type: "prefix") }
+
+          it "defaults to preserve" do
+            expect(route.segments_mode).to eq "preserve"
+          end
+
+          it "is not overriden" do
+            route = FactoryGirl.create(:redirect_route, route_type: "prefix", segments_mode: "ignore")
+            expect(route.segments_mode).to eq "ignore"
+          end
+        end
+      end
+
       describe "redirect_to field" do
         it "is required" do
           route.redirect_to = ""
           expect(route).not_to be_valid
           expect(route.errors[:redirect_to].size).to eq(1)
         end
+      end
 
-        it "is a valid URL" do
-          route.redirect_to = "\jkhsdfgjkhdjskfgh//fdf#th"
-          expect(route).not_to be_valid
-          expect(route.errors[:redirect_to].size).to eq(1)
+      context "and segments_mode set to 'ignore'" do
+        subject(:route) { FactoryGirl.build(:redirect_route, segments_mode: 'ignore') }
+
+        describe "redirect_to field" do
+          it "will allow query strings" do
+            route.redirect_to = "/foo/bar?thing"
+            expect(route).to be_valid
+          end
+
+          it "will allow URL fragments" do
+            route.redirect_to = "/foo/bar#section"
+            expect(route).to be_valid
+          end
+
+          it "will allow external URLs" do
+            route.redirect_to = "http://example.com/thing"
+            expect(route).to be_valid
+          end
+
+          it "will reject invalid URL paths" do
+            [
+              "\jkhsdfgjkhdjskfgh//fdf#th",
+              "not a URL path",
+              "bar/baz",
+              "/foo//bar",
+            ].each do |path|
+              route.redirect_to = path
+              expect(route).not_to be_valid
+              expect(route.errors[:redirect_to].size).to eq(1)
+            end
+          end
         end
       end
-    end
 
-    context "with handler set to 'redirect' and route_type set to 'exact'" do
-      subject(:route) { FactoryGirl.build(:redirect_route, route_type: 'exact') }
+      context "and segments_mode set to 'preserve'" do
+        subject(:route) { FactoryGirl.build(:redirect_route, segments_mode: 'preserve') }
 
-      describe "redirect_to field" do
-        it "will allow query strings" do
-          route.redirect_to = "/foo/bar?thing"
-          expect(route).to be_valid
-        end
+        describe "redirect_to field" do
+          it "will reject query strings" do
+            route.redirect_to = "/foo/bar?thing"
+            expect(route).to be_invalid
+          end
 
-        it "will allow URL fragments" do
-          route.redirect_to = "/foo/bar#section"
-          expect(route).to be_valid
-        end
+          it "will reject URL fragments" do
+            route.redirect_to = "/foo/bar#section"
+            expect(route).to be_invalid
+          end
 
-        it "will allow external URLs" do
-          route.redirect_to = "http://example.com/thing"
-          expect(route).to be_valid
-        end
+          it "will reject external URLs" do
+            route.redirect_to = "http://example.com/thing"
+            expect(route).to be_invalid
+          end
 
-        it "will reject invalid URL paths" do
-          [
-            "not a URL path",
-            "bar/baz",
-            "/foo//bar",
-          ].each do |path|
-            route.redirect_to = path
-            expect(route).not_to be_valid
-            expect(route.errors[:redirect_to].size).to eq(1)
+          it "will reject invalid URL paths" do
+            [
+              "\jkhsdfgjkhdjskfgh//fdf#th",
+              "not a URL path",
+              "bar/baz",
+              "/foo//bar",
+            ].each do |path|
+              route.redirect_to = path
+              expect(route).not_to be_valid
+              expect(route.errors[:redirect_to].size).to eq(1)
+            end
           end
         end
       end
