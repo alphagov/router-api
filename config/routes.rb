@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-
-  with_options :format => false do |r|
-    r.resources :backends, :only => [:show, :update, :destroy]
+  with_options format: false do |r|
+    r.resources :backends, only: [:show, :update, :destroy]
 
     r.get "/routes" => "routes#show"
     r.put "/routes" => "routes#update"

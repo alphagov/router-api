@@ -11,10 +11,10 @@ gem 'unicorn', '~> 4.9.0'
 gem 'airbrake', '4.3.1'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-rails', '~> 3.3.3'
   gem 'database_cleaner', '1.2.0'
   gem 'factory_girl_rails', '4.2.1'
-  gem 'simplecov-rcov', '0.2.3', :require => false
   gem 'ci_reporter_rspec', '1.0.0'
-  gem 'webmock', '~> 1.20.4', :require => false
+  gem 'webmock', '~> 1.20.4', require: false
+  gem 'govuk-lint'
 end

@@ -1,12 +1,12 @@
 class Backend
   include Mongoid::Document
 
-  field :backend_id, :type => String
-  field :backend_url, :type => String
+  field :backend_id, type: String
+  field :backend_url, type: String
 
-  index({:backend_id => 1}, :unique => true)
+  index({backend_id: 1}, unique: true)
 
-  validates :backend_id, :presence => true, :uniqueness => true, :format => {:with => /\A[a-z0-9-]*\z/}
+  validates :backend_id, presence: true, uniqueness: true, format: {with: /\A[a-z0-9-]*\z/}
   validate :validate_backend_url
 
   before_destroy :ensure_no_linked_routes
@@ -21,9 +21,7 @@ class Backend
   private
 
   def validate_backend_url
-    unless valid_backend_url?
-      errors[:backend_url] << "is not a valid HTTP URL"
-    end
+    errors[:backend_url] << "is not a valid HTTP URL" unless valid_backend_url?
   end
 
   def valid_backend_url?
@@ -38,7 +36,7 @@ class Backend
   end
 
   def ensure_no_linked_routes
-    if Route.backend.where(:backend_id => self.backend_id).any?
+    if Route.backend.where(backend_id: self.backend_id).any?
       errors[:base] << "Backend has routes - can't delete"
       return false
     end

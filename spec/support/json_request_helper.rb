@@ -4,4 +4,4 @@ module JSONRequestHelper
   end
 end
 
-RSpec.configuration.include JSONRequestHelper, :type => :request
+RSpec.configuration.include JSONRequestHelper, type: :request

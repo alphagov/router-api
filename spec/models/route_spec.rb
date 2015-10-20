@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Route, :type => :model do
+RSpec.describe Route, type: :model do
   describe "validations" do
     before :each do
       @route = FactoryGirl.build(:route)
@@ -75,18 +75,18 @@ RSpec.describe Route, :type => :model do
 
       describe "uniqueness" do
         it "should be unique" do
-          FactoryGirl.create(:route, :incoming_path => '/foo')
+          FactoryGirl.create(:route, incoming_path: '/foo')
           @route.incoming_path = '/foo'
           expect(@route).not_to be_valid
           expect(@route.errors[:incoming_path].size).to eq(1)
         end
 
         it "should have a db level uniqueness constraint" do
-          FactoryGirl.create(:route, :incoming_path => '/foo')
+          FactoryGirl.create(:route, incoming_path: '/foo')
           @route.incoming_path = '/foo'
 
           expect {
-            @route.save :validate => false
+            @route.save validate: false
           }.to raise_error(Moped::Errors::OperationFailure)
         end
       end
@@ -125,7 +125,7 @@ RSpec.describe Route, :type => :model do
         end
 
         it "should map to an existing backend" do
-          backend = FactoryGirl.create(:backend, :backend_id => "foo")
+          backend = FactoryGirl.create(:backend, backend_id: "foo")
 
           @route.backend_id = "foo"
           expect(@route).to be_valid
@@ -159,7 +159,7 @@ RSpec.describe Route, :type => :model do
 
     context "with handler set to 'redirect' and route_type set to 'exact'" do
       before :each do
-        @route = FactoryGirl.build(:redirect_route, :route_type => 'exact')
+        @route = FactoryGirl.build(:redirect_route, route_type: 'exact')
       end
 
       describe "redirect_to field" do
@@ -212,7 +212,7 @@ RSpec.describe Route, :type => :model do
       json_hash = @route.as_json
       expect(json_hash).to have_key("errors")
       expect(json_hash["errors"]).to eq({
-        :handler => ["is not included in the list"],
+        handler: ["is not included in the list"],
       })
     end
 
@@ -223,7 +223,7 @@ RSpec.describe Route, :type => :model do
 
   describe "has_parent_prefix_routes?" do
     before :each do
-      @route = FactoryGirl.create(:route, :incoming_path => "/foo/bar")
+      @route = FactoryGirl.create(:route, incoming_path: "/foo/bar")
     end
 
     it "should be false with no parents" do
@@ -231,22 +231,22 @@ RSpec.describe Route, :type => :model do
     end
 
     it "should be true with a parent prefix route" do
-      FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "prefix")
+      FactoryGirl.create(:route, incoming_path: "/foo", route_type: "prefix")
       expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
     it "should be false with a parent exact route" do
-      FactoryGirl.create(:route, :incoming_path => "/foo", :route_type => "exact")
+      FactoryGirl.create(:route, incoming_path: "/foo", route_type: "exact")
       expect(@route.has_parent_prefix_routes?).to be_falsey
     end
 
     it "should be true with a prefix route at /" do
-      FactoryGirl.create(:route, :incoming_path => "/", :route_type => "prefix")
+      FactoryGirl.create(:route, incoming_path: "/", route_type: "prefix")
       expect(@route.has_parent_prefix_routes?).to be_truthy
     end
 
     it "should be false for a prefix route at /" do
-      @route.update_attributes(:incoming_path => "/", :route_type => "prefix")
+      @route.update_attributes(incoming_path: "/", route_type: "prefix")
       expect(@route.has_parent_prefix_routes?).to be_falsey
     end
   end
@@ -260,7 +260,7 @@ RSpec.describe Route, :type => :model do
       allow(@route).to receive(:has_parent_prefix_routes?).and_return(true)
       @route.soft_delete
 
-      r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
+      r = Route.where(incoming_path: @route.incoming_path, route_type: @route.route_type).first
       expect(r).not_to be
     end
 
@@ -268,67 +268,66 @@ RSpec.describe Route, :type => :model do
       allow(@route).to receive(:has_parent_prefix_routes?).and_return(false)
       @route.soft_delete
 
-      r = Route.where(:incoming_path => @route.incoming_path, :route_type => @route.route_type).first
+      r = Route.where(incoming_path: @route.incoming_path, route_type: @route.route_type).first
       expect(r).to be
       expect(r.handler).to eq("gone")
     end
   end
 
   describe "cleaning child gone routes after create" do
-
     it "should delete a child gone route after creating a route" do
-      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
+      child = FactoryGirl.create(:gone_route, incoming_path: "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, incoming_path: "/foo", route_type: "prefix"))
       new_route.save!
 
-      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
+      r = Route.where(incoming_path: child.incoming_path, route_type: child.route_type).first
       expect(r).not_to be
     end
 
     it "should not delete anything if the creation fails" do
-      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix", :redirect_to => "not a url"))
+      child = FactoryGirl.create(:gone_route, incoming_path: "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, incoming_path: "/foo", route_type: "prefix", redirect_to: "not a url"))
       expect(new_route.save).to be_falsey
 
-      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
+      r = Route.where(incoming_path: child.incoming_path, route_type: child.route_type).first
       expect(r).to be
     end
 
     it "should not delete anything if the created route is an exact route" do
-      child = FactoryGirl.create(:gone_route, :incoming_path => "/foo/bar/baz")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "exact"))
+      child = FactoryGirl.create(:gone_route, incoming_path: "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, incoming_path: "/foo", route_type: "exact"))
       new_route.save!
 
-      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
+      r = Route.where(incoming_path: child.incoming_path, route_type: child.route_type).first
       expect(r).to be
     end
 
     it "should not delete a child route that's not a gone route" do
-      child = FactoryGirl.create(:redirect_route, :incoming_path => "/foo/bar/baz")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo", :route_type => "prefix"))
+      child = FactoryGirl.create(:redirect_route, incoming_path: "/foo/bar/baz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, incoming_path: "/foo", route_type: "prefix"))
       new_route.save!
 
-      r = Route.where(:incoming_path => child.incoming_path, :route_type => child.route_type).first
+      r = Route.where(incoming_path: child.incoming_path, route_type: child.route_type).first
       expect(r).to be
     end
 
     it "should not delete a route that's not a child" do
-      child1 = FactoryGirl.create(:redirect_route, :incoming_path => "/bar/baz")
-      child2 = FactoryGirl.create(:redirect_route, :incoming_path => "/foo/barbaz")
-      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
+      child1 = FactoryGirl.create(:redirect_route, incoming_path: "/bar/baz")
+      child2 = FactoryGirl.create(:redirect_route, incoming_path: "/foo/barbaz")
+      new_route = Route.new(FactoryGirl.attributes_for(:redirect_route, incoming_path: "/foo/bar", route_type: "prefix"))
       new_route.save!
 
-      r = Route.where(:incoming_path => child1.incoming_path, :route_type => child1.route_type).first
+      r = Route.where(incoming_path: child1.incoming_path, route_type: child1.route_type).first
       expect(r).to be
-      r = Route.where(:incoming_path => child2.incoming_path, :route_type => child2.route_type).first
+      r = Route.where(incoming_path: child2.incoming_path, route_type: child2.route_type).first
       expect(r).to be
     end
 
     it "should not delete itself when deleting routes" do
-      new_route = Route.new(FactoryGirl.attributes_for(:gone_route, :incoming_path => "/foo/bar", :route_type => "prefix"))
+      new_route = Route.new(FactoryGirl.attributes_for(:gone_route, incoming_path: "/foo/bar", route_type: "prefix"))
       new_route.save!
 
-      r = Route.where(:incoming_path => new_route.incoming_path, :route_type => new_route.route_type).first
+      r = Route.where(incoming_path: new_route.incoming_path, route_type: new_route.route_type).first
       expect(r).to be
     end
   end
