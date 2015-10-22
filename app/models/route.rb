@@ -8,6 +8,7 @@ class Route
   field :backend_id, type: String
   field :redirect_to, type: String
   field :redirect_type, type: String
+  field :segments_mode, type: String
 
   index({incoming_path: 1}, unique: true)
 
@@ -30,8 +31,10 @@ class Route
     be.validates :redirect_to, presence: true
     be.validate :validate_redirect_to
     be.validates :redirect_type, inclusion: {in: %w(permanent temporary)}
+    be.validates :segments_mode, inclusion: {in: %w(ignore preserve)}
   end
 
+  before_validation :default_segments_mode
   after_create :cleanup_child_gone_routes
 
   scope :excluding, lambda {|route| where(id: {:$ne => route.id}) }
@@ -70,6 +73,11 @@ class Route
     Route.excluding(self).prefix.where(incoming_path: "/").any?
   end
 
+  def default_segments_mode
+    return unless redirect?
+    self.segments_mode ||= self.route_type == "prefix" ? "preserve" : "ignore"
+  end
+
   private
 
   def validate_incoming_path
@@ -80,8 +88,8 @@ class Route
 
   def validate_redirect_to
     return unless self.redirect_to.present? # This is to short circuit nil values
-    if self.route_type == 'exact'
-      unless valid_exact_redirect_target?(self.redirect_to)
+    if self.segments_mode == 'ignore'
+      unless valid_ignore_redirect_target?(self.redirect_to)
         errors[:redirect_to] << "is not a valid redirect target"
       end
     else
@@ -99,9 +107,9 @@ class Route
     false
   end
 
-  def valid_exact_redirect_target?(target)
-    # Valid 'exact' redirect targets differ from standard targets in that we
-    # allow:
+  def valid_ignore_redirect_target?(target)
+    # Valid redirect targets where we ignore path segments differ
+    # from standard targets in that we allow:
     # 1. External URLs, or
     # 2. Query strings
     uri = URI.parse(target)
