@@ -23,7 +23,7 @@ class RouterReloader
     @errors = []
     @urls.each do |url|
       response = Net::HTTP.post_form(URI.parse(url), {})
-      @errors << [url, response] unless response.code.to_i == 200
+      @errors << [url, response] unless response.code.to_s =~ /20[02]/
     end
     if @errors.any?
       Airbrake.notify_or_ignore(

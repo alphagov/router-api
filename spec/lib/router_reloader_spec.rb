@@ -35,7 +35,7 @@ RSpec.describe RouterReloader do
 
     it "should POST to the reload endpoint on all the configured routers, and return true" do
       r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 200)
-      r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 200)
+      r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 202)
 
       expect(RouterReloader.reload).to be_truthy
 
@@ -59,7 +59,7 @@ RSpec.describe RouterReloader do
 
       it "should still reload subsequent hosts on error" do
         r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
-        r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 200)
+        r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 202)
 
         RouterReloader.reload
 
