@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.6'
 
+gem 'plek', '1.12.0'
+
 gem 'mongoid', '4.0.2'
 gem 'mongoid_rails_migrations', '~> 1.0.1'
 
