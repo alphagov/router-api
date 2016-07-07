@@ -20,4 +20,29 @@ namespace :backend do
 
     RouterReloader.reload
   end
+
+  desc 'Updates backend_url for all backends using search and replace'
+  task :bulk_update_url, [:search_string, :replace_string] => [:environment] do |_t, args|
+    unless args[:search_string] && args[:replace_string]
+      raise 'Requires search_string and replace_string to be passed as parameters'
+    end
+
+    search_string = args[:search_string]
+    replace_string = args[:replace_string]
+
+    Backend.all.each do |backend|
+      old_url = backend.backend_url
+      new_url = old_url.gsub(search_string, replace_string)
+
+      if old_url != new_url
+        puts "Changing #{backend.backend_id} from #{old_url} to #{new_url}"
+        backend.backend_url = new_url
+        backend.save!
+      end
+    end
+
+    puts 'Reloading router'
+
+    RouterReloader.reload
+  end
 end
