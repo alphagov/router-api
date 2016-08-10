@@ -11,9 +11,13 @@ class RoutesController < ApplicationController
 
   def update
     route_details = @request_data[:route]
-    @route = Route.find_or_initialize_by(incoming_path: route_details.delete(:incoming_path))
-    status_code = @route.new_record? ? 201 : 200
-    @route.update_attributes(route_details) || status_code = 422
+    @route = Route.new(route_details)
+    if @route.valid?
+      new_route = @route.upsert_on_path(route_details)
+      status_code = new_route.incoming_path.nil? ? 201 : 200
+    else
+      status_code = 422
+    end
     render json: @route, status: status_code
   end
 

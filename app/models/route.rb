@@ -18,10 +18,12 @@ class Route
 
   HANDLERS = %w(backend redirect gone)
 
-  validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
-  validates :route_type, inclusion: {in: %w(prefix exact)}
-  validates :handler, inclusion: {in: HANDLERS}
+  with_options unless: :disabled? do |be|
+    be.validates :route_type, inclusion: {in: %w(prefix exact)}
+    be.validates :handler, inclusion: {in: HANDLERS}
+  end
+
   with_options if: :backend? do |be|
     be.validates :backend_id, presence: true
     be.validate :validate_backend_id
@@ -55,6 +57,16 @@ class Route
       h["errors"] = self.errors.as_json if self.errors.any?
     end
   end
+
+
+  def upsert_on_path(route_details)
+    Route.where(incoming_path: route_details[:incoming_path])
+      .find_and_modify({ "$set" => route_details }, upsert: true).tap do |original|
+      # find_and_modify returns the original document; if it has no path, it's new.
+      run_callbacks(:create) if original.incoming_path.nil?
+    end
+  end
+
 
   def soft_delete
     if self.has_parent_prefix_routes?
