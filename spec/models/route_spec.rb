@@ -72,13 +72,6 @@ RSpec.describe Route, type: :model do
       end
 
       describe "uniqueness" do
-        it "is unique" do
-          FactoryGirl.create(:route, incoming_path: '/foo')
-          route.incoming_path = '/foo'
-          expect(route).not_to be_valid
-          expect(route.errors[:incoming_path].size).to eq(1)
-        end
-
         it "will have a db level uniqueness constraint" do
           FactoryGirl.create(:route, incoming_path: '/foo')
           route.incoming_path = '/foo'
