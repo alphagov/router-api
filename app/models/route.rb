@@ -17,6 +17,7 @@ class Route
   index({incoming_path: 1, route_type: 1})
 
   HANDLERS = %w(backend redirect gone)
+  DUPLICATE_KEY_ERROR = 11000
 
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
