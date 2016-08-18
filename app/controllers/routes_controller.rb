@@ -11,9 +11,19 @@ class RoutesController < ApplicationController
 
   def update
     route_details = @request_data[:route]
-    @route = Route.find_or_initialize_by(incoming_path: route_details.delete(:incoming_path))
-    status_code = @route.new_record? ? 201 : 200
-    @route.update_attributes(route_details) || status_code = 422
+    incoming_path = route_details.delete(:incoming_path)
+    tries = 3
+    begin
+      @route = Route.find_or_initialize_by(incoming_path: incoming_path)
+      status_code = @route.new_record? ? 201 : 200
+      @route.update_attributes(route_details) || status_code = 422
+    rescue Moped::Errors::OperationFailure => e
+      if e.details["code"] == Route::DUPLICATE_KEY_ERROR && (tries -= 1) > 0
+        retry
+      else
+        raise
+      end
+    end
     render json: @route, status: status_code
   end
 
