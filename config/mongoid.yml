@@ -1,7 +1,7 @@
 development:
   sessions:
     default:
-      uri: mongodb://localhost/router
+      uri: <%= ENV["MONGODB_URI"] || "mongodb://localhost/router" %>
       options:
         write:
           w: 1
@@ -15,7 +15,7 @@ development:
 test:
   sessions:
     default:
-      uri: mongodb://localhost/router_api_test
+      uri: <%= ENV["TEST_MONGODB_URI"] || "mongodb://localhost/router_api_test" %>
       options:
         write:
           w: 1
@@ -28,7 +28,7 @@ test:
 production:
   sessions:
     default:
-      uri: <%= ENV['MONGODB_URI'] %>
+      uri: <%= ENV["MONGODB_URI"] %>
       options:
         write:
           w: 1
