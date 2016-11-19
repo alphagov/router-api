@@ -9,18 +9,13 @@ unless ENV['GOVUK_APP_DOMAIN'].present?
   abort "GOVUK_APP_DOMAIN is not set.  Maybe you need to run under govuk_setenv..."
 end
 
-backends = {
-  'canary-frontend' => {'tls' => false},
-  'licensify' => {'tls' => true},
-}
+backends = %w(
+  canary-frontend
+  licensify
+)
 
-backends.each do |name, properties|
-  if properties['tls'] == true
-    protocol = 'https'
-  else
-    protocol = 'http'
-  end
-  url = "#{protocol}://#{name}.#{ENV['GOVUK_APP_DOMAIN']}/"
+backends.each do |name|
+  url = "https://#{name}.#{ENV['GOVUK_APP_DOMAIN']}/"
   puts "Backend #{name} => #{url}"
   be = Backend.find_or_initialize_by(backend_id: name)
   be.backend_url = url
