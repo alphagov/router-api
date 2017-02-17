@@ -17,6 +17,8 @@ class Route
   index({incoming_path: 1, route_type: 1})
 
   HANDLERS = %w(backend redirect gone)
+  WHITELISTED_DOMAIN_SUFFIXES = %w(.campaign.gov.uk)
+
   DUPLICATE_KEY_ERROR = 11000
 
   validates :incoming_path, uniqueness: true
@@ -94,10 +96,26 @@ class Route
         errors[:redirect_to] << "is not a valid redirect target"
       end
     else
-      unless valid_local_path?(self.redirect_to)
+      unless allow_segments?(self.redirect_to)
         errors[:redirect_to] << "is not a valid redirect target"
       end
     end
+  end
+
+  def allow_segments?(url)
+    valid_local_path?(url) || valid_whitelisted_url?(url)
+  end
+
+  def valid_whitelisted_url?(url)
+    uri = URI.parse(url)
+    return false unless uri.absolute? && uri.path.blank?
+    belongs_to_whitelist?(uri)
+  rescue URI::InvalidURIError
+    false
+  end
+
+  def belongs_to_whitelist?(uri)
+    WHITELISTED_DOMAIN_SUFFIXES.any? { |suffix| uri.host.end_with? suffix}
   end
 
   def valid_local_path?(path)
