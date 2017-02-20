@@ -239,7 +239,7 @@ RSpec.describe Route, type: :model do
           end
 
           it "will allow whitelisted domains" do
-            route.redirect_to = "https://moarcaek.campaign.gov.uk"
+            route.redirect_to = "https://moarcaek.campaign.gov.uk/"
             expect(route).to be_valid
           end
 
