@@ -108,10 +108,14 @@ class Route
 
   def valid_whitelisted_url?(url)
     uri = URI.parse(url)
-    return false unless uri.absolute? && uri.path.blank?
+    return false unless uri.absolute? && path_is_root_or_empty?(uri)
     belongs_to_whitelist?(uri)
   rescue URI::InvalidURIError
     false
+  end
+
+  def path_is_root_or_empty?(uri)
+    uri.path.blank? || uri.path == '/'
   end
 
   def belongs_to_whitelist?(uri)
