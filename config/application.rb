@@ -30,5 +30,7 @@ module RouterApi
     # config.i18n.default_locale = :de
 
     #config.i18n.enforce_available_locales = true
+
+    config.paths["log"] = ENV["LOG_PATH"] if ENV["LOG_PATH"]
   end
 end
