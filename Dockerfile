@@ -1,6 +1,7 @@
 FROM ruby:2.2.3
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
 
+ENV GOVUK_APP_NAME router-api
 ENV MONGODB_URI mongodb://mongo/router
 ENV PORT 3056
 ENV RAILS_ENV development
