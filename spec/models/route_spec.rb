@@ -53,7 +53,7 @@ RSpec.describe Route, type: :model do
         ].each do |path|
           route.incoming_path = path
           expect(route).not_to be_valid
-          expect(route.errors[:incoming_path].size).to eq(1)
+          expect(route.errors[:incoming_path]).not_to be_empty
         end
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Route, type: :model do
         ].each do |path|
           route.incoming_path = path
           expect(route).not_to be_valid
-          expect(route.errors[:incoming_path].size).to eq(1)
+          expect(route.errors[:incoming_path]).not_to be_empty
         end
       end
 
@@ -257,7 +257,7 @@ RSpec.describe Route, type: :model do
             ].each do |path|
               route.redirect_to = path
               expect(route).not_to be_valid
-              expect(route.errors[:redirect_to].size).to eq(1)
+              expect(route.errors[:redirect_to]).not_to be_empty
             end
           end
         end
