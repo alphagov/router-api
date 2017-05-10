@@ -238,14 +238,9 @@ RSpec.describe Route, type: :model do
             expect(route).to be_invalid
           end
 
-          it "will allow whitelisted domains" do
+          it "will allow domains within .gov.uk" do
             route.redirect_to = "https://moarcaek.campaign.gov.uk/"
             expect(route).to be_valid
-          end
-
-          it "will reject paths of whitelisted domains" do
-            route.redirect_to = "https://caekrecipes.campaign.gov.uk/victoria-sandwich"
-            expect(route).to be_invalid
           end
 
           it "will reject other external URLs" do
