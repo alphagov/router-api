@@ -83,51 +83,36 @@ class Route
   private
 
   def validate_incoming_path
-    unless valid_local_path?(self.incoming_path)
+    unless self.incoming_path.starts_with?("/") &&
+        valid_local_path?(self.incoming_path)
       errors[:incoming_path] << "is not a valid absolute URL path"
     end
   end
 
   def validate_redirect_to
     return unless self.redirect_to.present? # This is to short circuit nil values
-    if self.segments_mode == 'ignore'
-      unless valid_ignore_redirect_target?(self.redirect_to)
-        errors[:redirect_to] << "is not a valid redirect target"
+
+    if self.redirect_to.starts_with?("/")
+      unless valid_local_path?(self.redirect_to)
+        errors[:redirect_to] << "is not a valid internal redirect target"
       end
     else
-      unless allow_segments?(self.redirect_to)
-        errors[:redirect_to] << "is not a valid redirect target"
+      unless valid_external_target?(self.redirect_to)
+        errors[:redirect_to] << "is not a valid external redirect target"
       end
     end
   end
 
-  def allow_segments?(url)
-    valid_local_path?(url) || valid_whitelisted_url?(url)
-  end
-
-  def valid_whitelisted_url?(url)
-    uri = URI.parse(url)
-    uri.absolute?
-  rescue URI::InvalidURIError
-    false
-  end
-
-  def valid_local_path?(path)
-    return false unless path.starts_with?("/")
-    uri = URI.parse(path)
-    uri.path == path && path !~ %r{//} && path !~ %r{./\z}
-  rescue URI::InvalidURIError
-    false
-  end
-
-  def valid_ignore_redirect_target?(target)
-    # Valid redirect targets where we ignore path segments differ
-    # from standard targets in that we allow:
-    # 1. External URLs, or
-    # 2. Query strings
+  def valid_external_target?(target)
     uri = URI.parse(target)
-    return false unless uri.absolute? || uri.path.starts_with?("/")
-    uri.absolute? || (uri.path !~ %r{//} && target !~ %r{./\z})
+    uri.absolute? && uri.host.end_with?(".gov.uk")
+  rescue URI::InvalidURIError
+    false
+  end
+
+  def valid_local_path?(target)
+    uri = URI.parse(target)
+    uri.path == target && uri.path !~ %r{//} && target !~ %r{./\z}
   rescue URI::InvalidURIError
     false
   end
