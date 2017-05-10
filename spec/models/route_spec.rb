@@ -136,6 +136,18 @@ RSpec.describe Route, type: :model do
     context "with handler set to 'redirect'" do
       subject(:route) { FactoryGirl.build(:redirect_route) }
 
+      context "with an external redirect" do
+        it "will allow .gov.uk subdomains" do
+          route.redirect_to = "http://example.service.gov.uk/thing"
+          expect(route).to be_valid
+        end
+
+        it "won't allow domains outside of .gov.uk" do
+          route.redirect_to = "http://example.service.gov.uk.example.com/thing"
+          expect(route).to be_invalid
+        end
+      end
+
       describe "segments_mode field" do
         it "is required" do
           route.segments_mode = ""
