@@ -205,7 +205,7 @@ RSpec.describe Route, type: :model do
           end
 
           it "will allow external URLs" do
-            route.redirect_to = "http://example.com/thing"
+            route.redirect_to = "http://example.service.gov.uk/thing"
             expect(route).to be_valid
           end
 
