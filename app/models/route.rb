@@ -17,7 +17,6 @@ class Route
   index({incoming_path: 1, route_type: 1})
 
   HANDLERS = %w(backend redirect gone)
-  WHITELISTED_DOMAIN_SUFFIXES = %w(.campaign.gov.uk)
 
   DUPLICATE_KEY_ERROR = 11000
 
@@ -108,18 +107,9 @@ class Route
 
   def valid_whitelisted_url?(url)
     uri = URI.parse(url)
-    return false unless uri.absolute? && path_is_root_or_empty?(uri)
-    belongs_to_whitelist?(uri)
+    uri.absolute?
   rescue URI::InvalidURIError
     false
-  end
-
-  def path_is_root_or_empty?(uri)
-    uri.path.blank? || uri.path == '/'
-  end
-
-  def belongs_to_whitelist?(uri)
-    WHITELISTED_DOMAIN_SUFFIXES.any? { |suffix| uri.host.end_with? suffix}
   end
 
   def valid_local_path?(path)
