@@ -53,7 +53,7 @@ RSpec.describe Route, type: :model do
         ].each do |path|
           route.incoming_path = path
           expect(route).not_to be_valid
-          expect(route.errors[:incoming_path].size).to eq(1)
+          expect(route.errors[:incoming_path]).not_to be_empty
         end
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Route, type: :model do
         ].each do |path|
           route.incoming_path = path
           expect(route).not_to be_valid
-          expect(route.errors[:incoming_path].size).to eq(1)
+          expect(route.errors[:incoming_path]).not_to be_empty
         end
       end
 
@@ -135,6 +135,18 @@ RSpec.describe Route, type: :model do
 
     context "with handler set to 'redirect'" do
       subject(:route) { FactoryGirl.build(:redirect_route) }
+
+      context "with an external redirect" do
+        it "will allow .gov.uk subdomains" do
+          route.redirect_to = "http://example.service.gov.uk/thing"
+          expect(route).to be_valid
+        end
+
+        it "won't allow domains outside of .gov.uk" do
+          route.redirect_to = "http://example.service.gov.uk.example.com/thing"
+          expect(route).to be_invalid
+        end
+      end
 
       describe "segments_mode field" do
         it "is required" do
@@ -205,7 +217,7 @@ RSpec.describe Route, type: :model do
           end
 
           it "will allow external URLs" do
-            route.redirect_to = "http://example.com/thing"
+            route.redirect_to = "http://example.service.gov.uk/thing"
             expect(route).to be_valid
           end
 
@@ -238,14 +250,9 @@ RSpec.describe Route, type: :model do
             expect(route).to be_invalid
           end
 
-          it "will allow whitelisted domains" do
+          it "will allow domains within .gov.uk" do
             route.redirect_to = "https://moarcaek.campaign.gov.uk/"
             expect(route).to be_valid
-          end
-
-          it "will reject paths of whitelisted domains" do
-            route.redirect_to = "https://caekrecipes.campaign.gov.uk/victoria-sandwich"
-            expect(route).to be_invalid
           end
 
           it "will reject other external URLs" do
@@ -262,7 +269,7 @@ RSpec.describe Route, type: :model do
             ].each do |path|
               route.redirect_to = path
               expect(route).not_to be_valid
-              expect(route.errors[:redirect_to].size).to eq(1)
+              expect(route.errors[:redirect_to]).not_to be_empty
             end
           end
         end

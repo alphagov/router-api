@@ -17,7 +17,6 @@ class Route
   index({incoming_path: 1, route_type: 1})
 
   HANDLERS = %w(backend redirect gone)
-  WHITELISTED_DOMAIN_SUFFIXES = %w(.campaign.gov.uk)
 
   DUPLICATE_KEY_ERROR = 11000
 
@@ -84,62 +83,66 @@ class Route
   private
 
   def validate_incoming_path
-    unless valid_local_path?(self.incoming_path)
-      errors[:incoming_path] << "is not a valid absolute URL path"
-    end
+    errors[:incoming_path] << "must start with /" unless
+      incoming_path.starts_with?("/")
+
+    uri = URI.parse(incoming_path)
+
+    errors[:incoming_path] << "cannot end with /" if
+      uri.path != "/" && uri.path.end_with?("/")
+    errors[:incoming_path] << "cannot contain //" if uri.path =~ %r{//}
+
+    errors[:incoming_path] << "does not equal the URI path" unless
+      uri.path == incoming_path
+  rescue URI::InvalidURIError
+    errors[:incoming_path] << "is an invalid URI"
   end
 
   def validate_redirect_to
     return unless self.redirect_to.present? # This is to short circuit nil values
-    if self.segments_mode == 'ignore'
-      unless valid_ignore_redirect_target?(self.redirect_to)
-        errors[:redirect_to] << "is not a valid redirect target"
-      end
+
+    if self.redirect_to.starts_with?("/")
+      validate_internal_target(self.redirect_to)
     else
-      unless allow_segments?(self.redirect_to)
-        errors[:redirect_to] << "is not a valid redirect target"
+      validate_external_target(self.redirect_to)
+    end
+
+    if segments_mode == "preserve"
+      uri = URI.parse(redirect_to)
+
+      if uri.fragment.present?
+        errors[:redirect_to] << "cannot contain fragment if the segments mode is preserve"
+      end
+
+      if uri.query.present?
+        errors[:redirect_to] << "cannot contain query parameters if the segments mode is preserve"
       end
     end
-  end
-
-  def allow_segments?(url)
-    valid_local_path?(url) || valid_whitelisted_url?(url)
-  end
-
-  def valid_whitelisted_url?(url)
-    uri = URI.parse(url)
-    return false unless uri.absolute? && path_is_root_or_empty?(uri)
-    belongs_to_whitelist?(uri)
   rescue URI::InvalidURIError
-    false
+    errors[:redirect_to] << "is an invalid URI"
   end
 
-  def path_is_root_or_empty?(uri)
-    uri.path.blank? || uri.path == '/'
-  end
-
-  def belongs_to_whitelist?(uri)
-    WHITELISTED_DOMAIN_SUFFIXES.any? { |suffix| uri.host.end_with? suffix}
-  end
-
-  def valid_local_path?(path)
-    return false unless path.starts_with?("/")
-    uri = URI.parse(path)
-    uri.path == path && path !~ %r{//} && path !~ %r{./\z}
-  rescue URI::InvalidURIError
-    false
-  end
-
-  def valid_ignore_redirect_target?(target)
-    # Valid redirect targets where we ignore path segments differ
-    # from standard targets in that we allow:
-    # 1. External URLs, or
-    # 2. Query strings
+  def validate_external_target(target)
     uri = URI.parse(target)
-    return false unless uri.absolute? || uri.path.starts_with?("/")
-    uri.absolute? || (uri.path !~ %r{//} && target !~ %r{./\z})
+    puts "#{target} #{uri.host}"
+    errors[:redirect_to] << "must be an absolute URI" unless uri.absolute?
+
+    return unless errors[:redirect_to].empty? # Don't continue, as the
+                                              # host validation may
+                                              # fail
+
+    errors[:redirect_to] << "external domain must be within .gov.uk" unless
+      uri.host.end_with?(".gov.uk")
   rescue URI::InvalidURIError
-    false
+    errors[:redirect_to] << "is an invalid URI"
+  end
+
+  def validate_internal_target(target)
+    uri = URI.parse(target)
+    errors[:redirect_to] << "uri path cannot contain //" if uri.path =~ %r{//}
+    errors[:redirect_to] << "cannot end with /" if target =~ %r{./\z}
+  rescue URI::InvalidURIError
+    errors[:redirect_to] << "is an invalid URI"
   end
 
   def validate_backend_id
