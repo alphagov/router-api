@@ -29,6 +29,12 @@ task test_delete_collections: :environment do
   puts_routes_count(paths)
 end
 
+desc "Delete News Article 301s"
+task delete_news_articles: :environment do
+  paths = /\/news\//
+
+  delete_routes(paths)
+end
 
 def delete_routes(paths)
   routes = Route.where(incoming_path: paths, backend_id: "whitehall-frontend")
