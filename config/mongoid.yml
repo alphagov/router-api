@@ -1,35 +1,27 @@
 development:
-  sessions:
+  clients:
     default:
       uri: <%= ENV["MONGODB_URI"] || "mongodb://localhost/router" %>
       options:
         write:
           w: 1
-        read: primary
-
-        # Change the default consistency model to primary, secondary.
-        # 'secondary' will send reads to secondaries, 'primary' sends everything
-        # to master. (default: primary)
-        # read: secondary_preferred
 
 test:
-  sessions:
+  clients:
     default:
       uri: <%= ENV["TEST_MONGODB_URI"] || "mongodb://localhost/router_api_test" %>
       options:
         write:
           w: 1
-        read: primary
         # In the test environment we lower the retries and retry interval to
         # low amounts for fast failures.
         max_retries: 1
         retry_interval: 0
 
 production:
-  sessions:
+  clients:
     default:
       uri: <%= ENV["MONGODB_URI"] %>
       options:
         write:
           w: 1
-        read: primary
