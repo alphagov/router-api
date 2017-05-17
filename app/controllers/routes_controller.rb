@@ -1,8 +1,8 @@
 require 'router_reloader'
 
 class RoutesController < ApplicationController
-  before_filter :parse_json_request, only: [:update]
-  before_filter :ensure_route_keys, only: [:update]
+  before_action :parse_json_request, only: [:update]
+  before_action :ensure_route_keys, only: [:update]
 
   def show
     @route = Route.find_by(incoming_path: params[:incoming_path])
