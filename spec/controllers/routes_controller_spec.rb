@@ -22,7 +22,7 @@ RSpec.describe RoutesController, type: :controller do
       Thread.new do
         begin
           put :update, data
-        rescue Moped::Errors::OperationFailure
+        rescue Mongo::Error::OperationFailure
           failed = true
         rescue AbstractController::DoubleRenderError
           # this error will happen if both threads succeed, so this is fine.

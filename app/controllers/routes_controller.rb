@@ -17,8 +17,8 @@ class RoutesController < ApplicationController
       @route = Route.find_or_initialize_by(incoming_path: incoming_path)
       status_code = @route.new_record? ? 201 : 200
       @route.update_attributes(route_details) || status_code = 422
-    rescue Moped::Errors::OperationFailure => e
-      if e.details["code"] == Route::DUPLICATE_KEY_ERROR && (tries -= 1) > 0
+    rescue Mongo::Error::OperationFailure => e
+      if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1) > 0
         retry
       else
         raise
