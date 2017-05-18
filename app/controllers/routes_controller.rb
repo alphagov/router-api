@@ -39,9 +39,9 @@ class RoutesController < ApplicationController
 
   def commit
     if RouterReloader.reload
-      render text: "Router reloaded"
+      render plain: "Router reloaded"
     else
-      render text: "Failed to reload all routers", status: 500
+      render plain: "Failed to reload all routers", status: 500
     end
   end
 
