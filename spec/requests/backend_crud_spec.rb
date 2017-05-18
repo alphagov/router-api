@@ -57,7 +57,7 @@ RSpec.describe "managing backends", type: :request do
     end
 
     it "should return a 400 when given bad JSON" do
-      put "/backends/foo", "i'm not json", "CONTENT_TYPE" => "application/json"
+      put "/backends/foo", params: "i'm not json", headers: { "CONTENT_TYPE" => "application/json" }
       expect(response.status).to eq(400)
     end
   end
