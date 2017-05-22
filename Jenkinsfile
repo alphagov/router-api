@@ -2,6 +2,8 @@
 
 REPOSITORY = "router-api"
 
+repoName = JOB_NAME.split('/')[0]
+
 node ("mongodb-2.4") {
   def govuk = load "/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy"
 
@@ -16,6 +18,23 @@ node ("mongodb-2.4") {
 
     stage("Push release tag") {
       govuk.pushTag(REPOSITORY, env.BRANCH_NAME, "release_" + env.BUILD_NUMBER)
+    }
+
+    if (govuk.hasDockerfile()) {
+      stage("Build Docker image") {
+        govuk.buildDockerImage(repoName, env.BRANCH_NAME)
+      }
+
+      stage("Push Docker image") {
+        govuk.pushDockerImage(repoName, env.BRANCH_NAME)
+      }
+
+      if (env.BRANCH_NAME == "master") {
+        stage("Tag Docker image") {
+          dockerTag = "release_${env.BUILD_NUMBER}"
+          govuk.pushDockerImage(repoName, env.BRANCH_NAME, dockerTag)
+        }
+      }
     }
 
     stage("Deploy on Integration") {
