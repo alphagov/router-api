@@ -255,6 +255,16 @@ RSpec.describe Route, type: :model do
             expect(route).to be_valid
           end
 
+          it "will allow british-business-bank.co.uk URLs" do
+            route.redirect_to = "https://british-business-bank.co.uk/banking-things"
+            expect(route).to be_valid
+          end
+
+          it "will reject british-business-bank.co.uk subdomains" do
+            route.redirect_to = "https://www.british-business-bank.co.uk"
+            expect(route).to be_invalid
+          end
+
           it "will reject other external URLs" do
             route.redirect_to = "http://example.com"
             expect(route).to be_invalid
