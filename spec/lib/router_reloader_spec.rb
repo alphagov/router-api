@@ -28,6 +28,25 @@ RSpec.describe RouterReloader do
     end
   end
 
+  describe "parsing router reload urls from env var file" do
+    around :each do |example|
+      original_urls = RouterReloader.router_reload_urls
+      example.run
+      RouterReloader.router_reload_urls = original_urls
+    end
+
+    it "should generate urls from list of host:port pairs" do
+      filename = 'spec/support/router_nodes.txt'
+
+      RouterReloader.set_router_reload_urls_from_file(filename)
+
+      expect(RouterReloader.router_reload_urls).to eq([
+        "http://foo.bar:1234/reload",
+        "http://bar.baz:2345/reload",
+      ])
+    end
+  end
+
   describe "triggering a reload of routes" do
     before :each do
       allow(RouterReloader).to receive(:router_reload_urls).and_return(["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"])
