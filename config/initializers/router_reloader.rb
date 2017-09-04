@@ -3,6 +3,9 @@ require 'router_reloader'
 if ENV['ROUTER_NODES'].present?
   RouterReloader.set_router_reload_urls_from_string(ENV['ROUTER_NODES'])
 
+elsif ENV['ROUTER_NODES_FILE'].present?
+  RouterReloader.set_router_reload_urls_from_file(ENV['ROUTER_NODES_FILE'])
+
 elsif ! Rails.env.production?
   RouterReloader.router_reload_urls = ["http://localhost:3055/reload"]
 

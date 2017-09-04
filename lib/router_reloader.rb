@@ -12,6 +12,11 @@ class RouterReloader
     self.router_reload_urls = nodes.map {|node| "http://#{node}/reload" }
   end
 
+  def self.set_router_reload_urls_from_file(router_nodes_file)
+    nodes = File.readlines(router_nodes_file).map(&:chomp)
+    self.router_reload_urls = nodes.map {|node| "http://#{node}/reload" }
+  end
+
   # To be set in dev mode so that this can run when the router isn't running.
   cattr_accessor :swallow_connection_errors
 
