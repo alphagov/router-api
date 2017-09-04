@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '5.1.1'
-
+gem 'govuk_app_config', '~> 0.2.0'
 gem 'plek', '1.12.0'
 
 gem 'mongoid', '6.1.0'
@@ -9,8 +9,6 @@ gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_
 
 gem 'logstasher', '0.6.2'
 gem 'unicorn', '~> 4.9.0'
-
-gem 'airbrake', github: 'alphagov/airbrake', branch: 'silence-dep-warnings-for-rails-5'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'

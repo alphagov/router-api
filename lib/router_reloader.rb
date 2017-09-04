@@ -26,9 +26,9 @@ class RouterReloader
       @errors << [url, response] unless response.code.to_s =~ /20[02]/
     end
     if @errors.any?
-      Airbrake.notify_or_ignore(
-        RuntimeError.new("Failed to trigger reload on some routers"),
-        parameters: { errors: @errors.map {|url, resp| {url: url, status: resp.code, body: resp.body} } }
+      GovukError.notify(
+        "Failed to trigger reload on some routers",
+        extra: { errors: @errors.map {|url, resp| {url: url, status: resp.code, body: resp.body} } }
       )
       return false
     end

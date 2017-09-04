@@ -48,9 +48,9 @@ RSpec.describe RouterReloader do
         r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
         r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 404, body: "Not found")
 
-        expect(Airbrake).to receive(:notify_or_ignore) {|ex, options|
-          expect(ex.message).to eq("Failed to trigger reload on some routers")
-          errors = options[:parameters][:errors]
+        expect(GovukError).to receive(:notify) {|message, options|
+          expect(message).to eq("Failed to trigger reload on some routers")
+          errors = options[:extra][:errors]
           expect(errors[0]).to eq({url: "http://foo.example.com:1234/reload", status: "401", body: "Authorisation required"})
           expect(errors[1]).to eq({url: "http://bar.example.com:4321/reload", status: "404", body: "Not found"})
         }
