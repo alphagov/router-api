@@ -1,6 +1,6 @@
 class BackendsController < ApplicationController
-  before_filter :validate_slug
-  before_filter :parse_json_request, only: [:update]
+  before_action :validate_slug
+  before_action :parse_json_request, only: [:update]
 
   def show
     @backend = Backend.find_by(backend_id: params[:id])

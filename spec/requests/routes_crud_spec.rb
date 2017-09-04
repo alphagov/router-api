@@ -8,7 +8,7 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should return details of the route in JSON format" do
-      get "/routes", incoming_path: "/foo/bar"
+      get "/routes", params: { incoming_path: "/foo/bar" }
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -21,7 +21,7 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should 404 for non-existent routes" do
-      get "/routes", incoming_path: "/foo"
+      get "/routes", params: { incoming_path: "/foo" }
       expect(response.code.to_i).to eq(404)
     end
   end
@@ -157,10 +157,10 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should return a 400 when given bad JSON" do
-      put "/routes", "i'm not json", "CONTENT_TYPE" => "application/json"
+      put "/routes", params: "i'm not json", headers: { "CONTENT_TYPE" => "application/json" }
       expect(response.status).to eq(400)
 
-      put "/routes", "", "CONTENT_TYPE" => "application/json"
+      put "/routes", params: "", headers: { "CONTENT_TYPE" => "application/json" }
       expect(response.code.to_i).to eq(400)
     end
   end
@@ -172,7 +172,7 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should delete the route" do
-      delete "/routes", incoming_path: "/foo/bar", hard_delete: "true"
+      delete "/routes", params: { incoming_path: "/foo/bar", hard_delete: "true" }
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq({
@@ -188,7 +188,7 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should return 404 for non-existent routes" do
-      delete "/routes", incoming_path: "/foo"
+      delete "/routes", params: { incoming_path: "/foo" }
       expect(response.code.to_i).to eq(404)
     end
   end

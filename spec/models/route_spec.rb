@@ -85,7 +85,7 @@ RSpec.describe Route, type: :model do
 
           expect {
             route.save validate: false
-          }.to raise_error(Moped::Errors::OperationFailure)
+          }.to raise_error(Mongo::Error::OperationFailure)
         end
       end
     end

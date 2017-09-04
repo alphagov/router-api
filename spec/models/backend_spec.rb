@@ -29,7 +29,7 @@ RSpec.describe Backend, type: :model do
         backend.backend_id = 'a-backend'
         expect {
           backend.save validate: false
-        }.to raise_error(Moped::Errors::OperationFailure)
+        }.to raise_error(Mongo::Error::OperationFailure)
       end
     end
 

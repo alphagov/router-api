@@ -18,7 +18,7 @@ class Route
 
   HANDLERS = %w(backend redirect gone)
 
-  DUPLICATE_KEY_ERROR = 11000
+  DUPLICATE_KEY_ERROR = 'E11000'.freeze
 
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path

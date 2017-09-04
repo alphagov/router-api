@@ -8,7 +8,7 @@ RSpec.describe "auto creation and deletion of gone routes", type: :request do
     end
 
     it "should convert it into a 'gone' route" do
-      delete "/routes", incoming_path: "/foo/bar"
+      delete "/routes", params: { incoming_path: "/foo/bar" }
 
       expect(response.code.to_i).to eq(200)
 
@@ -19,7 +19,7 @@ RSpec.describe "auto creation and deletion of gone routes", type: :request do
     end
 
     it "should not convert it into a 'gone' route if hard deletion is requested" do
-      delete "/routes", incoming_path: "/foo/bar", hard_delete: "true"
+      delete "/routes", params: { incoming_path: "/foo/bar", hard_delete: "true" }
 
       expect(response.code.to_i).to eq(200)
 
@@ -29,7 +29,7 @@ RSpec.describe "auto creation and deletion of gone routes", type: :request do
 
     it "should fully delete it if it has a parent prefix route" do
       FactoryGirl.create(:backend_route, incoming_path: "/foo", route_type: "prefix")
-      delete "/routes", incoming_path: "/foo/bar"
+      delete "/routes", params: { incoming_path: "/foo/bar" }
 
       expect(response.code.to_i).to eq(200)
 

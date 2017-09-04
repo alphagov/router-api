@@ -1,8 +1,8 @@
 require 'router_reloader'
 
 class RoutesController < ApplicationController
-  before_filter :parse_json_request, only: [:update]
-  before_filter :ensure_route_keys, only: [:update]
+  before_action :parse_json_request, only: [:update]
+  before_action :ensure_route_keys, only: [:update]
 
   def show
     @route = Route.find_by(incoming_path: params[:incoming_path])
@@ -17,8 +17,8 @@ class RoutesController < ApplicationController
       @route = Route.find_or_initialize_by(incoming_path: incoming_path)
       status_code = @route.new_record? ? 201 : 200
       @route.update_attributes(route_details) || status_code = 422
-    rescue Moped::Errors::OperationFailure => e
-      if e.details["code"] == Route::DUPLICATE_KEY_ERROR && (tries -= 1) > 0
+    rescue Mongo::Error::OperationFailure => e
+      if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1) > 0
         retry
       else
         raise
@@ -39,9 +39,9 @@ class RoutesController < ApplicationController
 
   def commit
     if RouterReloader.reload
-      render text: "Router reloaded"
+      render plain: "Router reloaded"
     else
-      render text: "Failed to reload all routers", status: 500
+      render plain: "Failed to reload all routers", status: 500
     end
   end
 
