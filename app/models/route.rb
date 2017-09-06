@@ -153,6 +153,6 @@ class Route
 
   def cleanup_child_gone_routes
     return unless self.route_type == "prefix"
-    Route.excluding(self).gone.where(incoming_path: %r{\A#{Regexp.escape(self.incoming_path)}/}).destroy_all
+    Route.excluding(self).gone.where(incoming_path: %r{\A#{::Regexp.escape(self.incoming_path)}/}).destroy_all
   end
 end
