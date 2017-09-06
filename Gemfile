@@ -11,6 +11,7 @@ gem 'logstasher', '0.6.2'
 gem 'unicorn', '~> 4.9.0'
 
 group :development, :test do
+  gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
   gem 'database_cleaner', '1.6.1'
   gem 'factory_girl_rails', '4.2.1'

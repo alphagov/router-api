@@ -113,6 +113,8 @@ GEM
     plek (1.12.0)
     powerpack (0.1.1)
     rack (2.0.3)
+    rack-handlers (0.7.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.1.1)
@@ -210,6 +212,7 @@ DEPENDENCIES
   mongoid (= 6.1.0)
   mongoid_rails_migrations!
   plek (= 1.12.0)
+  rack-handlers (~> 0.7)
   rails (= 5.1.1)
   rspec-rails (~> 3.5)
   unicorn (~> 4.9.0)
