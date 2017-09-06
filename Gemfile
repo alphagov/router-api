@@ -4,7 +4,7 @@ gem 'rails', '5.1.1'
 gem 'govuk_app_config', '~> 0.2.0'
 gem 'plek', '1.12.0'
 
-gem 'mongoid', '6.1.0'
+gem 'mongoid', '~> 6.2'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 
 gem 'logstasher', '0.6.2'
