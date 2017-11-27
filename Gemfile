@@ -18,5 +18,5 @@ group :development, :test do
   gem 'govuk-lint', '3.3.1'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
-  gem 'webmock', '~> 1.20.4', require: false
+  gem 'webmock', '~> 2.3.0', require: false
 end
