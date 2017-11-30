@@ -45,7 +45,7 @@ RSpec.describe "auto creation and deletion of gone routes", type: :request do
     end
 
     it "should delete a gone route when a parent prefix route is created" do
-      put_json "/routes", route: {incoming_path: "/foo", route_type: "prefix", handler: "backend", backend_id: "a-backend"}
+      put_json "/routes", route: { incoming_path: "/foo", route_type: "prefix", handler: "backend", backend_id: "a-backend" }
 
       expect(response.code.to_i).to eq(201)
 

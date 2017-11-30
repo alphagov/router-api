@@ -11,13 +11,11 @@ RSpec.describe "managing routes", type: :request do
       get "/routes", params: { incoming_path: "/foo/bar" }
 
       expect(response.code.to_i).to eq(200)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false,
-      })
+        "disabled" => false)
     end
 
     it "should 404 for non-existent routes" do
@@ -32,16 +30,14 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should create a route" do
-      put_json "/routes", route: {incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: "a-backend"}
+      put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: "a-backend" }
 
       expect(response.code.to_i).to eq(201)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false,
-      })
+        "disabled" => false)
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
       expect(route).to be
@@ -51,19 +47,17 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should return an error if given invalid data" do
-      put_json "/routes", route: {incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: ""}
+      put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: "" }
 
       expect(response.code.to_i).to eq(422)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "",
         "disabled" => false,
         "errors" => {
           "backend_id" => ["can't be blank"],
-        },
-      })
+        })
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).not_to be
@@ -78,16 +72,14 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should update the route" do
-      put_json "/routes", route: {incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend"}
+      put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend" }
 
       expect(response.code.to_i).to eq(200)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "another-backend",
-        "disabled" => false,
-      })
+        "disabled" => false)
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
       expect(route).to be
@@ -96,19 +88,17 @@ RSpec.describe "managing routes", type: :request do
     end
 
     it "should return an error if given invalid data" do
-      put_json "/routes", route: {:incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", "backend_id" => ""}
+      put_json "/routes", route: { :incoming_path => "/foo/bar", :route_type => "prefix", :handler => "backend", "backend_id" => "" }
 
       expect(response.code.to_i).to eq(422)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "",
         "disabled" => false,
         "errors" => {
           "backend_id" => ["can't be blank"],
-        },
-      })
+        })
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).to be
@@ -117,10 +107,10 @@ RSpec.describe "managing routes", type: :request do
 
     describe "updating the disabled flag" do
       it "should set the disabled flag to the value given in the request" do
-        put_json "/routes", route: {incoming_path: "/foo/bar", disabled: true}
+        put_json "/routes", route: { incoming_path: "/foo/bar", disabled: true }
 
         expect(response.code.to_i).to eq(200)
-        expect(JSON.parse(response.body)).to include({"disabled" => true})
+        expect(JSON.parse(response.body)).to include("disabled" => true)
 
         route = Route.where(incoming_path: "/foo/bar").first
         expect(route.disabled).to eq(true)
@@ -129,7 +119,7 @@ RSpec.describe "managing routes", type: :request do
       it "should not change the disabled flag when not specified in the request" do
         @route.update_attributes!(disabled: true)
 
-        put_json "/routes", route: {incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend"}
+        put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend" }
 
         expect(response.code.to_i).to eq(200)
         route = Route.where(incoming_path: "/foo/bar").first
@@ -139,10 +129,10 @@ RSpec.describe "managing routes", type: :request do
       end
 
       it "should not alter other details of the route when only setting the flag" do
-        put_json "/routes", route: {incoming_path: "/foo/bar", disabled: true}
+        put_json "/routes", route: { incoming_path: "/foo/bar", disabled: true }
 
         expect(response.code.to_i).to eq(200)
-        expect(JSON.parse(response.body)).to include({"disabled" => true})
+        expect(JSON.parse(response.body)).to include("disabled" => true)
 
         route = Route.where(incoming_path: "/foo/bar").first
         expect(route.route_type).to eq("prefix")
@@ -175,13 +165,11 @@ RSpec.describe "managing routes", type: :request do
       delete "/routes", params: { incoming_path: "/foo/bar", hard_delete: "true" }
 
       expect(response.code.to_i).to eq(200)
-      expect(JSON.parse(response.body)).to eq({
-        "incoming_path" => "/foo/bar",
+      expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false
-      })
+        "disabled" => false)
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).not_to be

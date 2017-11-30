@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :route do
     route_type                "prefix"
-    sequence(:incoming_path)  {|n| "/path/#{n}"}
+    sequence(:incoming_path)  { |n| "/path/#{n}" }
     handler                   "gone"
 
     factory :backend_route do

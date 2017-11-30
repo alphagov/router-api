@@ -10,20 +10,20 @@ class Route
   field :redirect_type, type: String
   field :segments_mode, type: String
 
-  index({incoming_path: 1}, unique: true)
+  index({ incoming_path: 1 }, unique: true)
 
   # The router loads the routes in order, and therefore needs this index.
   # This is to enable it to generate a consistent checksum of the routes.
-  index({incoming_path: 1, route_type: 1})
+  index(incoming_path: 1, route_type: 1)
 
-  HANDLERS = %w(backend redirect gone)
+  HANDLERS = %w(backend redirect gone).freeze
 
   DUPLICATE_KEY_ERROR = 'E11000'.freeze
 
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
-  validates :route_type, inclusion: {in: %w(prefix exact)}
-  validates :handler, inclusion: {in: HANDLERS}
+  validates :route_type, inclusion: { in: %w(prefix exact) }
+  validates :handler, inclusion: { in: HANDLERS }
   with_options if: :backend? do |be|
     be.validates :backend_id, presence: true
     be.validate :validate_backend_id
@@ -32,14 +32,14 @@ class Route
   with_options if: :redirect? do |be|
     be.validates :redirect_to, presence: true
     be.validate :validate_redirect_to
-    be.validates :redirect_type, inclusion: {in: %w(permanent temporary)}
-    be.validates :segments_mode, inclusion: {in: %w(ignore preserve)}
+    be.validates :redirect_type, inclusion: { in: %w(permanent temporary) }
+    be.validates :segments_mode, inclusion: { in: %w(ignore preserve) }
   end
 
   before_validation :default_segments_mode
   after_create :cleanup_child_gone_routes
 
-  scope :excluding, lambda {|route| where(id: {:$ne => route.id}) }
+  scope :excluding, lambda { |route| where(id: { :$ne => route.id }) }
   scope :prefix, lambda { where(route_type: "prefix") }
 
   HANDLERS.each do |handler|
@@ -53,7 +53,7 @@ class Route
   def as_json(options = nil)
     super.tap do |h|
       h.delete("_id")
-      h.delete_if {|_k, v| v.nil? }
+      h.delete_if { |_k, v| v.nil? }
       h["errors"] = self.errors.as_json if self.errors.any?
     end
   end
@@ -80,7 +80,7 @@ class Route
     self.segments_mode ||= self.route_type == "prefix" ? "preserve" : "ignore"
   end
 
-  private
+private
 
   def validate_incoming_path
     errors[:incoming_path] << "must start with /" unless

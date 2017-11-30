@@ -18,7 +18,7 @@ class RoutesController < ApplicationController
       status_code = @route.new_record? ? 201 : 200
       @route.update_attributes(route_details) || status_code = 422
     rescue Mongo::Error::OperationFailure => e
-      if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1) > 0
+      if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1).positive?
         retry
       else
         raise
@@ -45,11 +45,11 @@ class RoutesController < ApplicationController
     end
   end
 
-  private
+private
 
   def ensure_route_keys
     unless @request_data[:route].respond_to?(:has_key?) && @request_data[:route].has_key?(:incoming_path)
-      render json: {"error" => "Required route keys (incoming_path and route_type) missing"}, status: 422
+      render json: { "error" => "Required route keys (incoming_path and route_type) missing" }, status: 422
     end
   end
 end

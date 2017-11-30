@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   rescue_from Mongoid::Errors::DocumentNotFound, with: :error_404
 
-  protected
+protected
 
   def error_404
     render status: 404, plain: "Not found"

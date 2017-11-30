@@ -82,9 +82,7 @@ RSpec.describe Backend, type: :model do
       backend.valid?
       json_hash = backend.as_json
       expect(json_hash).to have_key("errors")
-      expect(json_hash["errors"]).to eq({
-        backend_id: ["can't be blank"],
-      })
+      expect(json_hash["errors"]).to eq(backend_id: ["can't be blank"])
     end
 
     it "will not include the errors key when there are none" do
@@ -98,7 +96,7 @@ RSpec.describe Backend, type: :model do
     it "will not allow destroy when it has associated routes" do
       FactoryGirl.create(:backend_route, backend_id: backend.backend_id)
 
-      expect { backend.destroy }.not_to change { Backend.count }
+      expect { backend.destroy }.not_to(change { Backend.count })
     end
 
     it "will allow destroy otherwise" do

@@ -24,10 +24,12 @@ RSpec.describe RoutesController, type: :controller do
           put :update, body: data, format: :json
         rescue Mongo::Error::OperationFailure
           failed = true
+        # rubocop:disable Lint/HandleExceptions
         rescue AbstractController::DoubleRenderError
           # this error will happen if both threads succeed, so this is fine.
         end
       end
+      # rubocop:enable Lint/HandleExceptions
     end
     threads.each(&:join)
 

@@ -1,0 +1,5 @@
+Metrics/BlockLength:
+  Exclude:
+    - test/**/*
+    - spec/**/*
+    - lib/tasks/*.rake

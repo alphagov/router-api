@@ -121,7 +121,7 @@ RSpec.describe Route, type: :model do
         end
 
         it "will map to an existing backend" do
-          backend = FactoryGirl.create(:backend, backend_id: "foo")
+          FactoryGirl.create(:backend, backend_id: "foo")
 
           route.backend_id = "foo"
           expect(route).to be_valid
@@ -303,9 +303,7 @@ RSpec.describe Route, type: :model do
       route.valid?
       json_hash = route.as_json
       expect(json_hash).to have_key("errors")
-      expect(json_hash["errors"]).to eq({
-        handler: ["is not included in the list"],
-      })
+      expect(json_hash["errors"]).to eq(handler: ["is not included in the list"])
     end
 
     it "will not include the errors key when there are none" do
