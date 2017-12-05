@@ -24,6 +24,6 @@ class BackendsController < ApplicationController
 private
 
   def validate_slug
-    error_404 unless params[:id] =~ /\A[a-z0-9-]+\z/
+    error_404 unless params[:id].match?(/\A[a-z0-9-]+\z/)
   end
 end

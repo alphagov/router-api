@@ -28,7 +28,7 @@ class RouterReloader
     @errors = []
     @urls.each do |url|
       response = Net::HTTP.post_form(URI.parse(url), {})
-      @errors << [url, response] unless response.code.to_s =~ /20[02]/
+      @errors << [url, response] unless response.code.to_s.match?(/20[02]/)
     end
     if @errors.any?
       GovukError.notify(

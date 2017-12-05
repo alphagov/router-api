@@ -90,7 +90,7 @@ private
 
     errors[:incoming_path] << "cannot end with /" if
       uri.path != "/" && uri.path.end_with?("/")
-    errors[:incoming_path] << "cannot contain //" if uri.path =~ %r{//}
+    errors[:incoming_path] << "cannot contain //" if uri.path.match?(%r{//})
 
     errors[:incoming_path] << "does not equal the URI path" unless
       uri.path == incoming_path
@@ -138,8 +138,8 @@ private
 
   def validate_internal_target(target)
     uri = URI.parse(target)
-    errors[:redirect_to] << "uri path cannot contain //" if uri.path =~ %r{//}
-    errors[:redirect_to] << "cannot end with /" if target =~ %r{./\z}
+    errors[:redirect_to] << "uri path cannot contain //" if uri.path.match?(%r{//})
+    errors[:redirect_to] << "cannot end with /" if target.match?(%r{./\z})
   rescue URI::InvalidURIError
     errors[:redirect_to] << "is an invalid URI"
   end
