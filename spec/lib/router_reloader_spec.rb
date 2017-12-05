@@ -64,20 +64,20 @@ RSpec.describe RouterReloader do
 
     context "error handling" do
       it "should send an exception notification, and return false on HTTP errors" do
-        r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
-        r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 404, body: "Not found")
+        stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
+        stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 404, body: "Not found")
 
-        expect(GovukError).to receive(:notify) {|message, options|
+        expect(GovukError).to receive(:notify) { |message, options|
           expect(message).to eq("Failed to trigger reload on some routers")
           errors = options[:extra][:errors]
-          expect(errors[0]).to eq({url: "http://foo.example.com:1234/reload", status: "401", body: "Authorisation required"})
-          expect(errors[1]).to eq({url: "http://bar.example.com:4321/reload", status: "404", body: "Not found"})
+          expect(errors[0]).to eq(url: "http://foo.example.com:1234/reload", status: "401", body: "Authorisation required")
+          expect(errors[1]).to eq(url: "http://bar.example.com:4321/reload", status: "404", body: "Not found")
         }
         expect(RouterReloader.reload).to be_falsey
       end
 
       it "should still reload subsequent hosts on error" do
-        r1 = stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
+        stub_request(:post, "http://foo.example.com:1234/reload").to_return(status: 401, body: "Authorisation required")
         r2 = stub_request(:post, "http://bar.example.com:4321/reload").to_return(status: 202)
 
         RouterReloader.reload

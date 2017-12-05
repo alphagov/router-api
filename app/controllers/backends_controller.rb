@@ -21,7 +21,7 @@ class BackendsController < ApplicationController
     render json: @backend, status: status_code
   end
 
-  private
+private
 
   def validate_slug
     error_404 unless params[:id] =~ /\A[a-z0-9-]+\z/
