@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'govuk_app_config', '~> 0.2.0'
+gem 'govuk_app_config', '~> 0.3.0'
 gem 'plek', '1.12.0'
 gem 'rails', '5.1.1'
 

@@ -83,7 +83,7 @@ GEM
       rubocop (~> 0.51.0)
       rubocop-rspec (~> 1.16.0)
       scss_lint
-    govuk_app_config (0.2.0)
+    govuk_app_config (0.3.0)
       sentry-raven (~> 2.6.3)
       statsd-ruby (~> 1.4.0)
     hashdiff (0.3.7)
@@ -230,7 +230,7 @@ DEPENDENCIES
   database_cleaner (= 1.6.1)
   factory_girl_rails (= 4.2.1)
   govuk-lint (= 3.3.1)
-  govuk_app_config (~> 0.2.0)
+  govuk_app_config (~> 0.3.0)
   logstasher (= 0.6.2)
   mongoid (~> 6.2)
   mongoid_rails_migrations!
