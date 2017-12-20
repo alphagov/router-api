@@ -14,7 +14,7 @@ group :development, :test do
   gem 'byebug'
   gem 'ci_reporter_rspec', '~> 1.0.0'
   gem 'database_cleaner', '1.6.1'
-  gem 'factory_girl_rails', '4.2.1'
+  gem 'factory_girl_rails', '4.9.0'
   gem 'govuk-lint', '3.4.0'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
