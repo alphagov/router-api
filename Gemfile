@@ -13,7 +13,7 @@ gem 'unicorn', '~> 5.3.1'
 group :development, :test do
   gem 'byebug'
   gem 'ci_reporter_rspec', '~> 1.0.0'
-  gem 'database_cleaner', '1.6.1'
+  gem 'database_cleaner', '1.6.2'
   gem 'factory_girl_rails', '4.2.1'
   gem 'govuk-lint', '3.4.0'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
