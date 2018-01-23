@@ -236,7 +236,7 @@ DEPENDENCIES
   govuk_app_config
   mongoid (~> 6.2)
   mongoid_rails_migrations!
-  plek (= 2.1.1)
+  plek
   rack-handlers (~> 0.7)
   rails (= 5.1.1)
   rspec-rails (~> 3.5)
