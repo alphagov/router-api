@@ -115,7 +115,7 @@ GEM
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
-    plek (2.0.0)
+    plek (2.1.0)
     powerpack (0.1.1)
     public_suffix (3.0.1)
     rack (2.0.3)
@@ -233,7 +233,7 @@ DEPENDENCIES
   logstasher (= 0.6.2)
   mongoid (~> 6.2)
   mongoid_rails_migrations!
-  plek (= 2.0.0)
+  plek (= 2.1.0)
   rack-handlers (~> 0.7)
   rails (= 5.1.1)
   rspec-rails (~> 3.5)

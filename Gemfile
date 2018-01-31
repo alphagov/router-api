@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'govuk_app_config', '~> 0.2.0'
-gem 'plek', '2.0.0'
+gem 'plek', '2.1.0'
 gem 'rails', '5.1.1'
 
 gem 'mongoid', '~> 6.2'
