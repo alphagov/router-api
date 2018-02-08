@@ -12,7 +12,7 @@ group :development, :test do
   gem 'byebug', '~> 10'
   gem 'ci_reporter_rspec', '~> 1.0'
   gem 'database_cleaner', '~> 1.6'
-  gem 'factory_girl_rails', '~> 4.2'
+  gem 'factory_bot_rails', '~> 4.8'
   gem 'govuk-lint', '~> 3.6'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
