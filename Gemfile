@@ -2,8 +2,9 @@ source 'https://rubygems.org'
 
 gem 'govuk_app_config', '~> 1'
 gem 'plek', '~> 2'
-gem 'rails', '5.1.5'
+gem 'rails', '~> 5.1'
 
+gem 'mongo', '~> 2.4.3'
 gem 'mongoid', '~> 6.2'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 
