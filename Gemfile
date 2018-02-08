@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'govuk_app_config'
-gem 'plek'
+gem 'govuk_app_config', '~> 1'
+gem 'plek', '~> 2'
 gem 'rails', '5.1.1'
 
 gem 'mongoid', '~> 6.2'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 
 group :development, :test do
-  gem 'byebug'
+  gem 'byebug', '~> 10'
   gem 'ci_reporter_rspec', '~> 1.0.0'
   gem 'database_cleaner', '1.6.2'
   gem 'factory_girl_rails', '4.2.1'
