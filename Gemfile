@@ -10,11 +10,11 @@ gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_
 
 group :development, :test do
   gem 'byebug', '~> 10'
-  gem 'ci_reporter_rspec', '~> 1.0.0'
-  gem 'database_cleaner', '1.6.2'
-  gem 'factory_bot_rails', '4.8.2'
-  gem 'govuk-lint', '3.6.0'
+  gem 'ci_reporter_rspec', '~> 1.0'
+  gem 'database_cleaner', '~> 1.6'
+  gem 'factory_girl_rails', '~> 4.2'
+  gem 'govuk-lint', '~> 3.6'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
-  gem 'webmock', '~> 3.3.0', require: false
+  gem 'webmock', '~> 3.3', require: false
 end
