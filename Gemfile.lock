@@ -228,15 +228,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug
+  byebug (~> 10)
   ci_reporter_rspec (~> 1.0.0)
   database_cleaner (= 1.6.2)
   factory_girl_rails (= 4.2.1)
   govuk-lint (= 3.6.0)
-  govuk_app_config
+  govuk_app_config (~> 1)
   mongoid (~> 6.2)
   mongoid_rails_migrations!
-  plek
+  plek (~> 2)
   rack-handlers (~> 0.7)
   rails (= 5.1.1)
   rspec-rails (~> 3.5)
