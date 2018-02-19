@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Backend, type: :model do
   describe "validations" do
-    subject(:backend) { FactoryGirl.build(:backend) }
+    subject(:backend) { FactoryBot.build(:backend) }
 
     describe "on backend_id" do
       it "is required" do
@@ -18,14 +18,14 @@ RSpec.describe Backend, type: :model do
       end
 
       it "is unique" do
-        FactoryGirl.create(:backend, backend_id: 'a-backend')
+        FactoryBot.create(:backend, backend_id: 'a-backend')
         backend.backend_id = 'a-backend'
         expect(backend).not_to be_valid
         expect(backend.errors[:backend_id].size).to eq(1)
       end
 
       it "will have a db level uniqueness constraint" do
-        FactoryGirl.create(:backend, backend_id: 'a-backend')
+        FactoryBot.create(:backend, backend_id: 'a-backend')
         backend.backend_id = 'a-backend'
         expect {
           backend.save validate: false
@@ -71,7 +71,7 @@ RSpec.describe Backend, type: :model do
   end
 
   describe "as_json" do
-    subject(:backend) { FactoryGirl.build(:backend) }
+    subject(:backend) { FactoryBot.build(:backend) }
 
     it "will not include the mongo id in its json representation" do
       expect(backend.as_json).not_to have_key("_id")
@@ -91,17 +91,17 @@ RSpec.describe Backend, type: :model do
   end
 
   describe "destroying" do
-    subject(:backend) { FactoryGirl.create(:backend) }
+    subject(:backend) { FactoryBot.create(:backend) }
 
     it "will not allow destroy when it has associated routes" do
-      FactoryGirl.create(:backend_route, backend_id: backend.backend_id)
+      FactoryBot.create(:backend_route, backend_id: backend.backend_id)
 
       expect { backend.destroy }.not_to(change { Backend.count })
     end
 
     it "will allow destroy otherwise" do
-      backend2 = FactoryGirl.create(:backend)
-      FactoryGirl.create(:backend_route, backend_id: backend2.backend_id)
+      backend2 = FactoryBot.create(:backend)
+      FactoryBot.create(:backend_route, backend_id: backend2.backend_id)
 
       backend.destroy
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "managing backends", type: :request do
   describe "getting details of a backend" do
     it "should return the backend details as JSON" do
-      FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
+      FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
 
       get "/backends/foo"
 
@@ -58,7 +58,7 @@ RSpec.describe "managing backends", type: :request do
 
   describe "updating a backend" do
     it "should update the backend" do
-      backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
+      backend = FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
       put_json "/backends/foo", backend: { backend_url: "http://something-else.example.com/" }
 
       expect(response.code.to_i).to eq(200)
@@ -70,7 +70,7 @@ RSpec.describe "managing backends", type: :request do
     end
 
     it "should return an error if given invalid data" do
-      backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
+      backend = FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
       put_json "/backends/foo", backend: { backend_url: "" }
 
       expect(response.code.to_i).to eq(422)
@@ -87,7 +87,7 @@ RSpec.describe "managing backends", type: :request do
 
   describe "deleting a backend" do
     before :each do
-      @backend = FactoryGirl.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
+      @backend = FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://foo.example.com/")
     end
 
     it "should delete the backend" do
@@ -102,7 +102,7 @@ RSpec.describe "managing backends", type: :request do
     end
 
     it "should not allow deletion of a backend with associated routes" do
-      FactoryGirl.create(:backend_route, backend_id: @backend.backend_id)
+      FactoryBot.create(:backend_route, backend_id: @backend.backend_id)
 
       delete "/backends/foo"
 
