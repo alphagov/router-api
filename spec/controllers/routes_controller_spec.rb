@@ -3,7 +3,7 @@ require Rails.root.join('app/models/route')
 
 RSpec.describe RoutesController, type: :controller do
   before do
-    FactoryGirl.create(:backend, backend_id: "a-backend")
+    FactoryBot.create(:backend, backend_id: "a-backend")
   end
 
   let(:data) {
