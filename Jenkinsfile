@@ -1,11 +1,12 @@
 #!/usr/bin/env groovy
 
+library("govuk")
+
 REPOSITORY = "router-api"
 
 repoName = JOB_NAME.split('/')[0]
 
 node ("mongodb-2.4") {
-  def govuk = load "/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy"
   govuk.buildProject(
     publishingE2ETests: true,
     afterTest: {
