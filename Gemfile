@@ -13,7 +13,7 @@ group :development, :test do
   gem 'ci_reporter_rspec', '~> 1.0'
   gem 'database_cleaner', '~> 1.6'
   gem 'factory_bot_rails', '~> 4.8'
-  gem 'govuk-lint', '~> 3.7'
+  gem 'govuk-lint', '~> 3.8'
   gem 'rack-handlers', '~> 0.7', require: 'rack/handler/rails-server'
   gem 'rspec-rails', '~> 3.5'
   gem 'webmock', '~> 3.3', require: false
