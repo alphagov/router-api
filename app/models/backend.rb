@@ -1,5 +1,6 @@
 class Backend
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   field :backend_id, type: String
   field :backend_url, type: String
@@ -11,9 +12,9 @@ class Backend
 
   before_destroy :ensure_no_linked_routes
 
-  def as_json(options = nil)
-    super.tap do |h|
-      h.delete("_id")
+  def as_json(options = {})
+    options[:except] ||= %i[_id created_at updated_at]
+    super(options).tap do |h|
       h["errors"] = self.errors.as_json if self.errors.any?
     end
   end
