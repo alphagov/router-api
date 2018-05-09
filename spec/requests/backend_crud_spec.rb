@@ -7,14 +7,14 @@ RSpec.describe "managing backends", type: :request do
 
       get "/backends/foo"
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(JSON.parse(response.body)).to eq("backend_id" => "foo",
         "backend_url" => "http://foo.example.com/")
     end
 
     it "should 404 for a non-existent backend" do
       get "/backends/non-existent"
-      expect(response).to be_missing
+      expect(response).to be_not_found
     end
   end
 
