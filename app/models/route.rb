@@ -1,5 +1,6 @@
 class Route
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   field :incoming_path, type: String
   field :route_type, type: String
@@ -50,9 +51,9 @@ class Route
     end
   end
 
-  def as_json(options = nil)
-    super.tap do |h|
-      h.delete("_id")
+  def as_json(options = {})
+    options[:except] ||= %i[_id created_at updated_at]
+    super(options).tap do |h|
       h.delete_if { |_k, v| v.nil? }
       h["errors"] = self.errors.as_json if self.errors.any?
     end
