@@ -5,16 +5,24 @@ class RouterReloader
     new(router_reload_urls).reload
   end
 
+  def self.urls_from_string(string)
+    nodes = string.split(',').map(&:strip)
+    nodes.map { |node| "http://#{node}/reload" }
+  end
+
+  def self.urls_from_file(filename)
+    nodes = File.readlines(filename).map(&:chomp)
+    nodes.map { |node| "http://#{node}/reload" }
+  end
+
   # set from an initializer
   cattr_accessor :router_reload_urls
   def self.set_router_reload_urls_from_string(router_nodes_str)
-    nodes = router_nodes_str.split(',').map(&:strip)
-    self.router_reload_urls = nodes.map { |node| "http://#{node}/reload" }
+    self.router_reload_urls = urls_from_string(router_nodes_str)
   end
 
   def self.set_router_reload_urls_from_file(router_nodes_file)
-    nodes = File.readlines(router_nodes_file).map(&:chomp)
-    self.router_reload_urls = nodes.map { |node| "http://#{node}/reload" }
+    self.router_reload_urls = urls_from_file(router_nodes_file)
   end
 
   # To be set in dev mode so that this can run when the router isn't running.
