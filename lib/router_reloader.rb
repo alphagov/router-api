@@ -19,10 +19,6 @@ class RouterReloader
     end
   end
 
-  def swallow_connection_errors?
-    Rails.env.development?
-  end
-
   def reload
     errors = post_reload_urls.compact
     return true if errors.empty?
@@ -40,6 +36,10 @@ class RouterReloader
   end
 
 private
+
+  def swallow_connection_errors?
+    Rails.env.test? || Rails.env.development?
+  end
 
   def post_reload_urls
     urls.map do |url|

@@ -68,7 +68,12 @@ RSpec.describe RouterReloader do
         expect(r2).to have_been_requested.once
       end
 
-      it "should pass through any exceptions raised" do
+      it "should pass through any exceptions raised in production" do
+        allow(Rails.env).to receive(:test?).and_return(false)
+        allow(Rails.env).to receive(:development?).and_return(false)
+
+        allow(subject).to receive(:swallow_connection_errors?).and_return(false)
+
         stub_request(:post, "http://foo.example.com:1234/reload").to_raise(Errno::ECONNREFUSED)
 
         expect {
@@ -76,8 +81,10 @@ RSpec.describe RouterReloader do
         }.to raise_error(Errno::ECONNREFUSED)
       end
 
-      it "should swallow connection refused errors when configured to" do
-        allow(subject).to receive(:swallow_connection_errors?).and_return(true)
+      it "should swallow connection refused errors in development" do
+        allow(Rails.env).to receive(:test?).and_return(false)
+        allow(Rails.env).to receive(:development?).and_return(true)
+
         stub_request(:post, "http://foo.example.com:1234/reload").to_raise(Errno::ECONNREFUSED)
 
         expect(subject.reload).to eq(true)
