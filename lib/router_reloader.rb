@@ -2,39 +2,29 @@ require "net/http"
 
 class RouterReloader
   def self.reload
-    new(router_reload_urls).reload
-  end
-
-  def self.urls_from_string(string)
-    nodes = string.split(",").map(&:strip)
-    nodes.map { |node| "http://#{node}/reload" }
-  end
-
-  def self.urls_from_file(filename)
-    nodes = File.readlines(filename).map(&:chomp)
-    nodes.map { |node| "http://#{node}/reload" }
-  end
-
-  # set from an initializer
-  cattr_accessor :router_reload_urls
-  def self.set_router_reload_urls_from_string(router_nodes_str)
-    self.router_reload_urls = urls_from_string(router_nodes_str)
-  end
-
-  def self.set_router_reload_urls_from_file(router_nodes_file)
-    self.router_reload_urls = urls_from_file(router_nodes_file)
+    new.reload
   end
 
   # To be set in dev mode so that this can run when the router isn't running.
   cattr_accessor :swallow_connection_errors
 
-  def initialize(urls)
-    @urls = urls
+  def urls
+    @urls ||= begin
+      if ENV["ROUTER_NODES"].present?
+        urls_from_string(ENV["ROUTER_NODES"])
+      elsif ENV["ROUTER_NODES_FILE"].present?
+        urls_from_file(ENV["ROUTER_NODES_FILE"])
+      elsif !Rails.env.production?
+        ["http://localhost:3055/reload"]
+      else
+        raise "No router nodes provided. Need to set the ROUTER_NODES env variable"
+      end
+    end
   end
 
   def reload
     @errors = []
-    @urls.each do |url|
+    urls.each do |url|
       response = Net::HTTP.post_form(URI.parse(url), {})
       @errors << [url, response] unless response.code.to_s.match?(/20[02]/)
     end
@@ -49,5 +39,17 @@ class RouterReloader
   rescue Errno::ECONNREFUSED
     raise unless self.class.swallow_connection_errors
     true
+  end
+
+  private
+
+  def urls_from_string(string)
+    nodes = string.split(",").map(&:strip)
+    nodes.map { |node| "http://#{node}/reload" }
+  end
+
+  def urls_from_file(filename)
+    nodes = File.readlines(filename).map(&:chomp)
+    nodes.map { |node| "http://#{node}/reload" }
   end
 end
