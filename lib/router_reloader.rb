@@ -1,4 +1,4 @@
-require 'net/http'
+require "net/http"
 
 class RouterReloader
   def self.reload
@@ -6,7 +6,7 @@ class RouterReloader
   end
 
   def self.urls_from_string(string)
-    nodes = string.split(',').map(&:strip)
+    nodes = string.split(",").map(&:strip)
     nodes.map { |node| "http://#{node}/reload" }
   end
 
