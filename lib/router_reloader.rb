@@ -5,9 +5,6 @@ class RouterReloader
     new.reload
   end
 
-  # To be set in dev mode so that this can run when the router isn't running.
-  cattr_accessor :swallow_connection_errors
-
   def urls
     @urls ||= begin
       if ENV["ROUTER_NODES"].present?
@@ -20,6 +17,10 @@ class RouterReloader
         raise "No router nodes provided. Need to set the ROUTER_NODES env variable"
       end
     end
+  end
+
+  def swallow_connection_errors?
+    Rails.env.development?
   end
 
   def reload
@@ -37,7 +38,7 @@ class RouterReloader
     end
     true
   rescue Errno::ECONNREFUSED
-    raise unless self.class.swallow_connection_errors
+    raise unless swallow_connection_errors?
     true
   end
 

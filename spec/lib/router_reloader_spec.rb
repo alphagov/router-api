@@ -82,7 +82,7 @@ RSpec.describe RouterReloader do
       end
 
       it "should swallow connection refused errors when configured to" do
-        allow(RouterReloader).to receive(:swallow_connection_errors).and_return(true)
+        allow(subject).to receive(:swallow_connection_errors?).and_return(true)
         stub_request(:post, "http://foo.example.com:1234/reload").to_raise(Errno::ECONNREFUSED)
 
         expect(subject.reload).to eq(true)
