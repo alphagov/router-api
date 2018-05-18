@@ -24,33 +24,42 @@ class RouterReloader
   end
 
   def reload
-    @errors = []
-    urls.each do |url|
-      response = Net::HTTP.post_form(URI.parse(url), {})
-      @errors << [url, response] unless response.code.to_s.match?(/20[02]/)
-    end
-    if @errors.any?
-      GovukError.notify(
-        "Failed to trigger reload on some routers",
-        extra: { errors: @errors.map { |url, resp| { url: url, status: resp.code, body: resp.body } } }
-      )
-      return false
-    end
-    true
-  rescue Errno::ECONNREFUSED
-    raise unless swallow_connection_errors?
-    true
+    errors = post_reload_urls.compact
+    return true if errors.empty?
+
+    GovukError.notify(
+      "Failed to trigger reload on some routers",
+      extra: {
+        errors: errors.map do |url, resp|
+          { url: url, status: resp.code, body: resp.body }
+        end
+      }
+    )
+
+    false
   end
 
-  private
+private
+
+  def post_reload_urls
+    urls.map do |url|
+      response = Net::HTTP.post_form(URI.parse(url), {})
+      [url, response] unless response.code.to_s.match?(/20[02]/)
+    end
+  rescue Errno::ECONNREFUSED
+    raise unless swallow_connection_errors?
+    []
+  end
+
+  def urls_from_nodes(nodes)
+    nodes.map { |node| "http://#{node}/reload" }
+  end
 
   def urls_from_string(string)
-    nodes = string.split(",").map(&:strip)
-    nodes.map { |node| "http://#{node}/reload" }
+    urls_from_nodes(string.split(",").map(&:strip))
   end
 
   def urls_from_file(filename)
-    nodes = File.readlines(filename).map(&:chomp)
-    nodes.map { |node| "http://#{node}/reload" }
+    urls_from_nodes(File.readlines(filename).map(&:chomp))
   end
 end

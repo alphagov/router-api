@@ -3,32 +3,27 @@ require 'router_reloader'
 
 RSpec.describe RouterReloader do
   describe "parsing router reload urls from env var string" do
+    let(:expected_urls) { ["http://foo.bar:1234/reload", "http://bar.baz:2345/reload"] }
+
     it "should generate urls from list of host:port pairs" do
       ClimateControl.modify ROUTER_NODES: "foo.bar:1234,bar.baz:2345" do
-        expect(subject.urls).to eq([
-          "http://foo.bar:1234/reload",
-          "http://bar.baz:2345/reload",
-        ])
+        expect(subject.urls).to eq(expected_urls)
       end
     end
 
     it "should cope with extra whitespace in the string" do
       ClimateControl.modify ROUTER_NODES: "  foo.bar:1234,bar.baz:2345 \n" do
-        expect(subject.urls).to eq([
-          "http://foo.bar:1234/reload",
-          "http://bar.baz:2345/reload",
-        ])
+        expect(subject.urls).to eq(expected_urls)
       end
     end
   end
 
   describe "parsing router reload urls from env var file" do
+    let(:expected_urls) { ["http://foo.bar:1234/reload", "http://bar.baz:2345/reload"] }
+
     it "should generate urls from list of host:port pairs" do
       ClimateControl.modify ROUTER_NODES_FILE: "spec/support/router_nodes.txt" do
-        expect(subject.urls).to eq([
-          "http://foo.bar:1234/reload",
-          "http://bar.baz:2345/reload",
-        ])
+        expect(subject.urls).to eq(expected_urls)
       end
     end
   end
