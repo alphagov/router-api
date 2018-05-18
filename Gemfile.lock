@@ -66,6 +66,7 @@ GEM
     ci_reporter_rspec (1.0.0)
       ci_reporter (~> 2.0)
       rspec (>= 2.14, < 4)
+    climate_control (0.2.0)
     concurrent-ruby (1.0.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -237,6 +238,7 @@ PLATFORMS
 DEPENDENCIES
   byebug (~> 10)
   ci_reporter_rspec (~> 1.0)
+  climate_control (~> 0.2)
   database_cleaner (~> 1.7)
   factory_bot_rails (~> 4.8)
   govuk-lint (~> 3.8)

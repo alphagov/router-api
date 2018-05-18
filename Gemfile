@@ -11,6 +11,7 @@ gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_
 group :development, :test do
   gem 'byebug', '~> 10'
   gem 'ci_reporter_rspec', '~> 1.0'
+  gem 'climate_control', '~> 0.2'
   gem 'database_cleaner', '~> 1.7'
   gem 'factory_bot_rails', '~> 4.8'
   gem 'govuk-lint', '~> 3.8'

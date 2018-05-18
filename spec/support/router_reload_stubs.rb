@@ -1,13 +1,13 @@
-require 'router_reloader'
+require "router_reloader"
 
 module RouterReloadStubs
   def setup_router_reload_http_stub
     # Assume it's only configured with a single URL in development/test
-    @router_reload_http_stub = WebMock.stub_request(:post, RouterReloader.router_reload_urls.first)
+    @router_reload_http_stub = WebMock.stub_request(:post, RouterReloader.new.urls.first)
   end
 
   def stub_router_reload_error
-    WebMock.stub_request(:post, RouterReloader.router_reload_urls.first).
+    WebMock.stub_request(:post, RouterReloader.new.urls.first).
       to_return(status: 500, body: "Error")
   end
 

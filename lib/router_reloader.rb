@@ -1,45 +1,65 @@
-require 'net/http'
+require "net/http"
 
 class RouterReloader
   def self.reload
-    new(router_reload_urls).reload
+    new.reload
   end
 
-  # set from an initializer
-  cattr_accessor :router_reload_urls
-  def self.set_router_reload_urls_from_string(router_nodes_str)
-    nodes = router_nodes_str.split(',').map(&:strip)
-    self.router_reload_urls = nodes.map { |node| "http://#{node}/reload" }
-  end
-
-  def self.set_router_reload_urls_from_file(router_nodes_file)
-    nodes = File.readlines(router_nodes_file).map(&:chomp)
-    self.router_reload_urls = nodes.map { |node| "http://#{node}/reload" }
-  end
-
-  # To be set in dev mode so that this can run when the router isn't running.
-  cattr_accessor :swallow_connection_errors
-
-  def initialize(urls)
-    @urls = urls
+  def urls
+    @urls ||= begin
+      if ENV["ROUTER_NODES"].present?
+        urls_from_string(ENV["ROUTER_NODES"])
+      elsif ENV["ROUTER_NODES_FILE"].present?
+        urls_from_file(ENV["ROUTER_NODES_FILE"])
+      elsif !Rails.env.production?
+        ["http://localhost:3055/reload"]
+      else
+        raise "No router nodes provided. Need to set the ROUTER_NODES env variable"
+      end
+    end
   end
 
   def reload
-    @errors = []
-    @urls.each do |url|
+    errors = post_reload_urls.compact
+    return true if errors.empty?
+
+    GovukError.notify(
+      "Failed to trigger reload on some routers",
+      extra: {
+        errors: errors.map do |url, resp|
+          { url: url, status: resp.code, body: resp.body }
+        end
+      }
+    )
+
+    false
+  end
+
+private
+
+  def swallow_connection_errors?
+    Rails.env.test? || Rails.env.development?
+  end
+
+  def post_reload_urls
+    urls.map do |url|
       response = Net::HTTP.post_form(URI.parse(url), {})
-      @errors << [url, response] unless response.code.to_s.match?(/20[02]/)
+      [url, response] unless response.code.to_s.match?(/20[02]/)
     end
-    if @errors.any?
-      GovukError.notify(
-        "Failed to trigger reload on some routers",
-        extra: { errors: @errors.map { |url, resp| { url: url, status: resp.code, body: resp.body } } }
-      )
-      return false
-    end
-    true
   rescue Errno::ECONNREFUSED
-    raise unless self.class.swallow_connection_errors
-    true
+    raise unless swallow_connection_errors?
+    []
+  end
+
+  def urls_from_nodes(nodes)
+    nodes.map { |node| "http://#{node}/reload" }
+  end
+
+  def urls_from_string(string)
+    urls_from_nodes(string.split(",").map(&:strip))
+  end
+
+  def urls_from_file(filename)
+    urls_from_nodes(File.readlines(filename).map(&:chomp))
   end
 end
