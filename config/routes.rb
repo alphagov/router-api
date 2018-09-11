@@ -7,6 +7,6 @@ Rails.application.routes.draw do
     r.delete "/routes" => "routes#destroy"
     r.post "/routes/commit" => "routes#commit"
 
-    r.get "/healthcheck" => proc { [200, {}, ["OK"]] }
+    r.get "/healthcheck" => proc { [200, {}, %w(OK)] }
   end
 end
