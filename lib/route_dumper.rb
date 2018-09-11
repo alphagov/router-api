@@ -11,7 +11,7 @@ class RouteDumper
   def dump
     Zlib::GzipWriter.open(filename) do |file|
       csv = CSV.new(file)
-      csv << FIELDS + ["updated_at"]
+      csv << FIELDS + %w[updated_at]
       routes.each do |route|
         csv << FIELDS.map { |field| route.send(field) } + [Time.now.utc]
       end
