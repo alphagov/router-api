@@ -133,7 +133,7 @@ GEM
       ast (~> 2.4.0)
     plek (2.1.1)
     powerpack (0.1.2)
-    public_suffix (3.0.2)
+    public_suffix (3.0.3)
     rack (2.0.6)
     rack-handlers (0.7.3)
       rack
@@ -230,7 +230,7 @@ GEM
     unicorn (5.4.1)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    webmock (3.4.2)
+    webmock (3.5.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -256,7 +256,7 @@ DEPENDENCIES
   rack-handlers (~> 0.7)
   rails (~> 5.2)
   rspec-rails (~> 3.8)
-  webmock (~> 3.4)
+  webmock (~> 3.5)
 
 BUNDLED WITH
    1.16.1
