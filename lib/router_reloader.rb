@@ -48,6 +48,7 @@ private
     end
   rescue Errno::ECONNREFUSED
     raise unless swallow_connection_errors?
+
     []
   end
 

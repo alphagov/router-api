@@ -71,6 +71,7 @@ class Route
     segments = self.incoming_path.split('/').reject(&:blank?).tap(&:pop)
     while segments.any? do
       return true if Route.excluding(self).prefix.where(incoming_path: "/#{segments.join('/')}").any?
+
       segments.pop
     end
     Route.excluding(self).prefix.where(incoming_path: "/").any?
@@ -78,6 +79,7 @@ class Route
 
   def default_segments_mode
     return unless redirect?
+
     self.segments_mode ||= self.route_type == "prefix" ? "preserve" : "ignore"
   end
 
@@ -127,9 +129,7 @@ private
     uri = URI.parse(target)
     errors[:redirect_to] << "must be an absolute URI" unless uri.absolute?
 
-    return unless errors[:redirect_to].empty? # Don't continue, as the
-                                              # host validation may
-                                              # fail
+    return unless errors[:redirect_to].empty? # Don't continue, as the host validation may fail
 
     errors[:redirect_to] << "external domain must be within .gov.uk or british-business-bank.co.uk" unless
       uri.host.end_with?(".gov.uk") || uri.host == "british-business-bank.co.uk"
@@ -147,6 +147,7 @@ private
 
   def validate_backend_id
     return if self.backend_id.blank? # handled by presence validation
+
     unless Backend.where(backend_id: self.backend_id).exists?
       errors[:backend_id] << "does not exist"
     end
@@ -154,6 +155,7 @@ private
 
   def cleanup_child_gone_routes
     return unless self.route_type == "prefix"
+
     Route.excluding(self).gone.where(incoming_path: %r{\A#{::Regexp.escape(self.incoming_path)}/}).destroy_all
   end
 end
