@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe "managing routes", type: :request do
+  context "when the user is not authenticated" do
+    around do |example|
+      ClimateControl.modify(GDS_SSO_MOCK_INVALID: "1") { example.run }
+    end
+
+    it "returns an unauthorized response" do
+      get "/routes", params: { incoming_path: "/foo/bar" }
+      expect(response).to be_unauthorized
+    end
+  end
+
   describe "fetching details of a route" do
     before :each do
       FactoryBot.create(:backend, backend_id: "a-backend")

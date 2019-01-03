@@ -6,8 +6,9 @@ GDS::SSO.config do |config|
   config.oauth_secret = ENV['OAUTH_SECRET']
 
   # optional config for location of Signon
-  config.oauth_root_url = "http://localhost:3001"
+  config.oauth_root_url = Plek.new.external_url_for("signon")
 
   # Pass in a caching adapter cache bearer token requests.
   config.cache = Rails.cache
+  config.api_only = true
 end
