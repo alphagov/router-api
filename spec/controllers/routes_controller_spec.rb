@@ -3,6 +3,7 @@ require Rails.root.join('app/models/route')
 
 RSpec.describe RoutesController, type: :controller do
   before do
+    authenticate_as_stub_user
     FactoryBot.create(:backend, backend_id: "a-backend")
   end
 
