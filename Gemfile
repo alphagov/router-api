@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby File.read(".ruby-version").chomp
+
 gem 'gds-sso', '~> 14.0'
 gem 'govuk_app_config', '~> 1'
 gem 'plek', '~> 2'
