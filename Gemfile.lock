@@ -62,7 +62,7 @@ GEM
       oj (~> 3.0)
     bson (4.3.0)
     builder (3.2.3)
-    byebug (10.0.2)
+    byebug (11.0.0)
     ci_reporter (2.0.0)
       builder (>= 2.1.2)
     ci_reporter_rspec (1.0.0)
@@ -273,7 +273,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug (~> 10)
+  byebug (~> 11)
   ci_reporter_rspec (~> 1.0)
   climate_control (~> 0.2)
   database_cleaner (~> 1.7)

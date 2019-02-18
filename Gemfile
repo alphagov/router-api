@@ -10,7 +10,7 @@ gem 'mongoid', '~> 6.2'
 gem "mongoid_rails_migrations", git: "https://github.com/alphagov/mongoid_rails_migrations", branch: "avoid-calling-bundler-require-in-library-code-v1.1.0-plus-mongoid-v5-fix"
 
 group :development, :test do
-  gem 'byebug', '~> 10'
+  gem 'byebug', '~> 11'
   gem 'ci_reporter_rspec', '~> 1.0'
   gem 'climate_control', '~> 0.2'
   gem 'database_cleaner', '~> 1.7'
