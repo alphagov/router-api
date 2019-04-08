@@ -98,7 +98,7 @@ GEM
       rubocop (~> 0.64)
       rubocop-rspec (~> 1.28)
       scss_lint
-    govuk_app_config (1.13.1)
+    govuk_app_config (1.14.0)
       aws-xray-sdk (~> 0.10.0)
       logstasher (~> 1.2.2)
       sentry-raven (~> 2.7.1)
@@ -161,7 +161,7 @@ GEM
     plek (2.1.1)
     powerpack (0.1.2)
     public_suffix (3.0.3)
-    rack (2.0.6)
+    rack (2.0.7)
     rack-handlers (0.7.3)
       rack
     rack-test (1.1.0)
