@@ -62,7 +62,7 @@ GEM
       oj (~> 3.0)
     bson (4.3.0)
     builder (3.2.3)
-    byebug (11.0.0)
+    byebug (11.0.1)
     ci_reporter (2.0.0)
       builder (>= 2.1.2)
     ci_reporter_rspec (1.0.0)
