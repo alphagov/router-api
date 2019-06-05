@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'gds-sso', '~> 14.0'
 gem 'govuk_app_config', '~> 1'
-gem 'plek', '~> 2'
+gem 'plek', '~> 3'
 gem 'rails', '~> 5.2'
 
 gem 'mongo', '~> 2.4.3'
