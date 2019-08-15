@@ -18,6 +18,7 @@ test:
         max_retries: 1
         retry_interval: 0
 
+
 production:
   clients:
     default:
@@ -25,3 +26,4 @@ production:
       options:
         write:
           w: 1
+        ssl_ca_cert: /etc/ssl/certs/rds_cacert.pem
