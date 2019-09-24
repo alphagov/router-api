@@ -10,7 +10,7 @@ class BackendsController < ApplicationController
   def update
     @backend = Backend.find_or_initialize_by(backend_id: params[:id])
     status_code = @backend.new_record? ? 201 : 200
-    @backend.update_attributes(@request_data['backend']) || status_code = 422
+    @backend.update_attributes(@request_data["backend"]) || status_code = 422
     render json: @backend, status: status_code
   end
 

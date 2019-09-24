@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Backend, type: :model do
   describe "validations" do
@@ -6,27 +6,27 @@ RSpec.describe Backend, type: :model do
 
     describe "on backend_id" do
       it "is required" do
-        backend.backend_id = ''
+        backend.backend_id = ""
         expect(backend).not_to be_valid
         expect(backend.errors[:backend_id].size).to eq(1)
       end
 
       it "is a slug format" do
-        backend.backend_id = 'not a slug'
+        backend.backend_id = "not a slug"
         expect(backend).not_to be_valid
         expect(backend.errors[:backend_id].size).to eq(1)
       end
 
       it "is unique" do
-        FactoryBot.create(:backend, backend_id: 'a-backend')
-        backend.backend_id = 'a-backend'
+        FactoryBot.create(:backend, backend_id: "a-backend")
+        backend.backend_id = "a-backend"
         expect(backend).not_to be_valid
         expect(backend.errors[:backend_id].size).to eq(1)
       end
 
       it "will have a db level uniqueness constraint" do
-        FactoryBot.create(:backend, backend_id: 'a-backend')
-        backend.backend_id = 'a-backend'
+        FactoryBot.create(:backend, backend_id: "a-backend")
+        backend.backend_id = "a-backend"
         expect {
           backend.save validate: false
         }.to raise_error(Mongo::Error::OperationFailure)
@@ -35,7 +35,7 @@ RSpec.describe Backend, type: :model do
 
     describe "on backend_url" do
       it "is required" do
-        backend.backend_url = ''
+        backend.backend_url = ""
         expect(backend).not_to be_valid
         expect(backend.errors[:backend_url].size).to eq(1)
       end

@@ -1,5 +1,5 @@
-require 'rails_helper'
-require Rails.root.join('app/models/route')
+require "rails_helper"
+require Rails.root.join("app/models/route")
 
 RSpec.describe RoutesController, type: :controller do
   before do
@@ -11,7 +11,7 @@ RSpec.describe RoutesController, type: :controller do
     {
       route: {
         incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: "a-backend"
-      }
+      },
     }.to_json
   }
 

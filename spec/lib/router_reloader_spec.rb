@@ -1,5 +1,5 @@
-require 'rails_helper'
-require 'router_reloader'
+require "rails_helper"
+require "router_reloader"
 
 RSpec.describe RouterReloader do
   describe "parsing router reload urls from env var string" do
@@ -31,7 +31,7 @@ RSpec.describe RouterReloader do
   describe "triggering a reload of routes" do
     before :each do
       allow(subject).to receive(:urls).and_return(
-        ["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"]
+        ["http://foo.example.com:1234/reload", "http://bar.example.com:4321/reload"],
       )
     end
 

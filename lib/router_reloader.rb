@@ -28,8 +28,8 @@ class RouterReloader
       extra: {
         errors: errors.map do |url, resp|
           { url: url, status: resp.code, body: resp.body }
-        end
-      }
+        end,
+      },
     )
 
     false

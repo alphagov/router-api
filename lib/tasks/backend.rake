@@ -1,8 +1,8 @@
 namespace :backend do
-  desc 'Updates backend_url for a given backend'
+  desc "Updates backend_url for a given backend"
   task :modify_url, %i[backend_id backend_url] => [:environment] do |_t, args|
     unless args[:backend_id] && args[:backend_url]
-      raise 'Requires backend_id and backend_url to be passed as parameters'
+      raise "Requires backend_id and backend_url to be passed as parameters"
     end
 
     backend_id = args[:backend_id]
@@ -16,15 +16,15 @@ namespace :backend do
 
     backend.save!
 
-    puts 'Reloading router'
+    puts "Reloading router"
 
     RouterReloader.reload
   end
 
-  desc 'Updates backend_url for all backends using search and replace'
+  desc "Updates backend_url for all backends using search and replace"
   task :bulk_update_url, %i[search_string replace_string] => [:environment] do |_t, args|
     unless args[:search_string] && args[:replace_string]
-      raise 'Requires search_string and replace_string to be passed as parameters'
+      raise "Requires search_string and replace_string to be passed as parameters"
     end
 
     search_string = args[:search_string]
@@ -41,7 +41,7 @@ namespace :backend do
       end
     end
 
-    puts 'Reloading router'
+    puts "Reloading router"
 
     RouterReloader.reload
   end

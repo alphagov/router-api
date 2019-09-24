@@ -1,18 +1,18 @@
 class MigrateOpenPolicyMakingToolkit < Mongoid::Migration
   def self.up
-    update_route_backend('manuals-frontend')
+    update_route_backend("manuals-frontend")
     reload_router
   end
 
   def self.down
-    update_route_backend('whitehall-frontend')
+    update_route_backend("whitehall-frontend")
     reload_router
   end
 
   private
 
   def self.update_route_backend(backend_id)
-    incoming_path = '/guidance/open-policy-making-toolkit'
+    incoming_path = "/guidance/open-policy-making-toolkit"
 
     Route.where(incoming_path: incoming_path).update_all(backend_id: backend_id)
 
@@ -21,9 +21,9 @@ class MigrateOpenPolicyMakingToolkit < Mongoid::Migration
 
   def self.reload_router
     if RouterReloader.reload
-      puts 'Router reloaded'
+      puts "Router reloaded"
     else
-      puts 'Failed to reload router'
+      puts "Failed to reload router"
     end
   end
 end
