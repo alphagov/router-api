@@ -19,7 +19,7 @@ class Route
 
   HANDLERS = %w(backend redirect gone).freeze
 
-  DUPLICATE_KEY_ERROR = 'E11000'.freeze
+  DUPLICATE_KEY_ERROR = "E11000".freeze
 
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
@@ -68,7 +68,7 @@ class Route
   end
 
   def has_parent_prefix_routes?
-    segments = self.incoming_path.split('/').reject(&:blank?).tap(&:pop)
+    segments = self.incoming_path.split("/").reject(&:blank?).tap(&:pop)
     while segments.any? do
       return true if Route.excluding(self).prefix.where(incoming_path: "/#{segments.join('/')}").any?
 

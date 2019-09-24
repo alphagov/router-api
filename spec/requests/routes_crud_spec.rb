@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "managing routes", type: :request do
   context "when the user is not authenticated" do
@@ -37,7 +37,7 @@ RSpec.describe "managing routes", type: :request do
 
   describe "creating a route" do
     before :each do
-      FactoryBot.create(:backend, backend_id: 'a-backend')
+      FactoryBot.create(:backend, backend_id: "a-backend")
     end
 
     it "should create a route" do
@@ -77,8 +77,8 @@ RSpec.describe "managing routes", type: :request do
 
   describe "updating a route" do
     before :each do
-      FactoryBot.create(:backend, backend_id: 'a-backend')
-      FactoryBot.create(:backend, backend_id: 'another-backend')
+      FactoryBot.create(:backend, backend_id: "a-backend")
+      FactoryBot.create(:backend, backend_id: "another-backend")
       @route = FactoryBot.create(:backend_route, incoming_path: "/foo/bar", route_type: "prefix", backend_id: "a-backend")
     end
 

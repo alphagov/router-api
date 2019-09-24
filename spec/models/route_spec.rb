@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Route, type: :model do
   describe "validations" do
@@ -6,7 +6,7 @@ RSpec.describe Route, type: :model do
 
     describe "on route_type" do
       it "is required" do
-        route.route_type = ''
+        route.route_type = ""
         expect(route).not_to be_valid
         expect(route.errors[:route_type].size).to eq(1)
       end
@@ -17,7 +17,7 @@ RSpec.describe Route, type: :model do
           expect(route).to be_valid
         end
 
-        route.route_type = 'foo'
+        route.route_type = "foo"
         expect(route).not_to be_valid
         expect(route.errors[:route_type].size).to eq(1)
       end
@@ -73,15 +73,15 @@ RSpec.describe Route, type: :model do
 
       describe "uniqueness" do
         it "is unique" do
-          FactoryBot.create(:route, incoming_path: '/foo')
-          route.incoming_path = '/foo'
+          FactoryBot.create(:route, incoming_path: "/foo")
+          route.incoming_path = "/foo"
           expect(route).not_to be_valid
           expect(route.errors[:incoming_path].size).to eq(1)
         end
 
         it "will have a db level uniqueness constraint" do
-          FactoryBot.create(:route, incoming_path: '/foo')
-          route.incoming_path = '/foo'
+          FactoryBot.create(:route, incoming_path: "/foo")
+          route.incoming_path = "/foo"
 
           expect {
             route.save validate: false
@@ -115,7 +115,7 @@ RSpec.describe Route, type: :model do
 
       describe "on backend_id" do
         it "is required" do
-          route.backend_id = ''
+          route.backend_id = ""
           expect(route).not_to be_valid
           expect(route.errors[:backend_id].size).to eq(1)
         end
@@ -203,7 +203,7 @@ RSpec.describe Route, type: :model do
       end
 
       context "and segments_mode set to 'ignore'" do
-        subject(:route) { FactoryBot.build(:redirect_route, segments_mode: 'ignore') }
+        subject(:route) { FactoryBot.build(:redirect_route, segments_mode: "ignore") }
 
         describe "redirect_to field" do
           it "will allow query strings" do
@@ -237,7 +237,7 @@ RSpec.describe Route, type: :model do
       end
 
       context "and segments_mode set to 'preserve'" do
-        subject(:route) { FactoryBot.build(:redirect_route, segments_mode: 'preserve') }
+        subject(:route) { FactoryBot.build(:redirect_route, segments_mode: "preserve") }
 
         describe "redirect_to field" do
           it "will reject query strings" do

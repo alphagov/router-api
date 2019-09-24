@@ -1,4 +1,4 @@
-require 'router_reloader'
+require "router_reloader"
 
 class RoutesController < ApplicationController
   before_action :parse_json_request, only: [:update]

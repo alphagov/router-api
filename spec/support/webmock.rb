@@ -1,1 +1,1 @@
-require 'webmock/rspec'
+require "webmock/rspec"
