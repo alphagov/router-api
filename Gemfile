@@ -17,6 +17,6 @@ group :development, :test do
   gem "factory_bot_rails", "~> 5.1"
   gem "govuk-lint", "~> 4.0"
   gem "rack-handlers", "~> 0.7", require: "rack/handler/rails-server"
-  gem "rspec-rails", "~> 3.8"
+  gem "rspec-rails", "~> 3.9"
   gem "webmock", "~> 3.7", require: false
 end
