@@ -15,7 +15,7 @@ group :development, :test do
   gem "climate_control", "~> 0.2"
   gem "database_cleaner", "~> 1.7"
   gem "factory_bot_rails", "~> 5.1"
-  gem "govuk-lint", "~> 4.1"
+  gem "govuk-lint", "~> 4.2"
   gem "rack-handlers", "~> 0.7", require: "rack/handler/rails-server"
   gem "rspec-rails", "~> 3.9"
   gem "webmock", "~> 3.7", require: false
