@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "gds-sso", "~> 14.1"
+gem "gds-sso", "~> 14.2"
 gem "govuk_app_config", "~> 2"
 gem "plek", "~> 3"
 gem "rails", "~> 5.2"
