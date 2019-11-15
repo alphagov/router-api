@@ -26,4 +26,4 @@ production:
       options:
         write:
           w: 1
-        ssl_ca_cert: /etc/ssl/certs/rds_cacert.pem
+        ssl_ca_cert: /etc/ssl/certs/rds-combined-ca-bundle.pem
