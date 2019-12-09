@@ -10,7 +10,7 @@ ENV ROUTER_NODES router:3055
 ENV TEST_MONGODB_URI mongodb://mongo/router-test
 
 # place the AWS RDS Certificate Authority bundle at well known path
-RUN wget -O /etc/ssl/certs/rds-cacert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+RUN wget -O /etc/ssl/certs/rds-combined-ca-bundle.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
