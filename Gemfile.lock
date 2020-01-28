@@ -60,7 +60,7 @@ GEM
     ast (2.4.0)
     bson (4.3.0)
     builder (3.2.4)
-    byebug (11.1.0)
+    byebug (11.1.1)
     ci_reporter (2.0.0)
       builder (>= 2.1.2)
     ci_reporter_rspec (1.0.0)
