@@ -13,7 +13,7 @@ group :development, :test do
   gem "byebug", "~> 11"
   gem "ci_reporter_rspec", "~> 1.0"
   gem "climate_control", "~> 0.2"
-  gem "database_cleaner", "~> 1.7"
+  gem "database_cleaner", "~> 1.8"
   gem "factory_bot_rails", "~> 5.1"
   gem "govuk-lint", "~> 4.3"
   gem "rack-handlers", "~> 0.7", require: "rack/handler/rails-server"
