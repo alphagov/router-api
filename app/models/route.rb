@@ -25,16 +25,16 @@ class Route
   validate :validate_incoming_path
   validates :route_type, inclusion: { in: %w(prefix exact) }
   validates :handler, inclusion: { in: HANDLERS }
-  with_options if: :backend? do |be|
-    be.validates :backend_id, presence: true
-    be.validate :validate_backend_id
+  with_options if: :backend? do
+    validates :backend_id, presence: true
+    validate :validate_backend_id
   end
 
-  with_options if: :redirect? do |be|
-    be.validates :redirect_to, presence: true
-    be.validate :validate_redirect_to
-    be.validates :redirect_type, inclusion: { in: %w(permanent temporary) }
-    be.validates :segments_mode, inclusion: { in: %w(ignore preserve) }
+  with_options if: :redirect? do
+    validates :redirect_to, presence: true
+    validate :validate_redirect_to
+    validates :redirect_type, inclusion: { in: %w(permanent temporary) }
+    validates :segments_mode, inclusion: { in: %w(ignore preserve) }
   end
 
   before_validation :default_segments_mode
