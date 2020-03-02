@@ -14,7 +14,7 @@ namespace :backend_ids do
       route = Route.find_by(incoming_path: base_path)
       if route.backend_id == "whitehall-frontend"
         puts "updating #{base_path}"
-        route.update_attributes(backend_id: "government-frontend")
+        route.update(backend_id: "government-frontend")
       else
         puts "skipping #{base_path}"
       end

@@ -128,7 +128,7 @@ RSpec.describe "managing routes", type: :request do
       end
 
       it "should not change the disabled flag when not specified in the request" do
-        @route.update_attributes!(disabled: true)
+        @route.update!(disabled: true)
 
         put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend" }
 

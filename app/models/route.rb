@@ -63,7 +63,7 @@ class Route
     if self.has_parent_prefix_routes?
       destroy
     else
-      update_attributes(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
+      update(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
     end
   end
 
