@@ -102,7 +102,7 @@ private
   end
 
   def validate_redirect_to
-    return unless self.redirect_to.present? # This is to short circuit nil values
+    return if self.redirect_to.blank? # This is to short circuit nil values
 
     if self.redirect_to.starts_with?("/")
       validate_internal_target(self.redirect_to)
