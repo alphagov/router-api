@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
 protected
 
   def error_404
-    render status: 404, plain: "Not found"
+    render status: :not_found, plain: "Not found"
   end
 
   def parse_json_request
