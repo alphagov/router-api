@@ -8,3 +8,6 @@ Metrics/BlockLength:
     - test/**/*
     - spec/**/*
     - lib/tasks/*.rake
+
+Lint/SuppressedException:
+  Enabled: false
