@@ -16,7 +16,7 @@ class RoutesController < ApplicationController
     begin
       @route = Route.find_or_initialize_by(incoming_path: incoming_path)
       status_code = @route.new_record? ? 201 : 200
-      @route.update_attributes(route_details) || status_code = 422
+      @route.update(route_details) || status_code = 422
     rescue Mongo::Error::OperationFailure => e
       if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1).positive?
         retry
@@ -41,7 +41,7 @@ class RoutesController < ApplicationController
     if RouterReloader.reload
       render plain: "Router reloaded"
     else
-      render plain: "Failed to reload all routers", status: 500
+      render plain: "Failed to reload all routers", status: :internal_server_error
     end
   end
 
@@ -49,7 +49,7 @@ private
 
   def ensure_route_keys
     unless @request_data[:route].respond_to?(:has_key?) && @request_data[:route].has_key?(:incoming_path)
-      render json: { "error" => "Required route keys (incoming_path and route_type) missing" }, status: 422
+      render json: { "error" => "Required route keys (incoming_path and route_type) missing" }, status: :unprocessable_entity
     end
   end
 end
