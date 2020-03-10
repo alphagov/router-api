@@ -9,7 +9,7 @@ class MigrateOpenPolicyMakingToolkit < Mongoid::Migration
     reload_router
   end
 
-  private
+private
 
   def self.update_route_backend(backend_id)
     incoming_path = "/guidance/open-policy-making-toolkit"
