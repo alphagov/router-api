@@ -18,8 +18,7 @@ class CleanupDuplicateRoutes < Mongoid::Migration
     end
   end
 
-  def self.down
-  end
+  def self.down; end
 
   def self.route_summary(route)
     str = "#{route.route_type}:#{route.incoming_path}(#{route.handler}"
@@ -38,6 +37,7 @@ class CleanupDuplicateRoutes < Mongoid::Migration
     Route.prefix.asc(:incoming_path).each do |prefix|
       exact = Route.where(incoming_path: prefix.incoming_path, route_type: "exact").first
       next unless exact
+
       duplicates << [prefix, exact]
     end
     duplicates
@@ -45,14 +45,15 @@ class CleanupDuplicateRoutes < Mongoid::Migration
 
   def self.matching_route?(a, b)
     return false unless a.handler == b.handler
+
     case a.handler
     when "backend"
-      return a.backend_id == b.backend_id
+      a.backend_id == b.backend_id
     when "redirect"
-      return a.redirect_to == b.redirect_to &&
+      a.redirect_to == b.redirect_to &&
         a.redirect_type == b.redirect_type
     else
-      return true
+      true
     end
   end
 
@@ -170,5 +171,5 @@ class CleanupDuplicateRoutes < Mongoid::Migration
     /west-scotland-loan-fund-wslf-helensburgh-lomond
     /wine-producer-s-licence
     /young-person-wage-incentives
-  )
+  ).freeze
 end

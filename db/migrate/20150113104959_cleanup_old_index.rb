@@ -5,6 +5,5 @@ class CleanupOldIndex < Mongoid::Migration
     Route.collection.indexes.drop(incoming_path: 1, route_type: 1)
   end
 
-  def self.down
-  end
+  def self.down; end
 end
