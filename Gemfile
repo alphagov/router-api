@@ -16,7 +16,7 @@ group :development, :test do
   gem "database_cleaner", "~> 1.8"
   gem "factory_bot_rails", "~> 5.1"
   gem "rack-handlers", "~> 0.7", require: "rack/handler/rails-server"
-  gem "rspec-rails", "~> 3.9"
+  gem "rspec-rails", "~> 4.0"
   gem "rubocop-govuk"
   gem "webmock", "~> 3.8", require: false
 end
