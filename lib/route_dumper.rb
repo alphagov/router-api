@@ -2,7 +2,7 @@ require "csv"
 require "zlib"
 
 class RouteDumper
-  FIELDS = %w(incoming_path handler backend_id disabled redirect_to).freeze
+  FIELDS = %w[incoming_path handler backend_id disabled redirect_to].freeze
 
   def initialize(filename)
     @filename = filename

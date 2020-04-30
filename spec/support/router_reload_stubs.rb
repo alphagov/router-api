@@ -7,8 +7,8 @@ module RouterReloadStubs
   end
 
   def stub_router_reload_error
-    WebMock.stub_request(:post, RouterReloader.new.urls.first).
-      to_return(status: 500, body: "Error")
+    WebMock.stub_request(:post, RouterReloader.new.urls.first)
+      .to_return(status: 500, body: "Error")
   end
 
   def router_reload_http_stub

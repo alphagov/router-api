@@ -17,13 +17,13 @@ class Route
   # This is to enable it to generate a consistent checksum of the routes.
   index(incoming_path: 1, route_type: 1)
 
-  HANDLERS = %w(backend redirect gone).freeze
+  HANDLERS = %w[backend redirect gone].freeze
 
   DUPLICATE_KEY_ERROR = "E11000".freeze
 
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
-  validates :route_type, inclusion: { in: %w(prefix exact) }
+  validates :route_type, inclusion: { in: %w[prefix exact] }
   validates :handler, inclusion: { in: HANDLERS }
   with_options if: :backend? do
     validates :backend_id, presence: true
@@ -33,8 +33,8 @@ class Route
   with_options if: :redirect? do
     validates :redirect_to, presence: true
     validate :validate_redirect_to
-    validates :redirect_type, inclusion: { in: %w(permanent temporary) }
-    validates :segments_mode, inclusion: { in: %w(ignore preserve) }
+    validates :redirect_type, inclusion: { in: %w[permanent temporary] }
+    validates :segments_mode, inclusion: { in: %w[ignore preserve] }
   end
 
   before_validation :default_segments_mode
@@ -55,12 +55,12 @@ class Route
     options[:except] ||= %i[_id created_at updated_at]
     super(options).tap do |h|
       h.delete_if { |_k, v| v.nil? }
-      h["errors"] = self.errors.as_json if self.errors.any?
+      h["errors"] = errors.as_json if errors.any?
     end
   end
 
   def soft_delete
-    if self.has_parent_prefix_routes?
+    if has_parent_prefix_routes?
       destroy
     else
       update(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
@@ -68,8 +68,8 @@ class Route
   end
 
   def has_parent_prefix_routes?
-    segments = self.incoming_path.split("/").reject(&:blank?).tap(&:pop)
-    while segments.any? do
+    segments = incoming_path.split("/").reject(&:blank?).tap(&:pop)
+    while segments.any?
       return true if Route.excluding(self).prefix.where(incoming_path: "/#{segments.join('/')}").any?
 
       segments.pop
@@ -80,7 +80,7 @@ class Route
   def default_segments_mode
     return unless redirect?
 
-    self.segments_mode ||= self.route_type == "prefix" ? "preserve" : "ignore"
+    self.segments_mode ||= route_type == "prefix" ? "preserve" : "ignore"
   end
 
 private
@@ -102,12 +102,12 @@ private
   end
 
   def validate_redirect_to
-    return if self.redirect_to.blank? # This is to short circuit nil values
+    return if redirect_to.blank? # This is to short circuit nil values
 
-    if self.redirect_to.starts_with?("/")
-      validate_internal_target(self.redirect_to)
+    if redirect_to.starts_with?("/")
+      validate_internal_target(redirect_to)
     else
-      validate_external_target(self.redirect_to)
+      validate_external_target(redirect_to)
     end
 
     if segments_mode == "preserve"
@@ -146,16 +146,16 @@ private
   end
 
   def validate_backend_id
-    return if self.backend_id.blank? # handled by presence validation
+    return if backend_id.blank? # handled by presence validation
 
-    unless Backend.where(backend_id: self.backend_id).exists?
+    unless Backend.where(backend_id: backend_id).exists?
       errors[:backend_id] << "does not exist"
     end
   end
 
   def cleanup_child_gone_routes
-    return unless self.route_type == "prefix"
+    return unless route_type == "prefix"
 
-    Route.excluding(self).gone.where(incoming_path: %r{\A#{::Regexp.escape(self.incoming_path)}/}).destroy_all
+    Route.excluding(self).gone.where(incoming_path: %r{\A#{::Regexp.escape(incoming_path)}/}).destroy_all
   end
 end

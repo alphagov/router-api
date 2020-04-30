@@ -15,7 +15,7 @@ class Backend
   def as_json(options = {})
     options[:except] ||= %i[_id created_at updated_at]
     super(options).tap do |h|
-      h["errors"] = self.errors.as_json if self.errors.any?
+      h["errors"] = errors.as_json if errors.any?
     end
   end
 
@@ -26,7 +26,7 @@ private
   end
 
   def valid_backend_url?
-    uri = URI.parse(self.backend_url)
+    uri = URI.parse(backend_url)
     uri.scheme =~ /^https?$/ &&
       uri.host.present? &&
       uri.path.present? &&
@@ -37,7 +37,7 @@ private
   end
 
   def ensure_no_linked_routes
-    if Route.backend.where(backend_id: self.backend_id).any?
+    if Route.backend.where(backend_id: backend_id).any?
       errors[:base] << "Backend has routes - can't delete"
       throw :abort
     end
