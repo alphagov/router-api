@@ -23,10 +23,10 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "exact",
-        "handler" => "backend",
-        "backend_id" => "a-backend",
-        "disabled" => false)
+                                              "route_type" => "exact",
+                                              "handler" => "backend",
+                                              "backend_id" => "a-backend",
+                                              "disabled" => false)
     end
 
     it "should 404 for non-existent routes" do
@@ -45,10 +45,10 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(201)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "prefix",
-        "handler" => "backend",
-        "backend_id" => "a-backend",
-        "disabled" => false)
+                                              "route_type" => "prefix",
+                                              "handler" => "backend",
+                                              "backend_id" => "a-backend",
+                                              "disabled" => false)
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
       expect(route).to be
@@ -62,11 +62,11 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "prefix",
-        "handler" => "backend",
-        "backend_id" => "",
-        "disabled" => false,
-        "errors" => {
+                                              "route_type" => "prefix",
+                                              "handler" => "backend",
+                                              "backend_id" => "",
+                                              "disabled" => false,
+                                              "errors" => {
           "backend_id" => ["can't be blank"],
         })
 
@@ -87,10 +87,10 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "exact",
-        "handler" => "backend",
-        "backend_id" => "another-backend",
-        "disabled" => false)
+                                              "route_type" => "exact",
+                                              "handler" => "backend",
+                                              "backend_id" => "another-backend",
+                                              "disabled" => false)
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
       expect(route).to be
@@ -103,11 +103,11 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "prefix",
-        "handler" => "backend",
-        "backend_id" => "",
-        "disabled" => false,
-        "errors" => {
+                                              "route_type" => "prefix",
+                                              "handler" => "backend",
+                                              "backend_id" => "",
+                                              "disabled" => false,
+                                              "errors" => {
           "backend_id" => ["can't be blank"],
         })
 
@@ -177,10 +177,10 @@ RSpec.describe "managing routes", type: :request do
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq("incoming_path" => "/foo/bar",
-        "route_type" => "exact",
-        "handler" => "backend",
-        "backend_id" => "a-backend",
-        "disabled" => false)
+                                              "route_type" => "exact",
+                                              "handler" => "backend",
+                                              "backend_id" => "a-backend",
+                                              "disabled" => false)
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).not_to be

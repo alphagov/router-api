@@ -12,7 +12,7 @@ RSpec.describe Route, type: :model do
       end
 
       it "will only allow specific values" do
-        %w(prefix exact).each do |type|
+        %w[prefix exact].each do |type|
           route.route_type = type
           expect(route).to be_valid
         end
@@ -98,7 +98,7 @@ RSpec.describe Route, type: :model do
       end
 
       it "will only allow specific values" do
-        %w(backend redirect gone).each do |type|
+        %w[backend redirect gone].each do |type|
           route.handler = type
           route.valid?
           expect(route.errors[:handler]).to be_empty

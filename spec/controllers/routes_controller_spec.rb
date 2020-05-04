@@ -21,13 +21,11 @@ RSpec.describe RoutesController, type: :controller do
 
     threads = 4.times.map do
       Thread.new do
-        begin
-          put :update, body: data, format: :json
-        rescue Mongo::Error::OperationFailure
-          failed = true
-        rescue AbstractController::DoubleRenderError
-          # this error will happen if both threads succeed, so this is fine.
-        end
+        put :update, body: data, format: :json
+      rescue Mongo::Error::OperationFailure
+        failed = true
+      rescue AbstractController::DoubleRenderError
+        # this error will happen if both threads succeed, so this is fine.
       end
     end
     threads.each(&:join)
