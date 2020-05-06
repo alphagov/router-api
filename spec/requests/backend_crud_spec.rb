@@ -38,8 +38,8 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq("backend_id" => "foo",
                                               "backend_url" => "",
                                               "errors" => {
-          "backend_url" => ["is not a valid HTTP URL"],
-        })
+                                                "backend_url" => ["is not a valid HTTP URL"],
+                                              })
 
       backend = Backend.where(backend_id: "foo").first
       expect(backend).to be_nil
@@ -77,8 +77,8 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq("backend_id" => "foo",
                                               "backend_url" => "",
                                               "errors" => {
-          "backend_url" => ["is not a valid HTTP URL"],
-        })
+                                                "backend_url" => ["is not a valid HTTP URL"],
+                                              })
 
       backend.reload
       expect(backend.backend_url).to eq("http://something.example.com/")
@@ -110,8 +110,8 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq("backend_id" => "foo",
                                               "backend_url" => "http://foo.example.com/",
                                               "errors" => {
-          "base" => ["Backend has routes - can't delete"],
-        })
+                                                "base" => ["Backend has routes - can't delete"],
+                                              })
 
       backend = Backend.where(backend_id: "foo").first
       expect(backend).to be
