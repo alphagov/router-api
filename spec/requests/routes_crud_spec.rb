@@ -67,8 +67,8 @@ RSpec.describe "managing routes", type: :request do
                                               "backend_id" => "",
                                               "disabled" => false,
                                               "errors" => {
-          "backend_id" => ["can't be blank"],
-        })
+                                                "backend_id" => ["can't be blank"],
+                                              })
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).not_to be
@@ -108,8 +108,8 @@ RSpec.describe "managing routes", type: :request do
                                               "backend_id" => "",
                                               "disabled" => false,
                                               "errors" => {
-          "backend_id" => ["can't be blank"],
-        })
+                                                "backend_id" => ["can't be blank"],
+                                              })
 
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).to be
