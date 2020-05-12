@@ -7,13 +7,13 @@ RSpec.describe RoutesController, type: :controller do
     FactoryBot.create(:backend, backend_id: "a-backend")
   end
 
-  let(:data) {
+  let(:data) do
     {
       route: {
         incoming_path: "/foo/bar", route_type: "prefix", handler: "backend", backend_id: "a-backend"
       },
     }.to_json
-  }
+  end
 
   it "should not fail on multiple simultaneous requests" do
     bypass_rescue
