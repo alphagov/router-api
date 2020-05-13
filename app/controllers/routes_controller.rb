@@ -48,7 +48,7 @@ class RoutesController < ApplicationController
 private
 
   def ensure_route_keys
-    unless @request_data[:route].respond_to?(:has_key?) && @request_data[:route].has_key?(:incoming_path)
+    unless @request_data[:route].respond_to?(:has_key?) && @request_data[:route].key?(:incoming_path)
       render json: { "error" => "Required route keys (incoming_path and route_type) missing" }, status: :unprocessable_entity
     end
   end
