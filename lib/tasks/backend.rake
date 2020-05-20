@@ -34,11 +34,11 @@ namespace :backend do
       old_url = backend.backend_url
       new_url = old_url.gsub(search_string, replace_string)
 
-      if old_url != new_url
-        puts "Changing #{backend.backend_id} from #{old_url} to #{new_url}"
-        backend.backend_url = new_url
-        backend.save!
-      end
+      next unless old_url != new_url
+
+      puts "Changing #{backend.backend_id} from #{old_url} to #{new_url}"
+      backend.backend_url = new_url
+      backend.save!
     end
 
     puts "Reloading router"
