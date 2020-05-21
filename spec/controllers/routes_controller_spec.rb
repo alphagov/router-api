@@ -15,21 +15,13 @@ RSpec.describe RoutesController, type: :controller do
     }.to_json
   end
 
-  it "should not fail on multiple simultaneous requests" do
-    bypass_rescue
-    failed = false
+  it "should retry on multiple simultaneous requests" do
+    allow(Route).to receive(:find_or_initialize_by)
+      .and_raise(Mongo::Error::OperationFailure, Route::DUPLICATE_KEY_ERROR)
 
-    threads = 4.times.map do
-      Thread.new do
-        put :update, body: data, format: :json
-      rescue Mongo::Error::OperationFailure
-        failed = true
-      rescue AbstractController::DoubleRenderError
-        # this error will happen if both threads succeed, so this is fine.
-      end
-    end
-    threads.each(&:join)
+    expect(Route).to receive(:find_or_initialize_by).exactly(3).times
 
-    expect(failed).to be false
+    expect { put :update, body: data, format: :json }
+      .to raise_error(Mongo::Error::OperationFailure)
   end
 end
