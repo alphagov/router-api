@@ -255,21 +255,21 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug (~> 11)
-  ci_reporter_rspec (~> 1.0)
-  climate_control (~> 0.2)
-  database_cleaner (~> 1.8)
-  factory_bot_rails (~> 6.0)
-  gds-sso (~> 15.0)
-  govuk_app_config (~> 2)
-  mongo (~> 2.4.3)
-  mongoid (~> 6.2)
-  plek (~> 4)
-  rack-handlers (~> 0.7)
+  byebug
+  ci_reporter_rspec
+  climate_control
+  database_cleaner
+  factory_bot_rails
+  gds-sso
+  govuk_app_config
+  mongo
+  mongoid
+  plek
+  rack-handlers
   rails (~> 5.2)
-  rspec-rails (~> 4.0)
+  rspec-rails
   rubocop-govuk
-  webmock (~> 3.8)
+  webmock
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
