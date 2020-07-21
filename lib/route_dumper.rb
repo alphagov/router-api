@@ -13,7 +13,7 @@ class RouteDumper
       csv = CSV.new(file)
       csv << FIELDS + %w[updated_at]
       routes.each do |route|
-        csv << FIELDS.map { |field| route.send(field) } + [Time.now.utc]
+        csv << FIELDS.map { |field| route.send(field) } + [Time.zone.now.utc]
       end
     end
   end

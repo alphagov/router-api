@@ -7,7 +7,7 @@ task redirect_coronavirus: :environment do
 end
 
 def redirect(old_path, new_path)
-  Route.create(
+  Route.create!(
     incoming_path: old_path,
     redirect_to: new_path,
     route_type: "exact",
