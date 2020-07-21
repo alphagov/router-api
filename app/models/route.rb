@@ -61,9 +61,9 @@ class Route
 
   def soft_delete
     if has_parent_prefix_routes?
-      destroy
+      destroy!
     else
-      update(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
+      update!(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
     end
   end
 

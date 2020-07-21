@@ -334,7 +334,7 @@ RSpec.describe Route, type: :model do
     end
 
     it "is false for a prefix route at /" do
-      route.update(incoming_path: "/", route_type: "prefix")
+      route.update!(incoming_path: "/", route_type: "prefix")
       expect(route.has_parent_prefix_routes?).to be_falsey
     end
   end

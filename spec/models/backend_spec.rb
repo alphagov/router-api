@@ -103,7 +103,7 @@ RSpec.describe Backend, type: :model do
       backend2 = FactoryBot.create(:backend)
       FactoryBot.create(:backend_route, backend_id: backend2.backend_id)
 
-      backend.destroy
+      backend.destroy!
 
       expect(Backend.count).to eq 1
     end

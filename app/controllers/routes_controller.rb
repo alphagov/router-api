@@ -30,7 +30,7 @@ class RoutesController < ApplicationController
   def destroy
     @route = Route.find_by(incoming_path: params[:incoming_path])
     if params[:hard_delete] == "true"
-      @route.destroy
+      @route.destroy!
     else
       @route.soft_delete
     end
