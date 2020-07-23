@@ -1,9 +1,10 @@
 source "https://rubygems.org"
 
+gem "rails", "6.0.3.2"
+
 gem "gds-sso"
 gem "govuk_app_config"
 gem "plek"
-gem "rails", "~> 6.0.3", ">= 6.0.3.2"
 
 gem "mongo"
 gem "mongoid"
