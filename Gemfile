@@ -18,5 +18,6 @@ group :development, :test do
   gem "rack-handlers", require: "rack/handler/rails-server"
   gem "rspec-rails"
   gem "rubocop-govuk"
+  gem "simplecov"
   gem "webmock", require: false
 end
