@@ -31,3 +31,7 @@ module RouterApi
     config.paths["log"] = ENV["LOG_PATH"] if ENV["LOG_PATH"]
   end
 end
+
+# Trigger refresh of routes in Router (ensures Router is up to date post data sync)
+require_relative "../lib/router_reloader.rb"
+RouterReloader.reload
