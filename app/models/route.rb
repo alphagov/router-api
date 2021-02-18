@@ -131,8 +131,8 @@ private
 
     return unless errors[:redirect_to].empty? # Don't continue, as the host validation may fail
 
-    errors[:redirect_to] << "external domain must be within .gov.uk or british-business-bank.co.uk" unless
-      uri.host.end_with?(".gov.uk") || uri.host == "british-business-bank.co.uk"
+    errors[:redirect_to] << "external domain must be within .gov.uk, .judiciary.uk or british-business-bank.co.uk" unless
+      uri.host.end_with?(".gov.uk") || uri.host.end_with?(".judiciary.uk") || uri.host == "british-business-bank.co.uk"
   rescue URI::InvalidURIError
     errors[:redirect_to] << "is an invalid URI"
   end
