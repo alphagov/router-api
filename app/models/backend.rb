@@ -4,6 +4,7 @@ class Backend
 
   field :backend_id, type: String
   field :backend_url, type: String
+  field :subdomain_name, type: String
 
   index({ backend_id: 1 }, unique: true)
 
