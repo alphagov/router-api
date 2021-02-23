@@ -9,6 +9,7 @@ class Backend
   index({ backend_id: 1 }, unique: true)
 
   validates :backend_id, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]*\z/ }
+  validates :subdomain_name, format: { with: /\A[a-z0-9-.]*\z/ }
   validate :validate_backend_url
 
   before_destroy :ensure_no_linked_routes

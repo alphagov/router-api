@@ -11,6 +11,7 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq(
         "backend_id" => "foo",
         "backend_url" => "http://foo.example.com/",
+        "subdomain_name" => nil,
       )
     end
 
@@ -28,6 +29,7 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq(
         "backend_id" => "foo",
         "backend_url" => "http://foo.example.com/",
+        "subdomain_name" => nil,
       )
 
       backend = Backend.where(backend_id: "foo").first
@@ -45,6 +47,7 @@ RSpec.describe "managing backends", type: :request do
         "errors" => {
           "backend_url" => ["is not a valid HTTP URL"],
         },
+        "subdomain_name" => nil,
       )
 
       backend = Backend.where(backend_id: "foo").first
@@ -65,12 +68,13 @@ RSpec.describe "managing backends", type: :request do
   describe "updating a backend" do
     it "should update the backend" do
       backend = FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
-      put_json "/backends/foo", backend: { backend_url: "http://something-else.example.com/" }
+      put_json "/backends/foo", backend: { backend_url: "http://something-else.example.com/", "subdomain_name" => "something-else" }
 
       expect(response.code.to_i).to eq(200)
       expect(JSON.parse(response.body)).to eq(
         "backend_id" => "foo",
         "backend_url" => "http://something-else.example.com/",
+        "subdomain_name" => "something-else",
       )
 
       backend.reload
@@ -79,7 +83,7 @@ RSpec.describe "managing backends", type: :request do
 
     it "should return an error if given invalid data" do
       backend = FactoryBot.create(:backend, backend_id: "foo", backend_url: "http://something.example.com/")
-      put_json "/backends/foo", backend: { backend_url: "" }
+      put_json "/backends/foo", backend: { backend_url: "", "subdomain_name" => "https://a-url.example.com/" }
 
       expect(response.code.to_i).to eq(422)
       expect(JSON.parse(response.body)).to eq(
@@ -87,7 +91,9 @@ RSpec.describe "managing backends", type: :request do
         "backend_url" => "",
         "errors" => {
           "backend_url" => ["is not a valid HTTP URL"],
+          "subdomain_name" => ["is invalid"],
         },
+        "subdomain_name" => "https://a-url.example.com/",
       )
 
       backend.reload
@@ -107,6 +113,7 @@ RSpec.describe "managing backends", type: :request do
       expect(JSON.parse(response.body)).to eq(
         "backend_id" => "foo",
         "backend_url" => "http://foo.example.com/",
+        "subdomain_name" => nil,
       )
 
       backend = Backend.where(backend_id: "foo").first
@@ -125,6 +132,7 @@ RSpec.describe "managing backends", type: :request do
         "errors" => {
           "base" => ["Backend has routes - can't delete"],
         },
+        "subdomain_name" => nil,
       )
 
       backend = Backend.where(backend_id: "foo").first

@@ -1,4 +1,43 @@
 namespace :backend do
+  desc "Adds a subdomain to all backends"
+  task add_subdomains: :environment do
+    subdomain_mappings = {
+      "content-store" => "content-store",
+      "calculators" => "calculators",
+      "email-alert-frontend" => "email-alert-frontend",
+      "manuals-frontend" => "manuals-frontend",
+      "info-frontend" => "info-frontend",
+      "government-frontend" => "government-frontend",
+      "email-campaign-frontend" => "email-campaign-frontend",
+      "finder-frontend" => "finder-frontend",
+      "whitehall-frontend" => "whitehall-frontend",
+      "smartanswers" => "smartanswers",
+      "service-manual-frontend" => "service-manual-frontend",
+      "frontend" => "frontend",
+      "feedback" => "feedback",
+      "licensify" => "licensify",
+      "canary-frontend" => "canary-frontend",
+      "licencefinder" => "licencefinder",
+      "collections" => "collections",
+      "static" => "static",
+      "contacts-frontend" => "contacts-frontend",
+      "search-api" => "search-api",
+    }
+    subdomain_mappings.each do |backend_id, subdomain|
+      backend = Backend.find_by(backend_id: backend_id)
+      unless backend
+        puts "couldn't find backend '#{backend_id}'"
+        next
+      end
+      puts "Changing #{backend_id} subdomain from '#{backend.subdomain_name}' to '#{subdomain}'"
+      backend.subdomain_name = subdomain
+      backend.save!
+    end
+
+    puts "Reloading router"
+    RouterReloader.reload
+  end
+
   desc "Updates backend_url for a given backend"
   task :modify_url, %i[backend_id backend_url] => [:environment] do |_t, args|
     unless args[:backend_id] && args[:backend_url]
