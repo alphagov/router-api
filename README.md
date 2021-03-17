@@ -4,28 +4,17 @@ This provides an API for updating the routes used by the [router](https://github
 
 ## Technical documentation
 
-A Ruby on Rails application that manages the router database.  Routes are
-stored in a mongo database using [Mongoid](http://mongoid.org/) as an ORM.
+This is a Ruby on Rails app, and should follow [our Rails app conventions](https://docs.publishing.service.gov.uk/manual/conventions-for-rails-applications.html).
 
-### Dependencies
+You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies. Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 
-- [mongoDB](http://www.mongodb.org/)
-- [alphagov/router](https://github.com/alphagov/router/) - to reload routes
-  (optional in dev mode)
-
-When running in development mode, this will ignore connection errors when
-triggering a reload of the router
-
-### Running the application
-
-`bundle exec rails s`
-
-The app will then be available at http://localhost:3000/ (the port can be
-changed by passing a `-p` option to the command)
+**Use GOV.UK Docker to run any commands that follow.**
 
 ### Running the test suite
 
-`bundle exec rake`
+```
+bundle exec rake
+```
 
 ## API endpoints
 
