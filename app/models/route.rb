@@ -104,15 +104,16 @@ private
   def validate_redirect_to
     return if redirect_to.blank? # This is to short circuit nil values
 
-    if redirect_to.starts_with?("/")
-      validate_internal_target(redirect_to)
+    uri = URI.parse(redirect_to)
+    internal_uri = redirect_to.starts_with?(uri.path)
+
+    if internal_uri
+      errors[:redirect_to] << "must start with a /" unless uri.path.starts_with?("/")
     else
-      validate_external_target(redirect_to)
+      errors[:redirect_to] << "must be an absolute URI" unless uri.absolute?
     end
 
     if segments_mode == "preserve"
-      uri = URI.parse(redirect_to)
-
       if uri.fragment.present?
         errors[:redirect_to] << "cannot contain fragment if the segments mode is preserve"
       end
@@ -121,26 +122,6 @@ private
         errors[:redirect_to] << "cannot contain query parameters if the segments mode is preserve"
       end
     end
-  rescue URI::InvalidURIError
-    errors[:redirect_to] << "is an invalid URI"
-  end
-
-  def validate_external_target(target)
-    uri = URI.parse(target)
-    errors[:redirect_to] << "must be an absolute URI" unless uri.absolute?
-
-    return unless errors[:redirect_to].empty? # Don't continue, as the host validation may fail
-
-    errors[:redirect_to] << "external domain must be within .gov.uk, .judiciary.uk or british-business-bank.co.uk" unless
-      uri.host.end_with?(".gov.uk") || uri.host.end_with?(".judiciary.uk") || uri.host == "british-business-bank.co.uk"
-  rescue URI::InvalidURIError
-    errors[:redirect_to] << "is an invalid URI"
-  end
-
-  def validate_internal_target(target)
-    uri = URI.parse(target)
-    errors[:redirect_to] << "uri path cannot contain //" if uri.path.match?(%r{//})
-    errors[:redirect_to] << "cannot end with /" if target.match?(%r{./\z})
   rescue URI::InvalidURIError
     errors[:redirect_to] << "is an invalid URI"
   end

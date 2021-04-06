@@ -136,18 +136,6 @@ RSpec.describe Route, type: :model do
     context "with handler set to 'redirect'" do
       subject(:route) { FactoryBot.build(:redirect_route) }
 
-      context "with an external redirect" do
-        it "will allow .gov.uk subdomains" do
-          route.redirect_to = "http://example.service.gov.uk/thing"
-          expect(route).to be_valid
-        end
-
-        it "won't allow domains outside of .gov.uk" do
-          route.redirect_to = "http://example.service.gov.uk.example.com/thing"
-          expect(route).to be_invalid
-        end
-      end
-
       describe "segments_mode field" do
         it "is required" do
           route.segments_mode = ""
@@ -200,6 +188,26 @@ RSpec.describe Route, type: :model do
           expect(route).not_to be_valid
           expect(route.errors[:redirect_to].size).to eq(1)
         end
+
+        it "accepts a path prefixed with a /" do
+          route.redirect_to = "/thing"
+          expect(route).to be_valid
+        end
+
+        it "rejects a path without a / prefix" do
+          route.redirect_to = "thing"
+          expect(route).to be_invalid
+        end
+
+        it "accepts an absolute URL" do
+          route.redirect_to = "http://example.service.gov.uk.example.com/thing"
+          expect(route).to be_valid
+        end
+
+        it "rejects an invalid URI" do
+          route.redirect_to = "invalid url"
+          expect(route).to be_invalid
+        end
       end
 
       context "and segments_mode set to 'ignore'" do
@@ -214,24 +222,6 @@ RSpec.describe Route, type: :model do
           it "will allow URL fragments" do
             route.redirect_to = "/foo/bar#section"
             expect(route).to be_valid
-          end
-
-          it "will allow external URLs" do
-            route.redirect_to = "http://example.service.gov.uk/thing"
-            expect(route).to be_valid
-          end
-
-          it "will reject invalid URL paths" do
-            [
-              "\jkhsdfgjkhdjskfgh//fdf#th",
-              "not a URL path",
-              "bar/baz",
-              "/foo//bar",
-            ].each do |path|
-              route.redirect_to = path
-              expect(route).not_to be_valid
-              expect(route.errors[:redirect_to].size).to eq(1)
-            end
           end
         end
       end
@@ -248,44 +238,6 @@ RSpec.describe Route, type: :model do
           it "will reject URL fragments" do
             route.redirect_to = "/foo/bar#section"
             expect(route).to be_invalid
-          end
-
-          it "will allow domains within .gov.uk" do
-            route.redirect_to = "https://moarcaek.campaign.gov.uk/"
-            expect(route).to be_valid
-          end
-
-          it "will allow domains within .judiciary.uk" do
-            route.redirect_to = "https://www.judiciary.uk/"
-            expect(route).to be_valid
-          end
-
-          it "will allow british-business-bank.co.uk URLs" do
-            route.redirect_to = "https://british-business-bank.co.uk/banking-things"
-            expect(route).to be_valid
-          end
-
-          it "will reject british-business-bank.co.uk subdomains" do
-            route.redirect_to = "https://www.british-business-bank.co.uk"
-            expect(route).to be_invalid
-          end
-
-          it "will reject other external URLs" do
-            route.redirect_to = "http://example.com"
-            expect(route).to be_invalid
-          end
-
-          it "will reject invalid URL paths" do
-            [
-              "\jkhsdfgjkhdjskfgh//fdf#th",
-              "not a URL path",
-              "bar/baz",
-              "/foo//bar",
-            ].each do |path|
-              route.redirect_to = path
-              expect(route).not_to be_valid
-              expect(route.errors[:redirect_to]).not_to be_empty
-            end
           end
         end
       end
