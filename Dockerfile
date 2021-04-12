@@ -6,7 +6,6 @@ ENV GOVUK_APP_NAME router-api
 ENV MONGODB_URI mongodb://mongo/router
 ENV PORT 3056
 ENV RAILS_ENV development
-ENV ROUTER_NODES router:3055
 ENV TEST_MONGODB_URI mongodb://mongo/router-test
 
 # place the AWS RDS Certificate Authority bundle at well known path

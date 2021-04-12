@@ -14,7 +14,7 @@ class RouterReloader
       elsif !Rails.env.production?
         ["http://localhost:3055/reload"]
       else
-        raise "No router nodes provided. Need to set the ROUTER_NODES env variable"
+        []
       end
     end
   end
