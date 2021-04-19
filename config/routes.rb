@@ -8,5 +8,10 @@ Rails.application.routes.draw do
     r.post "/routes/commit" => "routes#commit"
 
     r.get "/healthcheck" => proc { [200, {}, %w[OK]] }
+
+    r.get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
+    r.get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
+      GovukHealthcheck::Mongoid,
+    )
   end
 end
