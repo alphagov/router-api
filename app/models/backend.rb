@@ -22,7 +22,7 @@ class Backend
 private
 
   def validate_backend_url
-    errors[:backend_url] << "is not a valid HTTP URL" unless valid_backend_url?
+    errors.add(:backend_url, "is not a valid HTTP URL") unless valid_backend_url?
   end
 
   def valid_backend_url?
@@ -38,7 +38,7 @@ private
 
   def ensure_no_linked_routes
     if Route.backend.where(backend_id: backend_id).any?
-      errors[:base] << "Backend has routes - can't delete"
+      errors.add(:base, "Backend has routes - can't delete")
       throw :abort
     end
   end
