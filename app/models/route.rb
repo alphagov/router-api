@@ -86,19 +86,19 @@ class Route
 private
 
   def validate_incoming_path
-    errors[:incoming_path] << "must start with /" unless
+    errors.add(:incoming_path, "must start with /") unless
       incoming_path.starts_with?("/")
 
     uri = URI.parse(incoming_path)
 
-    errors[:incoming_path] << "cannot end with /" if
+    errors.add(:incoming_path, "cannot end with /") if
       uri.path != "/" && uri.path.end_with?("/")
-    errors[:incoming_path] << "cannot contain //" if uri.path.match?(%r{//})
+    errors.add(:incoming_path, "cannot contain //") if uri.path.match?(%r{//})
 
-    errors[:incoming_path] << "does not equal the URI path" unless
+    errors.add(:incoming_path, "does not equal the URI path") unless
       uri.path == incoming_path
   rescue URI::InvalidURIError
-    errors[:incoming_path] << "is an invalid URI"
+    errors.add(:incoming_path, "is an invalid URI")
   end
 
   def validate_redirect_to
@@ -108,29 +108,29 @@ private
     internal_uri = redirect_to.starts_with?(uri.path)
 
     if internal_uri
-      errors[:redirect_to] << "must start with a /" unless uri.path.starts_with?("/")
+      errors.add(:redirect_to, "must start with a /") unless uri.path.starts_with?("/")
     else
-      errors[:redirect_to] << "must be an absolute URI" unless uri.absolute?
+      errors.add(:redirect_to, "must be an absolute URI") unless uri.absolute?
     end
 
     if segments_mode == "preserve"
       if uri.fragment.present?
-        errors[:redirect_to] << "cannot contain fragment if the segments mode is preserve"
+        errors.add(:redirect_to, "cannot contain fragment if the segments mode is preserve")
       end
 
       if uri.query.present?
-        errors[:redirect_to] << "cannot contain query parameters if the segments mode is preserve"
+        errors.add(:redirect_to, "cannot contain query parameters if the segments mode is preserve")
       end
     end
   rescue URI::InvalidURIError
-    errors[:redirect_to] << "is an invalid URI"
+    errors.add(:redirect_to, "is an invalid URI")
   end
 
   def validate_backend_id
     return if backend_id.blank? # handled by presence validation
 
     unless Backend.where(backend_id: backend_id).exists?
-      errors[:backend_id] << "does not exist"
+      errors.add(:backend_id, "does not exist")
     end
   end
 
