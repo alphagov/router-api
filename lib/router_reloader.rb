@@ -6,15 +6,21 @@ class RouterReloader
   end
 
   def urls
-    @urls ||= if ENV["ROUTER_NODES"].present?
-                urls_from_string(ENV["ROUTER_NODES"])
-              elsif ENV["ROUTER_NODES_FILE"].present?
-                urls_from_file(ENV["ROUTER_NODES_FILE"])
-              elsif !Rails.env.production?
-                ["http://localhost:3055/reload"]
-              else
-                []
-              end
+    @urls ||= tmp
+  end
+
+  def tmp
+    return [] if ENV["IS_DOCKER"] == "true"
+
+    if ENV["ROUTER_NODES"].present?
+      urls_from_string(ENV["ROUTER_NODES"])
+    elsif ENV["ROUTER_NODES_FILE"].present?
+      urls_from_file(ENV["ROUTER_NODES_FILE"])
+    elsif !Rails.env.production?
+      ["http://localhost:3055/reload"]
+    else
+      []
+    end
   end
 
   def reload
