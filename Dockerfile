@@ -1,22 +1,44 @@
-FROM ruby:2.7.5
-RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y build-essential && apt-get clean
-RUN gem install foreman
+ARG base_image=ruby:2.7.5-slim-buster
 
-ENV GOVUK_APP_NAME router-api
-ENV MONGODB_URI mongodb://mongo/router
-ENV PORT 3056
-ENV RAILS_ENV development
-ENV TEST_MONGODB_URI mongodb://mongo/router-test
+FROM $base_image AS builder
 
-# place the AWS RDS Certificate Authority bundle at well known path
+ENV RAILS_ENV=production
+
+# TODO: have a separate build image which already contains the build-only deps.
+RUN apt-get update -qq && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential nodejs wget && \
+    apt-get clean
+
+RUN mkdir /app
+
+WORKDIR /app
+COPY Gemfile* .ruby-version /app/
+
+RUN bundle config set deployment 'true' && \
+    bundle config set without 'development test webkit' && \
+    bundle install -j8 --retry=2
+
 RUN wget -O /etc/ssl/certs/rds-combined-ca-bundle.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
-ENV APP_HOME /app
-RUN mkdir $APP_HOME
+COPY . /app
 
-WORKDIR $APP_HOME
-ADD Gemfile* $APP_HOME/
-RUN bundle install
-ADD . $APP_HOME
 
-CMD foreman run web
+FROM $base_image
+
+ENV RAILS_ENV=production GOVUK_APP_NAME=router-api
+
+RUN apt-get update -qy && \
+    apt-get upgrade -y && \
+    apt-get install -y nodejs && \
+    apt-get clean
+
+
+
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /app /app/
+COPY --from=builder /etc/ssl/certs/rds-combined-ca-bundle.pem /etc/ssl/certs/rds-combined-ca-bundle.pem 
+
+WORKDIR /app
+
+CMD bundle exec puma
