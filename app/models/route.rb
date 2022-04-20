@@ -19,8 +19,6 @@ class Route
 
   HANDLERS = %w[backend redirect gone].freeze
 
-  DUPLICATE_KEY_ERROR = "E11000".freeze
-
   validates :incoming_path, uniqueness: true
   validate :validate_incoming_path
   validates :route_type, inclusion: { in: %w[prefix exact] }

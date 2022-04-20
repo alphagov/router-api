@@ -16,8 +16,17 @@ RSpec.describe RoutesController, type: :controller do
   end
 
   it "should retry on multiple simultaneous requests" do
-    allow(Route).to receive(:find_or_initialize_by)
-      .and_raise(Mongo::Error::OperationFailure, Route::DUPLICATE_KEY_ERROR)
+    # Simulate race condition by creating a clashing DB object and stubbing
+    # find_and_initialize_by to return something new - as if the item didn't
+    # exist when it was called.
+    FactoryBot.create(:route, incoming_path: "/foo/bar")
+    erroring_route = Route.new(incoming_path: "/foo/bar")
+    allow(Route).to receive(:find_or_initialize_by).and_return(erroring_route)
+
+    allow(erroring_route).to receive(:update).and_wrap_original do |_, attributes|
+      erroring_route.assign_attributes(attributes)
+      erroring_route.save!(validate: false)
+    end
 
     expect(Route).to receive(:find_or_initialize_by).exactly(3).times
 
