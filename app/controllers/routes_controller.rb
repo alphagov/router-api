@@ -17,12 +17,8 @@ class RoutesController < ApplicationController
       @route = Route.find_or_initialize_by(incoming_path: incoming_path)
       status_code = @route.new_record? ? 201 : 200
       @route.update(route_details) || status_code = 422
-    rescue Mongo::Error::OperationFailure => e
-      if e.message.start_with?(Route::DUPLICATE_KEY_ERROR) && (tries -= 1).positive?
-        retry
-      else
-        raise
-      end
+    rescue Mongo::Error::OperationFailure
+      (tries -= 1).positive? ? retry : raise
     end
     render json: @route, status: status_code
   end
