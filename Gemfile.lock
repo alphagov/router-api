@@ -308,7 +308,7 @@ DEPENDENCIES
   factory_bot_rails
   gds-sso
   govuk_app_config
-  mongo
+  mongo (~> 2.15.1)
   mongoid
   plek
   rack-handlers
