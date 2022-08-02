@@ -6,7 +6,7 @@ gem "gds-sso"
 gem "govuk_app_config"
 gem "plek"
 
-gem "mongo", "~> 2.15.1"
+gem "mongo", "~> 2.18.1"
 gem "mongoid"
 
 group :development, :test do
