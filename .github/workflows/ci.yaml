@@ -1,14 +1,14 @@
 name: CI
 
- on:
-   push:
-     branches:
-       - main
-   pull_request:
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
- jobs:
-   test:
-     name: Test Rails
-     uses: alphagov/govuk-infrastructure/.github/workflows/test-rails.yaml@main
-     with:
-       requiresMongoDB: true
+jobs:
+  test:
+    name: Test Rails
+    uses: alphagov/govuk-infrastructure/.github/workflows/test-rails.yaml@main
+    with:
+      requiresMongoDB: true
