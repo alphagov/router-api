@@ -10,6 +10,7 @@ gem "mongo", "~> 2.15.1"
 gem "mongoid"
 
 group :development, :test do
+  gem "brakeman"
   gem "byebug"
   gem "ci_reporter_rspec"
   gem "climate_control"
