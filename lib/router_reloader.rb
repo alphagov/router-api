@@ -25,7 +25,7 @@ class RouterReloader
       "Failed to trigger reload on some routers",
       extra: {
         errors: errors.map do |url, resp|
-          { url: url, status: resp.code, body: resp.body }
+          { url:, status: resp.code, body: resp.body }
         end,
       },
     )

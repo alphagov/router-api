@@ -14,7 +14,7 @@ class RoutesController < ApplicationController
     incoming_path = route_details.delete(:incoming_path)
     tries = 3
     begin
-      @route = Route.find_or_initialize_by(incoming_path: incoming_path)
+      @route = Route.find_or_initialize_by(incoming_path:)
       status_code = @route.new_record? ? 201 : 200
       @route.update(route_details) || status_code = 422
     rescue Mongo::Error::OperationFailure

@@ -8,7 +8,7 @@ namespace :backend do
     backend_id = args[:backend_id]
     backend_url = args[:backend_url]
 
-    backend = Backend.where(backend_id: backend_id).first
+    backend = Backend.where(backend_id:).first
     old_url = backend.backend_url
     backend.backend_url = backend_url
 
