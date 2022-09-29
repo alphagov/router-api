@@ -1,6 +1,6 @@
-ARG base_image=ghcr.io/alphagov/govuk-ruby-base:2.7.6
-ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:2.7.6
- 
+ARG base_image=ghcr.io/alphagov/govuk-ruby-base:3.1.2
+ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:3.1.2
+
 FROM $builder_image AS builder
 
 RUN apt update && \
@@ -28,7 +28,7 @@ RUN ln -fs /tmp /app/tmp
 
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 COPY --from=builder /app /app/
-COPY --from=builder /etc/ssl/certs/rds-combined-ca-bundle.pem /etc/ssl/certs/rds-combined-ca-bundle.pem 
+COPY --from=builder /etc/ssl/certs/rds-combined-ca-bundle.pem /etc/ssl/certs/rds-combined-ca-bundle.pem
 
 USER app
 

@@ -37,7 +37,7 @@ private
   end
 
   def ensure_no_linked_routes
-    if Route.backend.where(backend_id: backend_id).any?
+    if Route.backend.where(backend_id:).any?
       errors.add(:base, "Backend has routes - can't delete")
       throw :abort
     end

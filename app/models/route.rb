@@ -42,7 +42,7 @@ class Route
   scope :prefix, -> { where(route_type: "prefix") }
 
   HANDLERS.each do |handler|
-    scope handler, -> { where(handler: handler) }
+    scope handler, -> { where(handler:) }
 
     define_method "#{handler}?" do
       self.handler == handler
@@ -127,7 +127,7 @@ private
   def validate_backend_id
     return if backend_id.blank? # handled by presence validation
 
-    unless Backend.where(backend_id: backend_id).exists?
+    unless Backend.where(backend_id:).exists?
       errors.add(:backend_id, "does not exist")
     end
   end
