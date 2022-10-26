@@ -204,6 +204,11 @@ RSpec.describe Route, type: :model do
           expect(route).to be_valid
         end
 
+        it "accepts an absolute URL" do
+          route.redirect_to = "https://www.oisc.gov.uk"
+          expect(route).to be_valid
+        end
+
         it "rejects an invalid URI" do
           route.redirect_to = "invalid url"
           expect(route).to be_invalid

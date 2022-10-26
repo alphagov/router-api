@@ -103,7 +103,7 @@ private
     return if redirect_to.blank? # This is to short circuit nil values
 
     uri = URI.parse(redirect_to)
-    internal_uri = redirect_to.starts_with?(uri.path)
+    internal_uri = uri.path.present? && redirect_to.starts_with?(uri.path)
 
     if internal_uri
       errors.add(:redirect_to, "must start with a /") unless uri.path.starts_with?("/")
