@@ -32,4 +32,4 @@ COPY --from=builder /etc/ssl/certs/rds-combined-ca-bundle.pem /etc/ssl/certs/rds
 
 USER app
 
-CMD bundle exec puma
+CMD ["bundle", "exec", "puma"]
