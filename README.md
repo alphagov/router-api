@@ -22,4 +22,4 @@ bundle exec rake
 
 ## Licence
 
-[MIT License](LICENSE)
+[MIT License](LICENCE)
