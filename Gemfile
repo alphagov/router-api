@@ -7,7 +7,7 @@ gem "govuk_app_config"
 gem "mail", "~> 2.7.1"  # TODO: remove once https://github.com/mikel/mail/issues/1489 is fixed.
 gem "plek"
 
-gem "mongo", "~> 2.15.1"
+gem "mongo", "~> 2.18.2"
 gem "mongoid"
 
 group :development, :test do
