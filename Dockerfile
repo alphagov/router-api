@@ -1,35 +1,23 @@
-ARG base_image=ghcr.io/alphagov/govuk-ruby-base:3.1.2
-ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:3.1.2
+ARG ruby_version=3.1.2
+ARG base_image=ghcr.io/alphagov/govuk-ruby-base:$ruby_version
+ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
+
 
 FROM $builder_image AS builder
 
-RUN apt update && \
-    apt install -y wget
-
-WORKDIR /app
-
-COPY Gemfile* .ruby-version /app/
-
-RUN bundle config set without 'development test webkit' && \
-    bundle install
-
-RUN wget -O /etc/ssl/certs/rds-combined-ca-bundle.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
-
-COPY . /app
+WORKDIR $APP_HOME
+COPY Gemfile* .ruby-version ./
+RUN bundle install
+COPY . .
 
 
 FROM $base_image
 
 ENV GOVUK_APP_NAME=router-api
 
-WORKDIR /app
-
-RUN ln -fs /tmp /app/tmp
-
-COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
-COPY --from=builder /app /app/
-COPY --from=builder /etc/ssl/certs/rds-combined-ca-bundle.pem /etc/ssl/certs/rds-combined-ca-bundle.pem
+WORKDIR $APP_HOME
+COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
+COPY --from=builder $APP_HOME .
 
 USER app
-
-CMD bundle exec puma
+CMD ["puma"]
