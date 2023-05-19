@@ -1,22 +1,4 @@
-class Route
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  field :incoming_path, type: String
-  field :route_type, type: String
-  field :handler, type: String
-  field :disabled, type: Boolean, default: false
-  field :backend_id, type: String
-  field :redirect_to, type: String
-  field :redirect_type, type: String
-  field :segments_mode, type: String
-
-  index({ incoming_path: 1 }, unique: true)
-
-  # The router loads the routes in order, and therefore needs this index.
-  # This is to enable it to generate a consistent checksum of the routes.
-  index(incoming_path: 1, route_type: 1)
-
+class Route < ApplicationRecord
   HANDLERS = %w[backend redirect gone].freeze
 
   validates :incoming_path, uniqueness: true
@@ -38,7 +20,7 @@ class Route
   before_validation :default_segments_mode
   after_create :cleanup_child_gone_routes
 
-  scope :excluding, ->(route) { where(id: { :$ne => route.id }) }
+  # scope :excluding, ->(route) { where(id: { :$ne => route.id }) }
   scope :prefix, -> { where(route_type: "prefix") }
 
   HANDLERS.each do |handler|
@@ -50,7 +32,7 @@ class Route
   end
 
   def as_json(options = {})
-    options[:except] ||= %i[_id created_at updated_at]
+    options[:except] ||= %i[id created_at updated_at]
     super(options).tap do |h|
       h.delete_if { |_k, v| v.nil? }
       h["errors"] = errors.as_json if errors.any?
@@ -135,6 +117,6 @@ private
   def cleanup_child_gone_routes
     return unless route_type == "prefix"
 
-    Route.excluding(self).gone.where(incoming_path: %r{\A#{::Regexp.escape(incoming_path)}/}).destroy_all
+    Route.excluding(self).gone.where("incoming_path SIMILAR TO ?", "#{Regexp.escape(incoming_path)}/%").destroy_all
   end
 end
