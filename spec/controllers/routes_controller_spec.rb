@@ -31,6 +31,6 @@ RSpec.describe RoutesController, type: :controller do
     expect(Route).to receive(:find_or_initialize_by).exactly(3).times
 
     expect { put :update, body: data, format: :json }
-      .to raise_error(Mongo::Error::OperationFailure)
+      .to raise_error(ActiveRecord::RecordNotUnique)
   end
 end
