@@ -4,6 +4,8 @@ class BackendsController < ApplicationController
 
   def show
     @backend = Backend.find_by(backend_id: params[:id])
+    return error_404 if @backend.nil?
+
     render json: @backend
   end
 
@@ -16,6 +18,8 @@ class BackendsController < ApplicationController
 
   def destroy
     @backend = Backend.find_by(backend_id: params[:id])
+    return error_404 if @backend.nil?
+
     status_code = 200
     @backend.destroy || status_code = 422
     render json: @backend, status: status_code

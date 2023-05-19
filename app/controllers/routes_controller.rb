@@ -4,6 +4,8 @@ class RoutesController < ApplicationController
 
   def show
     @route = Route.find_by(incoming_path: params[:incoming_path])
+    return error_404 if @route.nil?
+
     render json: @route
   end
 
@@ -15,7 +17,7 @@ class RoutesController < ApplicationController
       @route = Route.find_or_initialize_by(incoming_path:)
       status_code = @route.new_record? ? 201 : 200
       @route.update(route_details) || status_code = 422
-    rescue Mongo::Error::OperationFailure
+    rescue ActiveRecord::RecordNotUnique
       (tries -= 1).positive? ? retry : raise
     end
     render json: @route, status: status_code
@@ -23,6 +25,8 @@ class RoutesController < ApplicationController
 
   def destroy
     @route = Route.find_by(incoming_path: params[:incoming_path])
+    return error_404 if @route.nil?
+
     if params[:hard_delete] == "true"
       @route.destroy!
     else

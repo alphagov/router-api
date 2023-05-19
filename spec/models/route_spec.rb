@@ -85,7 +85,7 @@ RSpec.describe Route, type: :model do
 
           expect {
             route.save validate: false
-          }.to raise_error(Mongo::Error::OperationFailure)
+          }.to raise_error(ActiveRecord::RecordNotUnique)
         end
       end
     end
