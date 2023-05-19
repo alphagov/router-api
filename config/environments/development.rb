@@ -57,7 +57,7 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts += [
-    "draft-router-api.dev.gov.uk",
-    "router-api.dev.gov.uk",
+    "draft-router-api-postgres.dev.gov.uk",
+    "router-api-postgres.dev.gov.uk",
   ]
 end

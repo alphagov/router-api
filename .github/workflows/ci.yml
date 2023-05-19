@@ -23,10 +23,9 @@ jobs:
     name: Test Ruby
     runs-on: ubuntu-latest
     steps:
-      - name: Setup MongoDB
-        uses: alphagov/govuk-infrastructure/.github/actions/setup-mongodb@main
-        with:
-          version: 2.6
+      - name: Setup Postgres
+        id: setup-postgres
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-postgres@main
 
       - name: Checkout repository
         uses: actions/checkout@v3
