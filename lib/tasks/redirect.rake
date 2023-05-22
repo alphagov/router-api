@@ -1,4 +1,3 @@
-require "router_reloader"
 desc "Redirects the coronavirus topical event page to new landing page"
 task redirect_coronavirus: :environment do
   old = "/government/topical-events/coronavirus-covid-19-uk-government-response"
@@ -16,5 +15,4 @@ def redirect(old_path, new_path)
     redirect_type: "permanent",
     segments_mode: "ignore",
   )
-  RouterReloader.reload
 end

@@ -4,6 +4,8 @@
 
 Information about the route data structure can be found in the [router repository](https://github.com/alphagov/router#routes).
 
+Router watches its database for changes and will pick up new/changed/deleted routes automatically within a few seconds.
+
 ### Getting details of a route:
 
 ``` sh
@@ -33,14 +35,6 @@ curl "http://router-api.example.com/routes?incoming_path=/foo" -X DELETE
 ```
 
 This will delete the corresponding route.  If no route matches the JSON request, a 404 status code will be returned.
-
-### Committing changes:
-
-``` sh
-curl http://router-api.example.com/routes/commit -X POST
-```
-
-This will trigger a router reload and cause any changes to the route to take effect.
 
 ## Backends
 
