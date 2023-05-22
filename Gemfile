@@ -5,7 +5,6 @@ gem "rails", "7.0.4.3"
 gem "bootsnap", require: false
 gem "gds-sso"
 gem "govuk_app_config"
-gem "plek"
 
 gem "mongo", "~> 2.15.1"
 gem "mongoid"
