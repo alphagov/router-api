@@ -15,10 +15,6 @@ namespace :backend do
     puts "Changing #{backend_id} from #{old_url} to #{backend_url}"
 
     backend.save!
-
-    puts "Reloading router"
-
-    RouterReloader.reload
   end
 
   desc "Updates backend_url for all backends using search and replace"
@@ -40,9 +36,5 @@ namespace :backend do
       backend.backend_url = new_url
       backend.save!
     end
-
-    puts "Reloading router"
-
-    RouterReloader.reload
   end
 end

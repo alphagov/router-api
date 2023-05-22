@@ -1,5 +1,3 @@
-require "router_reloader"
-
 class RoutesController < ApplicationController
   before_action :parse_json_request, only: [:update]
   before_action :ensure_route_keys, only: [:update]
@@ -33,12 +31,9 @@ class RoutesController < ApplicationController
     render json: @route
   end
 
+  # TODO: remove RoutesController::commit once clients are cleaned up.
   def commit
-    if RouterReloader.reload
-      render plain: "Router reloaded"
-    else
-      render plain: "Failed to reload all routers", status: :internal_server_error
-    end
+    render plain: "DEPRECATED: there is no longer any need to call /routes/commit; it is a no-op."
   end
 
 private

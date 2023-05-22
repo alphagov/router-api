@@ -331,7 +331,6 @@ DEPENDENCIES
   govuk_app_config
   mongo (~> 2.15.1)
   mongoid
-  plek
   rack-handlers
   rails (= 7.0.4.3)
   rspec-rails
