@@ -6,7 +6,7 @@ gem "bootsnap", require: false
 gem "gds-sso"
 gem "govuk_app_config"
 
-gem "mongo", "~> 2.15.1"
+gem "mongo", "~> 2.19.0"
 gem "mongoid"
 
 group :development, :test do
