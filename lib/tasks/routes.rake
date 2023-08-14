@@ -7,9 +7,4 @@ namespace :routes do
 
     RouteDumper.new(args[:filename]).dump
   end
-
-  desc "TEMP - Remove Whitehall Frontend routes"
-  task remove_whitehall_frontend_routes: :environment do
-    Route.where(handler: "backend", backend_id: "whitehall-frontend").delete_all
-  end
 end
