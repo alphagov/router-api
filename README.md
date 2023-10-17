@@ -1,6 +1,7 @@
 # Router API
 
-This provides an API for updating the routes used by the [router](https://github.com/alphagov/router/).
+Router API provides an API for updating the routes used by
+[Router](https://github.com/alphagov/router/).
 
 ## Technical documentation
 
@@ -20,6 +21,16 @@ bundle exec rake
 
 - [API Endpoints](docs/api-endpoints.md)
 
+## Team
+
+[GOV.UK Platform
+Engineering](https://github.com/orgs/alphagov/teams/gov-uk-platform-engineering)
+team looks after this repo. If you're inside GDS, you can find us in
+[#govuk-platform-engineering] or view our [kanban
+board](https://trello.com/b/u4FCzm53/).
+
 ## Licence
 
 [MIT License](LICENCE)
+
+[#govuk-platform-engineering]: https://gds.slack.com/channels/govuk-platform-engineering
