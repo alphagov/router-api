@@ -4,7 +4,7 @@ updates:
     directory: /
     schedule:
       interval: daily
-    updateGroups:
+    groups:
       ruby-deps:
         patterns: ["*"]
   - package-ecosystem: docker
@@ -13,13 +13,13 @@ updates:
       interval: weekly
     ignore:
       - dependency-name: ruby
-    updateGroups:
+    groups:
       dockerfile-deps:
         patterns: ["*"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-    updateGroups:
+    groups:
       workflow-deps:
         patterns: ["*"]
