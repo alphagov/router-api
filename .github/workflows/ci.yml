@@ -1,13 +1,11 @@
 name: CI
 
 on:
-  workflow_dispatch: {}
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - ".git**"
   pull_request:
+  push:
+    branches: [main]
+    paths-ignore: [".git**"]
+  workflow_dispatch:
 
 jobs:
   security-analysis:
@@ -22,26 +20,22 @@ jobs:
     name: Test Ruby
     runs-on: ubuntu-latest
     steps:
-      - name: Setup MongoDB
-        uses: alphagov/govuk-infrastructure/.github/actions/setup-mongodb@main
+      - uses: alphagov/govuk-infrastructure/.github/actions/setup-mongodb@main
         with:
           version: 2.6
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
-      - name: Initialize database
+      - run: bundle exec rails db:setup
         env:
           RAILS_ENV: test
-        run: bundle exec rails db:setup
 
-      - name: Run RSpec
+      - run: bundle exec rake spec
         env:
           RAILS_ENV: test
-        run: bundle exec rake spec
-
