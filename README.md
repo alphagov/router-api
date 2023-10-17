@@ -5,15 +5,20 @@ Router API provides an API for updating the routes used by
 
 ## Technical documentation
 
-This is a Ruby on Rails app, and should follow [our Rails app conventions](https://docs.publishing.service.gov.uk/manual/conventions-for-rails-applications.html).
+This is a Ruby on Rails app, and should follow [our Rails app
+conventions](https://docs.publishing.service.gov.uk/manual/conventions-for-rails-applications.html).
 
-You can use the [GOV.UK Docker environment](https://github.com/alphagov/govuk-docker) to run the application and its tests with all the necessary dependencies. Follow [the usage instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
+You can use the [GOV.UK Docker
+environment](https://github.com/alphagov/govuk-docker) to run the application
+and its tests with all the necessary dependencies. Follow [the usage
+instructions](https://github.com/alphagov/govuk-docker#usage) to get started.
 
-**Use GOV.UK Docker to run any commands that follow.**
+### Run the test suite
 
-### Running the test suite
+If you are not using govuk-docker, you will need a MongoDB instance running at
+`$TEST_MONGODB_URI` (which defaults to localhost) to run some of the tests.
 
-```
+```sh
 bundle exec rake
 ```
 
