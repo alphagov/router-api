@@ -7,7 +7,7 @@ gem "gds-sso"
 gem "govuk_app_config"
 
 gem "mongo", "~> 2.15.1"
-gem "mongoid"
+gem "mongoid", "~> 7.5"
 
 group :development, :test do
   gem "brakeman"

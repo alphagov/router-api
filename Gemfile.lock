@@ -538,7 +538,7 @@ DEPENDENCIES
   gds-sso
   govuk_app_config
   mongo (~> 2.15.1)
-  mongoid
+  mongoid (~> 7.5)
   rack-handlers
   rails (= 7.0.8)
   rspec-rails
