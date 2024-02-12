@@ -26,7 +26,7 @@ namespace :backend do
     search_string = args[:search_string]
     replace_string = args[:replace_string]
 
-    Backend.all.each do |backend|
+    Backend.all.find_each do |backend|
       old_url = backend.backend_url
       new_url = old_url.gsub(search_string, replace_string)
 
