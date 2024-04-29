@@ -3,10 +3,7 @@ updates:
   - package-ecosystem: bundler
     directory: /
     schedule:
-      interval: daily
-    groups:
-      ruby-deps:
-        patterns: ["*"]
+      interval: weekly
   - package-ecosystem: docker
     directory: /
     schedule:
