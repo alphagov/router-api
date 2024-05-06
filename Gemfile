@@ -6,8 +6,8 @@ gem "bootsnap", require: false
 gem "gds-sso"
 gem "govuk_app_config"
 
-gem "mongo", "~> 2.15.1"
-gem "mongoid", "~> 7.5"
+gem "mongo", "~> 2.20.0"
+gem "mongoid", "~> 9.0"
 
 group :development, :test do
   gem "brakeman"
