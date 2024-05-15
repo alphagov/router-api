@@ -4,6 +4,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: mongo
+      - dependency-name: mongoid
   - package-ecosystem: docker
     directory: /
     schedule:
