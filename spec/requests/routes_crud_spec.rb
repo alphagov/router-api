@@ -27,7 +27,6 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false,
       )
     end
 
@@ -51,14 +50,12 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false,
       )
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
       expect(route).to be
       expect(route.route_type).to eq("prefix")
       expect(route.backend_id).to eq("a-backend")
-      expect(route.disabled).to eq(false)
     end
 
     it "should return an error if given invalid data" do
@@ -70,7 +67,6 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "",
-        "disabled" => false,
         "errors" => {
           "backend_id" => ["can't be blank"],
         },
@@ -97,7 +93,6 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "another-backend",
-        "disabled" => false,
       )
 
       route = Route.backend.where(incoming_path: "/foo/bar").first
@@ -115,7 +110,6 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "prefix",
         "handler" => "backend",
         "backend_id" => "",
-        "disabled" => false,
         "errors" => {
           "backend_id" => ["can't be blank"],
         },
@@ -124,42 +118,6 @@ RSpec.describe "managing routes", type: :request do
       route = Route.where(incoming_path: "/foo/bar").first
       expect(route).to be
       expect(route.backend_id).to eq("a-backend")
-    end
-
-    describe "updating the disabled flag" do
-      it "should set the disabled flag to the value given in the request" do
-        put_json "/routes", route: { incoming_path: "/foo/bar", disabled: true }
-
-        expect(response.code.to_i).to eq(200)
-        expect(JSON.parse(response.body)).to include("disabled" => true)
-
-        route = Route.where(incoming_path: "/foo/bar").first
-        expect(route.disabled).to eq(true)
-      end
-
-      it "should not change the disabled flag when not specified in the request" do
-        @route.update!(disabled: true)
-
-        put_json "/routes", route: { incoming_path: "/foo/bar", route_type: "exact", handler: "backend", backend_id: "another-backend" }
-
-        expect(response.code.to_i).to eq(200)
-        route = Route.where(incoming_path: "/foo/bar").first
-        expect(route.backend_id).to eq("another-backend")
-
-        expect(route.disabled).to eq(true)
-      end
-
-      it "should not alter other details of the route when only setting the flag" do
-        put_json "/routes", route: { incoming_path: "/foo/bar", disabled: true }
-
-        expect(response.code.to_i).to eq(200)
-        expect(JSON.parse(response.body)).to include("disabled" => true)
-
-        route = Route.where(incoming_path: "/foo/bar").first
-        expect(route.route_type).to eq("prefix")
-        expect(route.handler).to eq("backend")
-        expect(route.backend_id).to eq("a-backend")
-      end
     end
 
     it "should not blow up if not given the necessary route lookup keys" do
@@ -191,7 +149,6 @@ RSpec.describe "managing routes", type: :request do
         "route_type" => "exact",
         "handler" => "backend",
         "backend_id" => "a-backend",
-        "disabled" => false,
       )
 
       route = Route.where(incoming_path: "/foo/bar").first
