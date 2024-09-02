@@ -215,6 +215,12 @@ RSpec.describe Route, type: :model do
         end
       end
 
+      describe "backend_id" do
+        it "is set to nil" do
+          expect(route.backend_id).to be nil
+        end
+      end
+
       context "and segments_mode set to 'ignore'" do
         subject(:route) { FactoryBot.build(:redirect_route, segments_mode: "ignore") }
 
@@ -246,6 +252,20 @@ RSpec.describe Route, type: :model do
           end
         end
       end
+    end
+  end
+
+  describe "changing backend route to redirect route" do
+    it "will clear the backend_id" do
+      route = FactoryBot.create(:backend_route)
+      route.update!(
+        handler: "redirect",
+        redirect_to: "/",
+        redirect_type: "permanent",
+      )
+      route.reload
+
+      expect(route.backend_id).to be nil
     end
   end
 
