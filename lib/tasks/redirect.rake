@@ -12,7 +12,6 @@ def redirect(old_path, new_path)
     route_type: "exact",
     handler: "redirect",
     backend_id: "whitehall-frontend",
-    redirect_type: "permanent",
     segments_mode: "ignore",
   )
 end

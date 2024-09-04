@@ -14,7 +14,6 @@ FactoryBot.define do
     factory :redirect_route do
       handler { "redirect" }
       redirect_to { "/bar" }
-      redirect_type { "permanent" }
     end
 
     factory :gone_route do

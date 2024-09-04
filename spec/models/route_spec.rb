@@ -261,7 +261,6 @@ RSpec.describe Route, type: :model do
       route.update!(
         handler: "redirect",
         redirect_to: "/",
-        redirect_type: "permanent",
       )
       route.reload
 

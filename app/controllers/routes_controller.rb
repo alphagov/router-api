@@ -10,6 +10,8 @@ class RoutesController < ApplicationController
   def update
     route_details = @request_data[:route]
     incoming_path = route_details.delete(:incoming_path)
+    # TODO: remove this once gds-api-adapters no longer send this attribute
+    route_details.delete("redirect_type")
     tries = 3
     begin
       @route = Route.find_or_initialize_by(incoming_path:)
