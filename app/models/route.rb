@@ -7,7 +7,6 @@ class Route
   field :handler, type: String
   field :backend_id, type: String
   field :redirect_to, type: String
-  field :redirect_type, type: String
   field :segments_mode, type: String
 
   index({ incoming_path: 1 }, unique: true)
@@ -30,7 +29,6 @@ class Route
   with_options if: :redirect? do
     validates :redirect_to, presence: true
     validate :validate_redirect_to
-    validates :redirect_type, inclusion: { in: %w[permanent temporary] }
     validates :segments_mode, inclusion: { in: %w[ignore preserve] }
   end
 
@@ -61,7 +59,7 @@ class Route
     if has_parent_prefix_routes?
       destroy!
     else
-      update!(handler: "gone", backend_id: nil, redirect_to: nil, redirect_type: nil)
+      update!(handler: "gone", backend_id: nil, redirect_to: nil)
     end
   end
 
