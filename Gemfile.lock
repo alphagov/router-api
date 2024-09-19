@@ -117,7 +117,7 @@ GEM
       warden-oauth2 (~> 0.0.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.27.2)
+    google-protobuf (4.27.5)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.15.0)
