@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 
-gem "rails", "7.0.8.6"
+gem "rails", "7.2.1.2"
 
 gem "bootsnap", require: false
 gem "gds-sso"
 gem "govuk_app_config"
 
-gem "mongo", "~> 2.15.1"
-gem "mongoid", "~> 7.5"
+gem "mongo", "~> 2.21.0"
+gem "mongoid", "~> 9.0"
 
 group :development, :test do
   gem "brakeman"
